@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+
+import { AuthProvider } from "../contexts/AuthContext";
 
 const inter = Inter({ subsets: ["cyrillic"] });
 
@@ -15,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ToastContainer autoClose={3000} />
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }
