@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import Router from 'next/router';
 import { createContext, ReactNode, useState, useEffect } from 'react';
