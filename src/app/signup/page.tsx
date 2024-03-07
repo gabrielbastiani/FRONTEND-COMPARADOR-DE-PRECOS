@@ -12,8 +12,9 @@ import { Button } from '@/components/Button/page';
 import { Input } from '@/components/Input/page';
 
 import logoImg from '../../../public/logo.png';
-import { setupAPIClient } from '../../services/api';
 import styles from '../signup/styles.module.css';
+
+import { setupAPIClient } from '@/services/api'; 
 
 
 export default function SignUp() {
@@ -148,10 +149,6 @@ export default function SignUp() {
 
                     <Link href="/login">
                         Já possui uma conta? Faça login!
-                    </Link>
-
-                    <Link href="/">
-                        Ir para o Blog
                     </Link>
 
                 </div>
