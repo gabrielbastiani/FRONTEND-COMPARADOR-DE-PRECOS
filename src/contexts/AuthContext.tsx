@@ -1,6 +1,5 @@
 "use client"
 
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import Router from 'next/router';
 import { createContext, ReactNode, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -19,7 +18,6 @@ type AuthContextData = {
 
 type UserProps = {
   id: string;
-  photo: string;
   name: string;
   email: string;
 }
@@ -51,16 +49,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
 
-    // tentar pegar algo no cookie
     const { '@comparador.token': token } = parseCookies();
 
     if (token) {
       api.get('/me').then(response => {
-        const { id, photo, name, email } = response.data;
+        const { id, name, email } = response.data;
 
         setUser({
           id,
-          photo,
           name,
           email
         })
@@ -77,29 +73,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password
       })
-      // console.log(response.data);
 
-      const { id, photo, name, token } = response.data;
+      const { id, name, token } = response.data;
 
       setCookie(undefined, '@comparador.token', token, {
-        maxAge: 60 * 60 * 24 * 30, // Expirar em 1 mes
-        path: "/" // Quais caminhos terao acesso ao cookie
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/"
       })
 
       setUser({
         id,
-        photo,
         name,
         email,
       })
 
-      //Passar para proximas requisiçoes o nosso token
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
       toast.success('Logado com sucesso!')
 
-      //Redirecionar o user para /dashboard
-      Router.push('/dashboard')
+      Router.push('/')
 
 
     } catch (err) {
