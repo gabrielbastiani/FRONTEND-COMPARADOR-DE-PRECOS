@@ -1,11 +1,25 @@
+import Router from 'next/router';
+import { toast } from 'react-toastify';
+
 import { AuthTokenError } from './errors/AuthTokenError';
 
-import { signOut } from '@/contexts/AuthContext';  
 import axios, { AxiosError } from 'axios';
-import { parseCookies } from 'nookies';
+import { destroyCookie, parseCookies } from 'nookies';
+
 
 
 export function setupAPIClient(ctx = undefined) {
+
+    function signOut() {
+        try {
+            destroyCookie(undefined, '@comparador.token')
+            Router.push('/login')
+        } catch {
+            toast.error('Erro ao deslogar!')
+            console.log('erro ao deslogar')
+        }
+    }
+
     const cookies = parseCookies(ctx);
 
     const api = axios.create({

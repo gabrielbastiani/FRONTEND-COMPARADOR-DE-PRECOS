@@ -1,6 +1,7 @@
 "use client"
 
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
+import router from 'next/router';
 import { createContext, ReactNode, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -33,17 +34,10 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData)
 
-export function signOut() {
-  try {
-    destroyCookie(undefined, '@comparador.token')
-    Router.push('/login')
-  } catch {
-    toast.error('Erro ao deslogar!')
-    console.log('erro ao deslogar')
-  }
-}
-
 export function AuthProvider({ children }: AuthProviderProps) {
+
+  const router = useRouter();
+
   const [user, setUser] = useState<UserProps>()
   const isAuthenticated = !!user;
 
@@ -91,12 +85,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       toast.success('Logado com sucesso!')
 
-      Router.push('/')
+      router.push('/')
 
 
     } catch (err) {
       toast.error("Erro ao acessar, confirmou seu cadastro em seu email?")
       console.log("Erro ao acessar, confirmou seu cadastro em seu email? ", err)
+    }
+  }
+
+  function signOut() {
+    try {
+      destroyCookie(undefined, '@comparador.token')
+      router.push('/login')
+    } catch {
+      toast.error('Erro ao deslogar!')
+      console.log('erro ao deslogar')
     }
   }
 

@@ -14,7 +14,6 @@ import logoLoginImg from '../../../public/logo.png';
 import styles from '../login/styles.module.css';
 
 import { AuthContext } from '@/contexts/AuthContext'; 
-import { canSSRGuest } from '@/utils/canSSRGuest'; 
 
 
 export default function Login() {
@@ -76,7 +75,7 @@ export default function Login() {
                 <Image src={logoLoginImg} alt="Logo SUMIG" />
 
                 <div className={styles.login}>
-                    <form onSubmit={handleLogin}>
+                    <form className={styles.form} onSubmit={handleLogin}>
                         <Input
                             placeholder='Digite seu email'
                             type='text'
@@ -121,9 +120,3 @@ export default function Login() {
         </>
     )
 }
-
-export const getServerSideProps = canSSRGuest(async (ctx) => {
-    return {
-        props: {}
-    }
-})

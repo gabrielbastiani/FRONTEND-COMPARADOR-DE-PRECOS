@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 
 import { AuthProvider } from "../contexts/AuthContext";
 import "./globals.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ["cyrillic"] });
 

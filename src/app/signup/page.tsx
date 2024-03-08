@@ -3,7 +3,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import { useState, useRef } from 'react'
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from 'react-toastify'
