@@ -17,8 +17,11 @@ import styles from '../../recover/[recover_id]/styles.module.css';
 import { setupAPIClient } from '@/services/api';
 
 
+interface Props {
+    params: { recovery_id: string }
+}
 
-export default function Recover({ params }: { params: { recovery_id: string } }) {
+export default function Recover({ params }: Props) {
 
     const router = useRouter();
     const apiClient = setupAPIClient();
