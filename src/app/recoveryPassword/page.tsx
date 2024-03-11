@@ -50,25 +50,25 @@ export default function RecoveryPassword() {
             const apiClient = setupAPIClient();
             await apiClient.post('/recovery_email', {
                 email: email
-            })
+            });
 
-            toast.success('Verifique sua caixa de e-mail')
-            toast.warning('NÃO DEIXE DE VERIFICAR O SPAN OU LIXEIRA!!!')
+            toast.success('Verifique sua caixa de e-mail');
+            toast.warning('NÃO DEIXE DE VERIFICAR O SPAN OU LIXEIRA!!!');
 
         } catch (err) {
             console.log(err);
-            toast.error('Erro ao enviar e-mail!')
+            toast.error('Erro ao enviar e-mail!');
         }
 
         setLoading(false);
 
-        router.push('/login')
+        router.push('/login');
 
     }
 
     const onChange = () => {/* @ts-ignore */
         if (captcha.current?.getValue()) {
-            console.log('Usuario não é um robo!')
+            console.log('Usuario não é um robo!');
         }
     }
 
