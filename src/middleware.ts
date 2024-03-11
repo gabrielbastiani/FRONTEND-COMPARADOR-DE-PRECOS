@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { toast } from 'react-toastify';
-
 export const config = {
     matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
 };
 
-const publicRoutes = ['/recoveryPassword', '/signup', '/login'];
+const publicRoutes = ['/recoveryPassword', '/signup', '/login', '/recover/'];
 
 export async function middleware(req: NextRequest) {
 
