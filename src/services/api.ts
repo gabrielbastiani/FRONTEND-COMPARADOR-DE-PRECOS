@@ -8,7 +8,7 @@ import { destroyCookie, parseCookies } from 'nookies';
 
 
 
-export function setupAPIClient(ctx = undefined) {
+export function setupAPIClient() {
 
     function signOut() {
         try {
@@ -20,7 +20,7 @@ export function setupAPIClient(ctx = undefined) {
         }
     }
 
-    const cookies = parseCookies(ctx);
+    const cookies = parseCookies();
 
     const api = axios.create({
         baseURL: 'http://localhost:3333',
