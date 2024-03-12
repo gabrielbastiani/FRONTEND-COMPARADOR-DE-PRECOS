@@ -10,18 +10,13 @@ import { toast } from 'react-toastify';
 import { Button } from '@/components/Button/page';
 import { Input } from '@/components/Input/page';
 
-
 import logoLoginImg from '../../../../public/logo.png';
-import styles from '../../recover/[recover_id]/styles.module.css';
+import styles from '../../recover/[recovery_id]/styles.module.css';
 
 import { setupAPIClient } from '@/services/api';
 
 
-interface Props {
-    params: { recovery_id: string }
-}
-
-export default function Recover({ params }: Props) {
+export default function Recover({ params }: { params: { recovery_id: string } }) {
 
     const router = useRouter();
     const apiClient = setupAPIClient();
@@ -29,7 +24,6 @@ export default function Recover({ params }: Props) {
     const [newPassword, setNewPassword] = useState('')
     const [password, setPassword] = useState('');
 
-    console.log(params.recovery_id)
 
     async function handleRecover(event: FormEvent) {
         event.preventDefault();
@@ -43,7 +37,7 @@ export default function Recover({ params }: Props) {
                 return;
             }
 
-            await apiClient.put(`/recover?recovery_id=${params.recovery_id}`, { password })
+            await apiClient.put(`/recover_password?passwordRecoveryUser_id=${params?.recovery_id}`, { password: password })
 
             toast.success('Senha atualizada com sucesso.')
 
