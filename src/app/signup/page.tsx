@@ -72,10 +72,10 @@ export default function SignUp() {
             setEmail("");
             setPassword("");
 
-        } catch (err) {
+        } catch (error) {
             toast.error('Erro ao cadastrar!');
-            router.push('/signup');
-            console.log("Ops erro ao cadastrar!");
+            router.push('/signup');/* @ts-ignore */
+            console.log(error.response.data);
         }
 
         setLoading(false);
