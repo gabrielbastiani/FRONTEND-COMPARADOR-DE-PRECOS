@@ -37,7 +37,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const router = useRouter();
 
-  const [user, setUser] = useState<UserProps>()
+  const [user, setUser] = useState<UserProps>();
+  const [loading, setLoading] = useState<boolean>(true);
   const isAuthenticated = !!user;
 
   useEffect(() => {
@@ -54,57 +55,61 @@ export function AuthProvider({ children }: AuthProviderProps) {
           email
         })
 
-      })
+      });
 
     }
 
-  }, [])
+    setLoading(false);
+
+  }, []);
 
   async function signIn({ email, password }: SignInProps) {
     try {
       const response = await api.post('/session', {
         email,
         password
-      })
+      });
 
       const { id, name, token } = response.data;
 
       setCookie(undefined, '@comparador.token', token, {
         maxAge: 60 * 60 * 24 * 30,
         path: "/"
-      })
+      });
 
       setUser({
         id,
         name,
         email,
-      })
+      });
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
-      toast.success('Logado com sucesso!')
+      toast.success('Logado com sucesso!');
 
-      router.push('/')
+      setLoading(false);
 
+      router.push('/');
 
     } catch (err) {
-      toast.error("Erro ao acessar, confirmou seu cadastro em seu email?")
-      console.log("Erro ao acessar, confirmou seu cadastro em seu email? ", err)
+      toast.error("Erro ao acessar, confirmou seu cadastro em seu email?");
+      console.log("Erro ao acessar, confirmou seu cadastro em seu email? ", err);
     }
   }
 
   function signOut() {
     try {
-      destroyCookie(undefined, '@comparador.token')
-      router.push('/login')
+      destroyCookie(undefined, '@comparador.token');
+      setLoading(false);
+      router.push('/login');
     } catch {
-      toast.error('Erro ao deslogar!')
-      console.log('erro ao deslogar')
+      toast.error('Erro ao deslogar!');
+      console.log('erro ao deslogar');
     }
   }
 
   return (/* @ts-ignore */
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   )

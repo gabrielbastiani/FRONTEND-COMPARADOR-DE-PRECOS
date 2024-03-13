@@ -7,7 +7,6 @@ import axios, { AxiosError } from 'axios';
 import { destroyCookie, parseCookies } from 'nookies';
 
 
-
 export function setupAPIClient() {
 
     function signOut() {
