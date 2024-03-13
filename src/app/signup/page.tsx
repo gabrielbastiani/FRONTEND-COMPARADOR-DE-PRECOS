@@ -14,7 +14,7 @@ import { Input } from '@/components/Input/page';
 import logoImg from '../../../public/logo.png';
 import styles from '../signup/styles.module.css';
 
-import { setupAPIClient } from '@/services/api'; 
+import { setupAPIClient } from '@/services/api';
 
 
 export default function SignUp() {
@@ -26,7 +26,6 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [userValid, setUserValid] = useState(false);
     const captcha = useRef(null);
 
 
@@ -37,15 +36,15 @@ export default function SignUp() {
 
     async function handleRegister() {
         try {
-            /* @ts-ignore */
-            if (captcha.current.getValue()) {
-                console.log('Usuario válido!')
-                setUserValid(true)
-            } else {
-                console.log('Por favor, acerte o recaptcha!')
-                toast.error('Por favor, acerte o recaptcha!')
+            if (captcha.current !== null) {/* @ts-ignore */
+                if (captcha.current.getValue()) {
+                    console.log('Usuario válido!')
+                } else {
+                    console.log('Por favor, acerte o recaptcha!')
+                    toast.error('Por favor, acerte o recaptcha!')
 
-                return;
+                    return;
+                }
             }
 
             if (name === '' || email === '' || password === '') {
@@ -74,10 +73,9 @@ export default function SignUp() {
             setPassword("");
 
         } catch (err) {
-            console.log(err);
-            toast.error('Erro ao cadastrar!')
-            router.push('/signup')
-            console.log("Ops erro ao cadastrar!")
+            toast.error('Erro ao cadastrar!');
+            router.push('/signup');
+            console.log("Ops erro ao cadastrar!");
         }
 
         setLoading(false);
@@ -86,9 +84,11 @@ export default function SignUp() {
 
     }
 
-    const onChange = () => {/* @ts-ignore */
-        if (captcha.current.getValue()) {
-            console.log('Usuario não é um robo!')
+    const onChange = () => {
+        if (captcha.current !== null) {/* @ts-ignore */
+            if (captcha.current.getValue()) {
+                console.log('Usuario não é um robo!');
+            }
         }
     }
 

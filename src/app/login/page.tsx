@@ -1,11 +1,11 @@
 "use client"
 
-import Head from 'next/head'
-import Image from 'next/image'
+import Head from 'next/head';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useContext, FormEvent, useState, useRef } from 'react'
+import { useContext, FormEvent, useState, useRef } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 import { Button } from '@/components/Button/page';
 import { Input } from '@/components/Input/page';
@@ -13,54 +13,56 @@ import { Input } from '@/components/Input/page';
 import logoLoginImg from '../../../public/logo.png';
 import styles from '../login/styles.module.css';
 
-import { AuthContext } from '@/contexts/AuthContext'; 
+import { AuthContext } from '@/contexts/AuthContext';
 
 
 export default function Login() {
 
-    const { signIn } = useContext(AuthContext)
+    const { signIn } = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState(false);
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [userValid, setUserValid] = useState(false);
     const captcha = useRef(null);
 
 
     async function handleLogin(event: FormEvent) {
         event.preventDefault();
-        /* @ts-ignore */
-        if (captcha.current.getValue()) {
-            console.log('Usuario válido!')
-            setUserValid(true)
-        } else {
-            console.log('Por favor, acerte o recaptcha!')
-            toast.error('Por favor, acerte o recaptcha!')
 
-            return;
+        if (captcha.current !== null) {/* @ts-ignore */
+            if (captcha.current.getValue()) {
+                console.log('Usuario válido!');
+            } else {
+                console.log('Por favor, acerte o recaptcha!');
+                toast.error('Por favor, acerte o recaptcha!');
+
+                return;
+            }
         }
-        /* @ts-ignore */
+        
         if (email === '' || password === '') {
-            toast.warning('Preencha os campos! (Email e Senha)')
+            toast.warning('Preencha os campos! (Email e Senha)');
             return;
         }
 
-        setLoading(true)
+        setLoading(true);
 
         const data = {
             email,
             password
         }
-        /* @ts-ignore */
+
         await signIn(data)
 
         setLoading(false)
 
     }
 
-    const onChange = () => {/* @ts-ignore */
-        if (captcha.current.getValue()) {
-            console.log('Usuario não é um robo!')
+    const onChange = () => {
+        if (captcha.current !== null) {/* @ts-ignore */
+            if (captcha.current.getValue()) {
+                console.log('Usuario não é um robo!')
+            }
         }
     }
 
@@ -85,8 +87,8 @@ export default function Login() {
 
                         <Input
                             placeholder='Digite sua senha'
-                            type='password'/* @ts-ignore */
-                            value={password}/* @ts-ignore */
+                            type='password'
+                            value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
 

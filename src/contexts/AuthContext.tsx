@@ -10,8 +10,9 @@ import { destroyCookie, setCookie, parseCookies } from 'nookies';
 
 
 type AuthContextData = {
-  user: UserProps;
+  user?: UserProps;
   isAuthenticated: boolean;
+  loadingRequests: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
   signOut: () => void;
 }
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
 
   const [user, setUser] = useState<UserProps>();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingRequests, setLoadingRequests] = useState<boolean>(true);
   const isAuthenticated = !!user;
 
   useEffect(() => {
@@ -59,7 +60,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     }
 
-    setLoading(false);
+    setLoadingRequests(false);
 
   }, []);
 
@@ -87,7 +88,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       toast.success('Logado com sucesso!');
 
-      setLoading(false);
+      setLoadingRequests(false);
 
       router.push('/');
 
@@ -100,7 +101,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   function signOut() {
     try {
       destroyCookie(undefined, '@comparador.token');
-      setLoading(false);
+      setLoadingRequests(false);
       router.push('/login');
     } catch {
       toast.error('Erro ao deslogar!');
@@ -108,8 +109,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  return (/* @ts-ignore */
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut, loading }}>
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut, loadingRequests }}>
       {children}
     </AuthContext.Provider>
   )

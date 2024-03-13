@@ -6,12 +6,12 @@ import { AuthContext } from "@/contexts/AuthContext";
 
 
 export function HeaderFirst() {
-    /* @ts-ignore */
-    const { signOut, loading } = useContext(AuthContext);
+
+    const { signOut, loadingRequests } = useContext(AuthContext);
 
     return (
         <>
-            {loading ? (
+            {loadingRequests ? (
                 <LoadingRequests />
             ) : (
                 <button onClick={signOut}>
