@@ -30,13 +30,15 @@ export function setupAPIClient() {
 
     api.interceptors.response.use(response => {
         return response;
-    }, (error: AxiosError) => {/* @ts-ignore */
-        if (error.response.status === 401) {
-            // eslint-disable-next-line valid-typeof
-            if (typeof window !== undefined) {
-                signOut();
-            } else {
-                return Promise.reject(new AuthTokenError())
+    }, (error: AxiosError) => {
+        if (error.response) {
+            if (error.response.status === 401) {
+            
+                if (typeof window !== 'undefined') {
+                    signOut();
+                } else {
+                    return Promise.reject(new AuthTokenError())
+                }
             }
         }
 
