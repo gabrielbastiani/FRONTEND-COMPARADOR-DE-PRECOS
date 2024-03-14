@@ -9,24 +9,24 @@ import { destroyCookie, parseCookies } from 'nookies';
 
 export function setupAPIClient() {
 
+    const cookies = parseCookies();
+
     function signOut() {
         try {
-            destroyCookie(undefined, '@comparador.token')
-            Router.push('/login')
+            destroyCookie(undefined, '@comparador.token');
+            Router.push('/login');
         } catch {
-            toast.error('Erro ao deslogar!')
-            console.log('erro ao deslogar')
+            toast.error('Erro ao deslogar!');
+            console.log('erro ao deslogar');
         }
     }
-
-    const cookies = parseCookies();
 
     const api = axios.create({
         baseURL: 'http://localhost:3333',
         headers: {
             Authorization: `Bearer ${cookies['@comparador.token']}`
         }
-    })
+    });
 
     api.interceptors.response.use(response => {
         return response;
@@ -37,7 +37,7 @@ export function setupAPIClient() {
                 if (typeof window !== 'undefined') {
                     signOut();
                 } else {
-                    return Promise.reject(new AuthTokenError())
+                    return Promise.reject(new AuthTokenError());
                 }
             }
         }
