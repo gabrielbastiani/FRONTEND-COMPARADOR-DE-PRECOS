@@ -31,16 +31,13 @@ export default function Recover({ params }: { params: { recovery_id: string } })
         try {
 
             if (newPassword != password) {
-
                 toast.error('Senhas diferentes');
-
                 return;
             }
 
             await apiClient.put(`/recover_password?passwordRecoveryUser_id=${params?.recovery_id}`, { password: password });
 
             toast.success('Senha atualizada com sucesso.');
-
 
         } catch (err) {
             console.log(err);

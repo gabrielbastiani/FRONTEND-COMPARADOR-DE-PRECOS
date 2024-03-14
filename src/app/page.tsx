@@ -1,6 +1,6 @@
 'use client'
  
-import { HeaderFirst } from "@/components/HeaderFirst/page";
+import { Header } from "@/components/Header/page";
 
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
   
   return (
     <>
-      <HeaderFirst />
+      <Header />
       <h1>HOME</h1>
     </>
   );
