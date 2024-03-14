@@ -44,7 +44,7 @@ export function setupAPIClient() {
 
         return Promise.reject(error);
 
-    })
+    });
 
     return api;
 
