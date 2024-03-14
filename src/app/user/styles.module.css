@@ -29,6 +29,10 @@
   margin-bottom: 40px;
 }
 
+.contentText svg {
+  cursor: pointer;
+}
+
 .text {
   width: 56%;
   display: flex;
