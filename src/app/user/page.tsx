@@ -48,6 +48,13 @@ export default function User() {
                         />
                         <Button style={{ backgroundColor: 'green', width: '80px', height: '35px', color: 'white' }}>Salvar</Button>
                     </div>
+                    <div className={styles.contentValues}>
+                        <Button
+                            style={{ padding: '10px', fontWeight: 'bold' }}
+                        >
+                            Deletar conta
+                        </Button>
+                    </div>
                 </article>
             </main>
         </>
