@@ -22,7 +22,7 @@ export function Header() {
             </div>
             <div className={styles.menuItems}>
                 <ul>
-                    <Link href={`/user/${user?.id}`}>{user?.name}</Link>
+                    <Link href="/user">{user?.name}</Link>
                     <CiLogin size={35} color='white' onClick={signOut} />
                 </ul>
             </div>
