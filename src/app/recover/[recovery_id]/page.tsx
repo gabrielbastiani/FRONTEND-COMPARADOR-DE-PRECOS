@@ -59,7 +59,7 @@ export default function Recover({ params }: { params: { recovery_id: string } })
             </Head>
 
             <div className={styles.containerCenter}>
-                <Image src={logoLoginImg} alt="Logo SUMIG" />
+                <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
 
                 <div className={styles.login}>
                     <form className={styles.form} onSubmit={handleRecover}>

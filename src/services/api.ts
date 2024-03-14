@@ -33,7 +33,6 @@ export function setupAPIClient() {
     }, (error: AxiosError) => {
         if (error.response) {
             if (error.response.status === 401) {
-            
                 if (typeof window !== 'undefined') {
                     signOut();
                 } else {

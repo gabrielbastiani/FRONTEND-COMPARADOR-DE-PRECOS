@@ -101,7 +101,7 @@ export default function SignUp() {
             </Head>
 
             <div className={styles.containerCenter}>
-                <Image src={logoImg} alt="Logo SUMIG" />
+                <Image src={logoImg} width={200} height={150} alt="Logo SUMIG" />
 
                 <div className={styles.login}>
                     <h1>Crie sua conta</h1>

@@ -8,7 +8,7 @@ export default function NotFound() {
 
     return (
         <div className={styles.error_container}>
-            <Image src={logoLoginImg} alt="Logo SUMIG" />
+            <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
             <h1>Erro 404</h1>
             <p>Página não encontrada</p>
             <Link href="/">Voltar para a página inicial</Link>

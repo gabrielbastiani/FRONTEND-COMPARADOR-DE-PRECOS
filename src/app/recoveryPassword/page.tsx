@@ -35,8 +35,8 @@ export default function RecoveryPassword() {
                     console.log('Usuario válido!')
                     setUserValid(true)
                 } else {
-                    console.log('Por favor, acerte o recaptcha!')
-                    toast.error('Por favor, acerte o recaptcha!')
+                    console.log('Por favor, acerte o recaptcha!');
+                    toast.error('Por favor, acerte o recaptcha!');
 
                     return;
                 }
@@ -85,7 +85,7 @@ export default function RecoveryPassword() {
                 <title>Recuperar minha senha - Comparador de preços SUMIG</title>
             </Head>
             <div className={styles.containerCenter}>
-                <Image src={logoLoginImg} alt="Logo SUMIG" />
+                <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
 
                 <div className={styles.login}>
                     <form className={styles.form} onSubmit={handleRecover}>
