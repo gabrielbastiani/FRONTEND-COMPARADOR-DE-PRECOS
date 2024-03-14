@@ -28,6 +28,7 @@
     ],
     "rules": {
         "react-hooks/rules-of-hooks": "error",
+        "no-control-regex": "off",
         "react-hooks/exhaustive-deps": "warn",
         "react/react-in-jsx-scope": "off",
         "prettier/prettier": 0,

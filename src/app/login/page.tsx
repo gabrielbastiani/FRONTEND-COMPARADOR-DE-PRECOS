@@ -27,6 +27,8 @@ export default function Login() {
 
 
     async function handleLogin(event: FormEvent) {
+
+        setLoading(true);
         event.preventDefault();
 
         if (captcha.current !== null) {/* @ts-ignore */
@@ -52,9 +54,9 @@ export default function Login() {
             password
         }
 
-        await signIn(data)
+        await signIn(data);
 
-        setLoading(false)
+        setLoading(false);
 
     }
 

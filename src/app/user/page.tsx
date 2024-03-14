@@ -2,7 +2,7 @@
 
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -21,39 +21,113 @@ export default function User() {
 
     const { user } = useContext(AuthContext);
     const router = useRouter();
-    const apiClient = setupAPIClient();
 
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
 
-    async function updateUserName() {
+    function isEmail(userEmail: string) {
+        return /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(userEmail)
+    }
+
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadUser() {
+            try {
+                const { data } = await apiClient.get(`/find_unique_user?user_id=${user?.id}`);
+                setUserName(data?.name || "");
+                setUserEmail(data?.email || "");
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+            }
+        }
+        loadUser();
+    }, [user?.id]);
+
+    async function loadUser() {
+        const apiClient = setupAPIClient();
         try {
-            setLoading(true);
-            apiClient.put(`/update_name_user?user_id=${user?.id}`, {
+            const { data } = await apiClient.get(`/find_unique_user?user_id=${user?.id}`);
+            setUserName(data?.name || "");
+            setUserEmail(data?.email || "");
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+        }
+    }
+
+    async function updateUserName() {
+
+        setLoading(true);
+
+        const apiClient = setupAPIClient();
+
+        try {
+
+            if (userName === '') {
+                toast.error('Preencha o seu nome');
+                console.log("Preencha o seu nome");
+                setLoading(false);
+                return;
+            }
+
+            await apiClient.put(`/update_name_user?user_id=${user?.id}`, {
                 name: userName
             });
+
             toast.success("Nome do usuário atualizado com sucesso");
 
             setLoading(false);
+            loadUser();
 
         } catch (error) {
             /* @ts-ignore */
             console.log(error.response.data);
             toast.error("Erro ao atualizar o nome do usuário");
+            setLoading(false);
+            loadUser();
         }
+
     }
 
     async function updateUserEmail() {
+
+        setLoading(true);
+
+        const apiClient = setupAPIClient();
+
         try {
-            apiClient.put(`/update_email_user?user_id=${user?.id}`, {
+
+            if (userEmail === '') {
+                toast.warning('Preencha o seu email');
+                console.log("Preencha o seu email");
+                setLoading(false);
+                return;
+            }
+
+            if (!isEmail(userEmail)) {
+
+                toast.error('Por favor digite um email valido!');
+
+                setLoading(false);
+
+                return;
+            }
+
+            await apiClient.put(`/update_email_user?user_id=${user?.id}`, {
                 email: userEmail
             });
+
             toast.success("Email do usuário atualizado com sucesso");
+
+            setLoading(false);
+            loadUser();
+
         } catch (error) {
             /* @ts-ignore */
             console.log(error.response.data);
             toast.error("Erro ao atualizar o email do usuário");
+            setLoading(false);
+            loadUser();
         }
     }
 
@@ -64,11 +138,10 @@ export default function User() {
                 <title>{`Usuário - ${user?.name}`}</title>
             </Head>
 
-            {loading ? (
+            {loading ?
                 <LoadingRequests />
-            ) :
+                :
                 <>
-
                     <Header />
 
                     <main className={styles.mainContainer}>
@@ -82,6 +155,8 @@ export default function User() {
                                 <div className={styles.text}>
                                     <h2>Editar usuário</h2>
                                 </div>
+
+                                <div className={styles.text}></div>
                             </div>
                             <div className={styles.contentValues}>
                                 <Input

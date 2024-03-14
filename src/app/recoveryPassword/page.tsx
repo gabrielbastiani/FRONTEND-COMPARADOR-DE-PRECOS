@@ -25,16 +25,24 @@ export default function RecoveryPassword() {
     const [userValid, setUserValid] = useState(false);
     const captcha = useRef(null);
 
+    function isEmail(email: string) {
+        return /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(email)
+    }
+
 
     async function handleRecover(event: FormEvent) {
+
+        setLoading(true);
+
         event.preventDefault();
 
         try {
             if (captcha.current !== null) {/* @ts-ignore */
                 if (captcha.current.getValue()) {
-                    console.log('Usuario válido!')
-                    setUserValid(true)
+                    console.log('Usuario válido!');
+                    setUserValid(true);
                 } else {
+                    setLoading(false);
                     console.log('Por favor, acerte o recaptcha!');
                     toast.error('Por favor, acerte o recaptcha!');
 
@@ -44,11 +52,19 @@ export default function RecoveryPassword() {
 
 
             if (email === '') {
-                toast.warning('Digite seu e-mail!')
+                toast.warning('Digite seu e-mail!');
+                setLoading(false);
                 return;
             }
 
-            setLoading(true);
+            if (!isEmail(email)) {
+
+                toast.error('Por favor digite um email valido!');
+
+                setLoading(false);
+
+                return;
+            }
 
             const apiClient = setupAPIClient();
             await apiClient.post('/recovery_email', {
@@ -58,12 +74,13 @@ export default function RecoveryPassword() {
             toast.success('Verifique sua caixa de e-mail');
             toast.warning('NÃO DEIXE DE VERIFICAR O SPAN OU LIXEIRA!!!');
 
+            setLoading(false);
+
         } catch (err) {
             console.log(err);
             toast.error('Erro ao enviar e-mail!');
+            setLoading(false);
         }
-
-        setLoading(false);
 
         router.push('/login');
 
