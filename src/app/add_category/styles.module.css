@@ -1,0 +1,35 @@
+.mainContainer {
+    min-height: 100vh;
+    display: flex;
+    background-color: black;
+    padding-top: 80px;
+  }
+  
+  .contentValues {
+    display: flex;
+    justify-content: flex-start;
+    width: 65%;
+  }
+  
+  .content {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .content h2 {
+    color: white;
+    padding-bottom: 1rem;
+  }
+  
+  .contentText {
+    width: 65%;
+    display: flex;
+    margin-bottom: 40px;
+    justify-content: space-between;
+  }
+  
+  .contentText svg {
+    cursor: pointer;
+  }

@@ -2,26 +2,57 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CiLogin } from 'react-icons/ci';
 
 import logoLoginImg from '../../../public/logo.png';
 import styles from './styles.module.css';
 
 import { AuthContext } from "@/contexts/AuthContext";
+import { setupAPIClient } from '@/services/api';
+
+
+type CategorysProps = {
+    id: string;
+    name: string;
+    slug: string;
+    image: string;
+}
 
 export function Header() {
 
     const { signOut, user } = useContext(AuthContext);
+    const [categorys, setCategorys] = useState<CategorysProps[]>();
+
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadCategorys() {
+            try {
+                const { data } = await apiClient.get('/all_zeros_levels_categorys');
+                setCategorys(data || []);
+
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+            }
+        }
+        loadCategorys();
+    }, []);
+
 
     return (
         <nav className={styles.topMenu}>
             <div className={styles.logo}>
-                <Image src={logoLoginImg} width={150} height={80} alt="Logo SUMIG" />
+                <Link href='/'>
+                    <Image src={logoLoginImg} width={150} height={80} alt="Logo SUMIG" />
+                </Link>
             </div>
-            <div className={styles.topMenuLojas}>
-                <button>LOJAS</button>
-            </div>
+            {categorys?.length === 0 ?
+                null
+                :
+                <div className={styles.topMenuLojas}>
+                    <button>LOJAS</button>
+                </div>
+            }
             <div className={styles.menuItems}>
                 <ul>
                     <Link href="/user">{user?.name}</Link>
