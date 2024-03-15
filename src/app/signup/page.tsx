@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 
 import { Button } from '@/components/Button/page';
 import { Input } from '@/components/Input/page';
+import LoadingRequests from '@/components/LoadingRequests/page';
 
 import logoImg from '../../../public/logo.png';
 import styles from '../signup/styles.module.css';
@@ -34,13 +35,16 @@ export default function SignUp() {
     }
 
     async function handleRegister() {
+        setLoading(true);
         try {
             if (captcha.current !== null) {/* @ts-ignore */
                 if (captcha.current.getValue()) {
                     console.log('Usuario válido!')
                 } else {
-                    console.log('Por favor, acerte o recaptcha!')
-                    toast.error('Por favor, acerte o recaptcha!')
+                    console.log('Por favor, acerte o recaptcha!');
+                    toast.error('Por favor, acerte o recaptcha!');
+
+                    setLoading(false);
 
                     return;
                 }
@@ -49,6 +53,7 @@ export default function SignUp() {
             if (name === '' || email === '' || password === '') {
                 toast.warning('Preencha todos os campos!')
                 console.log("Preencha todos os campos!");
+                setLoading(false);
                 return;
             }
 
@@ -56,10 +61,10 @@ export default function SignUp() {
 
                 toast.error('Por favor digite um email valido!');
 
+                setLoading(false);
+
                 return;
             }
-
-            setLoading(true);
 
             await apiClient.post('/create_user', {
                 name: name,
@@ -71,15 +76,18 @@ export default function SignUp() {
             setEmail("");
             setPassword("");
 
+            toast.success('Conta criada com sucesso!!!');
+
+            setLoading(false);
+
+            router.push('/');
+
         } catch (error) {
             toast.error('Erro ao cadastrar!');
-            router.push('/signup');/* @ts-ignore */
+            /* @ts-ignore */
             console.log(error.response.data);
+            setLoading(false);
         }
-
-        setLoading(false);
-
-        router.push('/');
 
     }
 
@@ -99,60 +107,63 @@ export default function SignUp() {
                 <title>Faça seu cadastro agora!</title>
             </Head>
 
-            <div className={styles.containerCenter}>
-                <Image src={logoImg} width={200} height={150} alt="Logo SUMIG" />
+            {loading ?
+                <LoadingRequests />
+                :
+                <>
+                    <div className={styles.containerCenter}>
+                        <Image src={logoImg} width={200} height={150} alt="Logo SUMIG" />
 
-                <div className={styles.login}>
-                    <h1>Crie sua conta</h1>
+                        <div className={styles.login}>
+                            <h1>Crie sua conta</h1>
 
-                    <div className={styles.form}>
+                            <div className={styles.form}>
 
-                        <Input
-                            placeholder="Digite seu nome"
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
+                                <Input
+                                    placeholder="Digite seu nome"
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
 
-                        <Input
-                            placeholder="Digite seu email"
-                            type="email"
-                            name='email'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                                <Input
+                                    placeholder="Digite seu email"
+                                    type="email"
+                                    name='email'
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
 
-                        <Input
-                            placeholder="Sua senha"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                                <Input
+                                    placeholder="Sua senha"
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
 
-                        <div className={styles.recaptcha}>
-                            <ReCAPTCHA
-                                ref={captcha}
-                                sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
-                                onChange={onChange}
-                            />
+                                <div className={styles.recaptcha}>
+                                    <ReCAPTCHA
+                                        ref={captcha}
+                                        sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                        onChange={onChange}
+                                    />
+                                </div>
+
+                                <Button
+                                    onClick={handleRegister}
+                                >
+                                    Cadastrar
+                                </Button>
+
+                            </div>
+
+                            <Link href="/login">
+                                Já possui uma conta? Faça login!
+                            </Link>
                         </div>
-
-                        <Button
-                            onClick={handleRegister}
-                            loading={loading}
-                        >
-                            Cadastrar
-                        </Button>
-
                     </div>
-
-                    <Link href="/login">
-                        Já possui uma conta? Faça login!
-                    </Link>
-
-                </div>
-
-            </div>
+                </>
+            }
         </>
     )
 }

@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import { Button } from '@/components/Button/page';
 import { Input } from '@/components/Input/page';
+import LoadingRequests from '@/components/LoadingRequests/page';
 
 import logoLoginImg from '../../../../public/logo.png';
 import styles from '../../recover/[recovery_id]/styles.module.css';
@@ -23,15 +24,24 @@ export default function Recover({ params }: { params: { recovery_id: string } })
 
     const [newPassword, setNewPassword] = useState('')
     const [password, setPassword] = useState('');
-
+    const [loading, setLoading] = useState(false);
 
     async function handleRecover(event: FormEvent) {
+
+        setLoading(true);
         event.preventDefault();
 
         try {
 
             if (newPassword != password) {
                 toast.error('Senhas diferentes');
+                setLoading(false);
+                return;
+            }
+
+            if (newPassword === "" && password === "") {
+                toast.error('Não deixe os campos em branco');
+                setLoading(false);
                 return;
             }
 
@@ -39,12 +49,15 @@ export default function Recover({ params }: { params: { recovery_id: string } })
 
             toast.success('Senha atualizada com sucesso.');
 
+            setLoading(false);
+
+            router.push('/login');
+
         } catch (err) {
             console.log(err);
-            toast.error('Erro ao atualizar a sua senha')
+            toast.error('Erro ao atualizar a sua senha');
+            setLoading(false);
         }
-
-        router.push('/login');
 
     }
 
@@ -55,40 +68,46 @@ export default function Recover({ params }: { params: { recovery_id: string } })
                 <title>Recuperar minha senha - Comparador de preços SUMIG</title>
             </Head>
 
-            <div className={styles.containerCenter}>
-                <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
+            {loading ?
+                <LoadingRequests />
+                :
+                <>
+                    <div className={styles.containerCenter}>
+                        <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
 
-                <div className={styles.login}>
-                    <form className={styles.form} onSubmit={handleRecover}>
+                        <div className={styles.login}>
+                            <form className={styles.form} onSubmit={handleRecover}>
 
-                        <Input
-                            placeholder='Digite nova senha'
-                            type='password'
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                        />
+                                <Input
+                                    placeholder='Digite nova senha'
+                                    type='password'
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                />
 
-                        <Input
-                            placeholder='Repetir a nova senha'
-                            type='password'
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                                <Input
+                                    placeholder='Repetir a nova senha'
+                                    type='password'
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
 
-                        <Button
-                            type="submit"
-                        >
-                            Alterar senha
-                        </Button>
+                                <Button
+                                    type="submit"
+                                >
+                                    Alterar senha
+                                </Button>
 
-                    </form>
+                            </form>
 
-                    <Link href="/signup">
-                        Não possui uma conta? Cadastre-se
-                    </Link>
+                            <Link href="/signup">
+                                Não possui uma conta? Cadastre-se
+                            </Link>
 
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </>
+            }
         </>
     )
 }

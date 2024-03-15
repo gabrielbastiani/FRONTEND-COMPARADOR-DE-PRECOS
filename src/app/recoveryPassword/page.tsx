@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 
 import { Button } from '@/components/Button/page';
 import { Input } from '@/components/Input/page';
+import LoadingRequests from '@/components/LoadingRequests/page';
 
 import logoLoginImg from '../../../public/logo.png';
 import { setupAPIClient } from '../../services/api';
@@ -76,13 +77,13 @@ export default function RecoveryPassword() {
 
             setLoading(false);
 
+            router.push('/login');
+
         } catch (err) {
             console.log(err);
             toast.error('Erro ao enviar e-mail!');
             setLoading(false);
         }
-
-        router.push('/login');
 
     }
 
@@ -101,42 +102,49 @@ export default function RecoveryPassword() {
             <Head>
                 <title>Recuperar minha senha - Comparador de preços SUMIG</title>
             </Head>
-            <div className={styles.containerCenter}>
-                <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
 
-                <div className={styles.login}>
-                    <form className={styles.form} onSubmit={handleRecover}>
-                        <Input
-                            placeholder='Digite seu email cadastrado'
-                            type='text'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+            {loading ?
+                <LoadingRequests />
+                :
+                <>
+                    <div className={styles.containerCenter}>
+                        <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
 
-                        <div className={styles.recaptcha}>
-                            <ReCAPTCHA
-                                ref={captcha}
-                                sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
-                                onChange={onChange}
-                            />
+                        <div className={styles.login}>
+                            <form className={styles.form} onSubmit={handleRecover}>
+                                <Input
+                                    placeholder='Digite seu email cadastrado'
+                                    type='text'
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+
+                                <div className={styles.recaptcha}>
+                                    <ReCAPTCHA
+                                        ref={captcha}
+                                        sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                        onChange={onChange}
+                                    />
+                                </div>
+
+                                {!userValid &&
+                                    <Button
+                                        type="submit"
+                                        loading={loading}
+                                    >
+                                        Enviar solicitação
+                                    </Button>
+                                }
+                            </form>
+
+                            <Link href="/signup">
+                                Não possui uma conta? Cadastre-se
+                            </Link>
+
                         </div>
-
-                        {!userValid &&
-                            <Button
-                                type="submit"
-                                loading={loading}
-                            >
-                                Enviar solicitação
-                            </Button>
-                        }
-                    </form>
-
-                    <Link href="/signup">
-                        Não possui uma conta? Cadastre-se
-                    </Link>
-
-                </div>
-            </div>
+                    </div>
+                </>
+            }
         </>
     )
 }

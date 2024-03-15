@@ -4,12 +4,14 @@ import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
+import Modal from 'react-modal';
 import { toast } from 'react-toastify';
 
 import { Button } from '@/components/Button/page';
 import { Header } from '@/components/Header/page';
 import { Input } from '@/components/Input/page';
 import LoadingRequests from '@/components/LoadingRequests/page';
+import { ModalDeleteUser } from '@/components/popups/ModalDeleteBanner/page';
 
 import styles from './styles.module.css';
 
@@ -25,6 +27,8 @@ export default function User() {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     function isEmail(userEmail: string) {
         return /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(userEmail)
@@ -131,6 +135,16 @@ export default function User() {
         }
     }
 
+    function handleCloseModalDelete() {
+        setModalVisible(false);
+    }
+
+    async function handleOpenModalDelete() {
+        setModalVisible(true);
+    }
+
+    Modal.setAppElement('body');
+
 
     return (
         <>
@@ -139,7 +153,7 @@ export default function User() {
             </Head>
 
             {loading ?
-                <LoadingRequests />
+                    <LoadingRequests />
                 :
                 <>
                     <Header />
@@ -200,6 +214,7 @@ export default function User() {
                             <div className={styles.contentValues}>
                                 <Button
                                     style={{ padding: '10px', fontWeight: 'bold' }}
+                                    onClick={handleOpenModalDelete}
                                 >
                                     Deletar conta
                                 </Button>
@@ -208,6 +223,12 @@ export default function User() {
                     </main>
                 </>
             }
+            {modalVisible && (
+                <ModalDeleteUser
+                    isOpen={modalVisible}
+                    onRequestClose={handleCloseModalDelete}
+                />
+            )}
         </>
     )
 }
