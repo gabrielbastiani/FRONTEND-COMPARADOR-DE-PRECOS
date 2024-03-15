@@ -1,6 +1,5 @@
 "use client"
 
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -99,10 +98,6 @@ export default function RecoveryPassword() {
 
     return (
         <>
-            <Head>
-                <title>Recuperar minha senha - Comparador de preços SUMIG</title>
-            </Head>
-
             {loading ?
                 <LoadingRequests />
                 :

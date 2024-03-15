@@ -1,3 +1,5 @@
+'use client'
+
 import { ReactNode, ButtonHTMLAttributes } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 

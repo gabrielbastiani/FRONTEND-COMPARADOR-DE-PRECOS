@@ -1,6 +1,5 @@
 "use client"
 
-import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -148,12 +147,8 @@ export default function User() {
 
     return (
         <>
-            <Head>
-                <title>{`Usuário - ${user?.name}`}</title>
-            </Head>
-
             {loading ?
-                    <LoadingRequests />
+                <LoadingRequests />
                 :
                 <>
                     <Header />

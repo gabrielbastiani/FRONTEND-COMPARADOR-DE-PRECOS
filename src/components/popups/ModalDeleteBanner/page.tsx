@@ -1,3 +1,5 @@
+'use client'
+
 import { useContext } from 'react';
 import { FiX } from 'react-icons/fi';
 import Modal from 'react-modal';

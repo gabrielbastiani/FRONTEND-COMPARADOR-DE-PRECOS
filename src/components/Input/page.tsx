@@ -1,3 +1,5 @@
+'use client'
+
 import { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 import styles from './styles.module.css';

@@ -9,8 +9,16 @@ import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "Comparador de preços SUMIG",
+  title: {
+    absolute: '',
+    default: "Comparador de preços SUMIG",
+    template: ''
+  },
   description: "Sistem de comparativos de preços da concorrencia da SUMIG",
+  robots: {
+    follow: false,
+    index: false
+  }
 };
 
 export default function RootLayout({

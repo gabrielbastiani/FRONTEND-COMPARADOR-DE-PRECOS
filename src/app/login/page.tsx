@@ -1,6 +1,5 @@
 "use client"
 
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, FormEvent, useState, useRef } from 'react';
@@ -72,9 +71,6 @@ export default function Login() {
 
     return (
         <>
-            <Head>
-                <title>Login</title>
-            </Head>
             <div className={styles.containerCenter}>
                 <Image src={logoLoginImg} width={200} height={150} alt="Logo SUMIG" />
 
