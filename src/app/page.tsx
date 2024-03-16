@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
+import { CiEdit } from 'react-icons/ci';
 import { FaPlus } from 'react-icons/fa';
 
 import { Header } from "@/components/Header/page";
@@ -65,7 +66,9 @@ export default function Home() {
                     return (
                       <button key={item.id} className={styles.grid_item}>
                         <Image src={'http://localhost:3333/files/' + item?.image} width={70} height={70} alt={item?.name} />
-                        <strong>{item.name}</strong>
+                        <strong>
+                          {item.name}  <CiEdit color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
+                        </strong>
                       </button>
                     )
                   })}
@@ -74,11 +77,11 @@ export default function Home() {
               <button
                 style={{
                   backgroundColor: 'red',
-                   cursor: 'pointer'
-                  }}
-                   className={styles.grid_item}
-                   onClick={() => router.push('/add_category')}
-                >
+                  cursor: 'pointer'
+                }}
+                className={styles.grid_item}
+                onClick={() => router.push('/add_category')}
+              >
                 <FaPlus size={50} color='white' />
               </button>
             </div>

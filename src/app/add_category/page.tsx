@@ -22,18 +22,13 @@ export default function Add_category() {
     const router = useRouter();
 
     const [nameCategory, setNameCategory] = useState("");
-    const [order, setOrder] = useState<number | undefined>(undefined);
+    const [order, setOrder] = useState<number>(Number);
 
     const [loading, setLoading] = useState<boolean>(false);
 
     const [categoryPhotoUrl, setCategoryPhotoUrl] = useState<string | null>(null);
     const [categoryPhoto, setCategoryPhoto] = useState<File | null>(null);
 
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value); // ou parseFloat para números decimais
-        setOrder(value);
-    }
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
 
@@ -70,18 +65,11 @@ export default function Add_category() {
                 return;
             }
 
-            data.append('name', nameCategory);
-
-            if (typeof order === 'number') {
-                data.append('order', order.toString());
-            } else {
-                toast.error("Valor de order não é um número válido.");
-                console.error('Valor de order não é um número válido.');
-                setLoading(false);
-                return
-            }
-
-            data.append('file', categoryPhoto);
+            data.append('name', nameCategory);/* @ts-ignore */
+            data.append('order', Number(order));
+            data.append('file', categoryPhoto);/* @ts-ignore */
+            data.append('nivel', Number(0));/* @ts-ignore */
+            data.append('parentId', "");
 
             const apiClient = setupAPIClient();
             await apiClient.post('/create_category', data);
@@ -127,52 +115,49 @@ export default function Add_category() {
 
                                 <div className={styles.text}></div>
                             </div>
+
                             <div className={styles.contentValues}>
-                                <Input
-                                    style={{ width: '300px', marginRight: '20px' }}
-                                    placeholder="Nome da categoria"
-                                    type='text'
-                                    value={nameCategory}
-                                    onChange={(e) => setNameCategory(e.target.value)}
-                                />
-                            </div>
-                            <div className={styles.contentValues}>
-                                <Input
-                                    style={{ width: '300px', marginRight: '20px' }}
-                                    placeholder="Ordem"
-                                    type='number'
-                                    value={order}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <form className={styles.form} onSubmit={handleRegister}>
-                                <label className={styles.labelBanner}>
-                                    <span>
-                                        <FiUpload size={30} color="#FFF" />
-                                    </span>
+                                <form className={styles.form} onSubmit={handleRegister}>
+                                    <Input
+                                        placeholder="Nome da categoria"
+                                        type='text'
+                                        value={nameCategory}
+                                        onChange={(e) => setNameCategory(e.target.value)}
+                                    />
 
-                                    <input type="file" accept="image/png, image/jpeg" onChange={handleFile} />
+                                    <Input
+                                        placeholder="Ordem"
+                                        type='number'
+                                        value={order}/* @ts-ignore */
+                                        onChange={(e) => setOrder(e.target.value)}
+                                    />
 
-                                    {categoryPhotoUrl && (
+                                    <label className={styles.labelBanner}>
+                                        <span>
+                                            <FiUpload size={30} color="#FFF" />
+                                        </span>
 
-                                        <Image
-                                            className={styles.preview}
-                                            src={categoryPhotoUrl}
-                                            alt="Foto da categoria"
-                                            width={250}
-                                            height={250}
-                                        />
-                                    )}
+                                        <input type="file" accept="image/png, image/jpeg" onChange={handleFile} />
 
-                                </label>
-                            </form>
-                            <div className={styles.contentValues}>
-                                <Button
-                                    style={{ padding: '10px', fontWeight: 'bold', width: '300px' }}
-                                /* onClick={''} */
-                                >
-                                    Cadastrar
-                                </Button>
+                                        {categoryPhotoUrl && (
+
+                                            <Image
+                                                className={styles.preview}
+                                                src={categoryPhotoUrl}
+                                                alt="Foto da categoria"
+                                                width={250}
+                                                height={250}
+                                            />
+                                        )}
+                                    </label>
+
+                                    <Button
+                                        type="submit"
+                                        style={{ padding: '10px', fontWeight: 'bold', width: '300px' }}
+                                    >
+                                        Cadastrar
+                                    </Button>
+                                </form>
                             </div>
                         </article>
                     </main>
