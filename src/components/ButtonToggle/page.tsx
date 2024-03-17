@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
-
 import styles from './styles.module.css';
 
-function ButtonToggle() {
-    const [isActive, setIsActive] = useState(false);
+interface ToggleRequest {
+    statusUpdate: () => void;
+    status: string;
+}
 
-    const toggleButton = () => {
-        setIsActive(!isActive);
-    };
-
+function ButtonToggle({ statusUpdate, status }: ToggleRequest) {
     return (
         <button
-            className={`${styles.toggleButton} ${isActive ? styles.active : styles.inactive}`}
-            onClick={toggleButton}
+            className={`${styles.toggleButton} ${status === "Disponivel" ? styles.active : styles.inactive}`}
+            onClick={statusUpdate}
         >
-            {isActive ? 'Ativo' : 'Inativo'}
+            {status === "Disponivel" ? 'Ativo' : 'Inativo'}
         </button>
     );
 }

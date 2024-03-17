@@ -10,7 +10,7 @@ import { Button } from '@/components/Button/page';
 import { Header } from '@/components/Header/page';
 import { Input } from '@/components/Input/page';
 import LoadingRequests from '@/components/LoadingRequests/page';
-import { ModalDeleteUser } from '@/components/popups/ModalDeleteBanner/page';
+import { ModalDeleteUser } from '@/components/popups/ModalDeleteUser/page';
 
 import styles from './styles.module.css';
 

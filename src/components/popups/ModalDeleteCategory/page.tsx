@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext } from 'react';
+import { useRouter } from 'next/navigation';
 import { FiX } from 'react-icons/fi';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
@@ -10,17 +10,16 @@ import { Button } from '@/components/Button/page';
 import { setupAPIClient } from '../../../services/api';
 import styles from './styles.module.css';
 
-import { AuthContext } from '@/contexts/AuthContext';
 
-
-interface ModalDeleteBannerHomeRequest {
+interface ModalCategoryRequest {
     isOpen: boolean;
+    categoryId: string;
     onRequestClose: () => void;
 }
 
-export function ModalDeleteUser({ isOpen, onRequestClose }: ModalDeleteBannerHomeRequest) {
+export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId }: ModalCategoryRequest) {
 
-    const { signOut, user } = useContext(AuthContext);
+    const router = useRouter();
 
     const customStyles = {
         content: {
@@ -36,20 +35,20 @@ export function ModalDeleteUser({ isOpen, onRequestClose }: ModalDeleteBannerHom
     };
 
 
-    async function handleDeleteUser() {
+    async function handleDeleteCategory() {
         try {
             const apiClient = setupAPIClient();
 
-            await apiClient.delete(`/delete_user?user_id=${user?.id}`);
-            toast.success(`Usuário deletado com sucesso.`);
+            await apiClient.delete(`/delete_category?category_id=${categoryId}`);
+            toast.success(`Categoria deletada com sucesso.`);
 
-            signOut();
+            router.push('/');
 
             onRequestClose();
 
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error('Ops erro ao deletar o Usuário!');
+            toast.error('Ops erro ao deletar a categoria!');
         }
     }
 
@@ -71,12 +70,12 @@ export function ModalDeleteUser({ isOpen, onRequestClose }: ModalDeleteBannerHom
 
             <div className={styles.containerContent}>
 
-                <h2>Deseja mesmo deletar sua conta?</h2>
+                <h2>Deseja mesmo deletar essa categoria?</h2>
 
                 <div className={styles.containerButton}>
                     <Button
                         style={{ width: '40%', fontWeight: "bold", fontSize: '1.2rem' }}
-                        onClick={() => handleDeleteUser()}
+                        onClick={() => handleDeleteCategory()}
                     >
                         Deletar
                     </Button>

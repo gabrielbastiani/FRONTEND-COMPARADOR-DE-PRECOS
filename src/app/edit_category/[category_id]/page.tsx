@@ -1,8 +1,10 @@
 "use client"
 
+import Image from "next/image";
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
+import { FiUpload } from 'react-icons/fi';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
 
@@ -11,6 +13,7 @@ import ButtonToggle from '@/components/ButtonToggle/page';
 import { Header } from '@/components/Header/page';
 import { Input } from '@/components/Input/page';
 import LoadingRequests from '@/components/LoadingRequests/page';
+import { ModalDeleteCategory } from "@/components/popups/ModalDeleteCategory/page";
 
 import styles from './styles.module.css';
 
@@ -26,7 +29,9 @@ export default function Edit_category({ params }: { params: { category_id: strin
     const [status, setStatus] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-    
+    const [imageCategory, setImageCategory] = useState("");
+    const [categoryPhotoUrl, setCategoryPhotoUrl] = useState<string | null>(null);
+    const [categoryPhoto, setCategoryPhoto] = useState<File | null>(null);
 
 
     useEffect(() => {
@@ -37,6 +42,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                 setNameCategory(data?.name || "");
                 setOrderCategory(data?.order);
                 setStatus(data?.status || "");
+                setImageCategory(data?.image || "");
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
             }
@@ -118,17 +124,78 @@ export default function Edit_category({ params }: { params: { category_id: strin
             toast.error('Ops erro ao atualizar a status da categoria.');
         }
 
+        loadCategory();
+        router.refresh();
+
         if (status === "Indisponivel") {
             toast.success(`A categoria se encontra Disponivel.`);
             setLoading(false);
+            router.refresh();
             return;
         }
 
         if (status === "Disponivel") {
             toast.error(`A categoria se encontra Indisponivel.`);
             setLoading(false);
+            router.refresh();
             return;
         }
+    }
+
+    function handleFile(e: ChangeEvent<HTMLInputElement>) {
+
+        if (!e.target.files) {
+            return;
+        }
+
+        const image: File = e.target.files[0];
+
+        if (!image) {
+            return;
+        }
+
+        if (image.type === 'image/jpeg' || image.type === 'image/png') {
+
+            setCategoryPhoto(image);
+            setCategoryPhotoUrl(URL.createObjectURL(e.target.files[0]))
+
+        }
+
+    }
+
+    async function handleRegister(event: FormEvent) {
+
+        setLoading(true);
+
+        event.preventDefault();
+
+        try {
+            const data = new FormData();
+
+            if (categoryPhoto === null) {
+                toast.error("Insira uma foto");
+                return;
+            }
+
+            data.append('file', categoryPhoto);/* @ts-ignore */
+
+            const apiClient = setupAPIClient();
+            await apiClient.put(`/update_image_category?category_id=${params?.category_id}`, data);
+
+            toast.success('Imagem da categoria atualizada com sucesso!')
+
+            setCategoryPhoto(null);
+            setCategoryPhotoUrl('');
+
+            setLoading(false);
+            loadCategory();
+
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error("Ops erro ao atualizar a imagem da categoria");
+            setLoading(false);
+        }
+
     }
 
     function handleCloseModalDelete() {
@@ -206,9 +273,62 @@ export default function Edit_category({ params }: { params: { category_id: strin
                             </div>
 
                             <div className={styles.contentValues}>
-                                <ButtonToggle />
+                                <ButtonToggle
+                                    statusUpdate={updateStatus}
+                                    status={status}
+                                />
                             </div>
-                            
+
+                            <div className={styles.contentValues}>
+                                {imageCategory ?
+                                    <form className={styles.form} onSubmit={handleRegister}>
+                                        <label className={styles.labelBanner}>
+                                            {/* {categoryPhotoUrl ?
+                                                <Button
+                                                    style={{ padding: '10px', fontWeight: 'bold', width: '300px', backgroundColor: 'green' }}
+                                                    type="submit"
+                                                >
+                                                    Salvar nova imagem
+                                                </Button>
+                                                :
+                                                null
+                                            } */}
+                                            <span>
+                                                <FiUpload size={30} color="#FFF" />
+                                            </span>
+
+                                            <input type="file" accept="image/png, image/jpeg" onChange={handleFile} />
+
+                                            {categoryPhotoUrl ? (
+                                                <>
+                                                    <Image src={categoryPhotoUrl} width={80} height={80} alt={nameCategory} />
+                                                </>
+                                            ) :
+                                                <>
+                                                    <Image
+                                                        className={styles.preview}
+                                                        src={"http://localhost:3333/files/" + imageCategory}
+                                                        alt="Foto da categoria"
+                                                        width={80}
+                                                        height={80}
+                                                    />
+                                                </>
+                                            }
+                                        </label>
+
+                                        <Button
+                                            type="submit"
+                                            style={{ padding: '10px', fontWeight: 'bold', width: '300px', backgroundColor: 'green' }}
+                                        >
+                                            Atualizar imagem
+                                        </Button>
+                                    </form>
+                                    :
+                                    null
+                                }
+
+                            </div>
+
                             <div className={styles.contentValues}>
                                 <Button
                                     style={{ padding: '10px', fontWeight: 'bold' }}
@@ -222,9 +342,10 @@ export default function Edit_category({ params }: { params: { category_id: strin
                 </>
             }
             {modalVisible && (
-                <ModalDeleteUser
+                <ModalDeleteCategory
                     isOpen={modalVisible}
                     onRequestClose={handleCloseModalDelete}
+                    categoryId={params?.category_id}
                 />
             )}
         </>
