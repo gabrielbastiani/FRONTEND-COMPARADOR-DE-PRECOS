@@ -19,6 +19,7 @@ type CategorysProps = {
   name: string;
   slug: string;
   image: string;
+  status: string;
 }
 
 export default function Home() {
@@ -64,12 +65,23 @@ export default function Home() {
                 <>
                   {categorys?.map((item) => {
                     return (
-                      <button key={item.id} className={styles.grid_item}>
-                        <Image src={'http://localhost:3333/files/' + item?.image} width={70} height={70} alt={item?.name} />
-                        <strong>
-                          {item.name}  <CiEdit color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
-                        </strong>
-                      </button>
+                      <div key={item.id}>
+                        {item?.status === "Indisponivel" ?
+                          <button className={styles.grid_item_indisponivel} onClick={() => router.push(`/edit_category/${item?.id}`)}>
+                            <Image src={'http://localhost:3333/files/' + item?.image} width={70} height={70} alt={item?.name} />
+                            <strong>
+                              {item.name}  <CiEdit color='black' size={25} />
+                            </strong>
+                          </button>
+                          :
+                          <button className={styles.grid_item}>
+                            <Image src={'http://localhost:3333/files/' + item?.image} width={70} height={70} alt={item?.name} />
+                            <strong>
+                              {item.name}  <CiEdit color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
+                            </strong>
+                          </button>
+                        }
+                      </div>
                     )
                   })}
                 </>

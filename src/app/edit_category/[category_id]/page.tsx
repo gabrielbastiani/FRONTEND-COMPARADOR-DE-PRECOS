@@ -283,16 +283,6 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                 {imageCategory ?
                                     <form className={styles.form} onSubmit={handleRegister}>
                                         <label className={styles.labelBanner}>
-                                            {/* {categoryPhotoUrl ?
-                                                <Button
-                                                    style={{ padding: '10px', fontWeight: 'bold', width: '300px', backgroundColor: 'green' }}
-                                                    type="submit"
-                                                >
-                                                    Salvar nova imagem
-                                                </Button>
-                                                :
-                                                null
-                                            } */}
                                             <span>
                                                 <FiUpload size={30} color="#FFF" />
                                             </span>

@@ -114,6 +114,20 @@
   margin: 80px 0;
 }
 
+.grid_item_indisponivel {
+  background-color: rgba(176, 166, 166, 0.516);
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+  margin: 26px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  height: 140px;
+  justify-content: space-evenly;
+  cursor: pointer;
+}
+
 .grid_item {
   background-color: white;
   padding: 20px;
