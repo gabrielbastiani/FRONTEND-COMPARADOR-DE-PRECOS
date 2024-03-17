@@ -1,0 +1,29 @@
+.mainContainer {
+    min-height: 100vh;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    flex-direction: column;
+}
+
+.mensage {
+    display: flex;
+    justify-content: center;
+}
+
+.mensage h2 {
+    padding: 0 50px;
+    color: white;
+}
+
+.buttons {
+    display: flex;
+    margin-top: 25px;
+}
+
+.buttons button {
+    font-weight: 800;
+    font-size: 15px;
+    margin: 0 30px;
+}

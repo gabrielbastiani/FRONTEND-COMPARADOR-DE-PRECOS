@@ -251,6 +251,18 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                 >
                                     Salvar
                                 </Button>
+
+                                <Button
+                                    style={{
+                                        backgroundColor: 'green',
+                                        width: '80px',
+                                        height: '35px',
+                                        color: 'white'
+                                    }}
+                                    onClick={() => router.push(`/add_subcategory/${params?.category_id}`)}
+                                >
+                                    Adicionar subcategoria
+                                </Button>
                             </div>
                             <div className={styles.contentValues}>
                                 <Input

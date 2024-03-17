@@ -20,6 +20,7 @@ type CategorysProps = {
   slug: string;
   image: string;
   status: string;
+  parentId: string;
 }
 
 export default function Home() {
@@ -74,7 +75,7 @@ export default function Home() {
                             </strong>
                           </button>
                           :
-                          <button className={styles.grid_item}>
+                          <button className={styles.grid_item} onClick={() => router.push(item?.parentId === item?.id ? `/category/${item?.slug}` : `/more_category/${item?.id}`)}>
                             <Image src={'http://localhost:3333/files/' + item?.image} width={70} height={70} alt={item?.name} />
                             <strong>
                               {item.name}  <CiEdit color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
