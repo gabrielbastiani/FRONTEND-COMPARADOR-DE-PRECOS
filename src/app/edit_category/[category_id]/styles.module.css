@@ -5,6 +5,12 @@
   padding-top: 80px;
 }
 
+.contentValuesPlus {
+  display: flex;
+  justify-content: flex-start;
+  width: 65%;
+}
+
 .contentValues {
   display: flex;
   justify-content: flex-start;
@@ -108,4 +114,14 @@
   height: 100%;
   object-fit: contain;
   border-radius: 0.3rem;
+}
+
+@media (max-width: 600px) {
+  .contentValuesPlus {
+    flex-direction: column;
+  }
+
+  .contentValuesPlus button {
+    margin-bottom: 20px;
+  }
 }

@@ -142,6 +142,17 @@
   cursor: pointer;
 }
 
+.grid_item button {
+  background-color: white;
+  border: none;
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
 @media (max-width: 798px) {
   .grid_container {
     grid-template-columns: 400px;

@@ -232,7 +232,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
 
                                 <div className={styles.text}></div>
                             </div>
-                            <div className={styles.contentValues}>
+                            <div className={styles.contentValuesPlus}>
                                 <Input
                                     style={{ width: '300px', marginRight: '20px' }}
                                     placeholder={nameCategory}
@@ -245,7 +245,8 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                         backgroundColor: 'green',
                                         width: '80px',
                                         height: '35px',
-                                        color: 'white'
+                                        color: 'white',
+                                        marginRight: '20px'
                                     }}
                                     onClick={updateName}
                                 >
@@ -255,7 +256,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                 <Button
                                     style={{
                                         backgroundColor: 'green',
-                                        width: '80px',
+                                        width: '160px',
                                         height: '35px',
                                         color: 'white'
                                     }}
