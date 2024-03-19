@@ -332,7 +332,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                 }
 
                             </div>
-
+                            <br />
                             <div className={styles.contentValues}>
                                 <Button
                                     style={{ padding: '10px', fontWeight: 'bold' }}

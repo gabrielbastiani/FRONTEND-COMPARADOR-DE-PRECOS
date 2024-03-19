@@ -81,7 +81,7 @@ export default function Category({ params }: { params: { slug: string, category_
                                                     </button>
                                                     :
                                                     <div className={styles.grid_item}>
-                                                        <button onClick={() => router.push(`/category/${item?.slug}`)}>
+                                                        <button onClick={() => router.push(`/category/${item?.slug}/${item?.id}`)}>
                                                             <strong>
                                                                 {item.name}
                                                             </strong>
