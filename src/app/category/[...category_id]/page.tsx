@@ -29,6 +29,7 @@ export default function Category({ params }: { params: { slug: string, category_
 
     const [sub_categorys, setSub_categorys] = useState<CategorysProps[]>();
     const [nameCategory, subNameCategory] = useState<string>("");
+    const [nivelCategory, subNivelCategory] = useState<number>();
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -39,6 +40,7 @@ export default function Category({ params }: { params: { slug: string, category_
                 const { data } = await apiClient.get(`/sub_categorys_category?parentId=${params?.category_id[1]}`);
                 setSub_categorys(data?.all_subcategorys || []);
                 subNameCategory(data?.categorys?.name);
+                subNivelCategory(data?.categorys?.nivel);
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -62,7 +64,7 @@ export default function Category({ params }: { params: { slug: string, category_
                                 size={32}
                                 color='white'
                             />
-                            <h1>{"Categoria - " + `${nameCategory}`}</h1>
+                            <h1>{nivelCategory === 0 ? "Categoria - " + nameCategory : "Subcategoria - " + nameCategory}</h1>
                             <div></div>
                         </div>
                         <div className={styles.grid_container}>
