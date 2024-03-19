@@ -21,22 +21,26 @@ type CategorysProps = {
   image: string;
   status: string;
   parentId: string;
+  nivel: number;
 }
 
 export default function Home() {
 
   const router = useRouter();
 
-  const [categorys, setCategorys] = useState<CategorysProps[]>();
+  const [categorys_zero, setCategorys_zero] = useState<CategorysProps[]>();
+  const [all_categorys, setAll_categorys] = useState<CategorysProps[]>();
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     setLoading(true);
     const apiClient = setupAPIClient();
     async function loadCategorys() {
       try {
-        const { data } = await apiClient.get('/all_zeros_levels_categorys');
-        setCategorys(data || []);
+        const { data } = await apiClient.get('/all_categorys');
+        setCategorys_zero(data.categorys_zero || []);
+        setAll_categorys(data.all_categorys || []);
         setLoading(false);
 
       } catch (error) {/* @ts-ignore */
@@ -60,11 +64,11 @@ export default function Home() {
               <h2>Categorias</h2>
             </div>
             <div className={styles.grid_container}>
-              {categorys?.length === 0 ?
+              {all_categorys?.length === 0 ?
                 <strong className={styles.text}>Adicione alguma categoria principal</strong>
                 :
                 <>
-                  {categorys?.map((item) => {
+                  {categorys_zero?.map((item) => {
                     return (
                       <div key={item.id}>
                         {item?.status === "Indisponivel" ?
@@ -76,7 +80,7 @@ export default function Home() {
                           </button>
                           :
                           <div className={styles.grid_item}>
-                            <button onClick={() => router.push(item?.parentId === item?.id ? `/category/${item?.slug}` : `/more_category/${item?.id}`)}>
+                            <button onClick={() => router.push(`/category/${item?.slug}/${item?.id}`)}>
                               <Image src={'http://localhost:3333/files/' + item?.image} width={70} height={70} alt={item?.name} />
                               <strong>
                                 {item.name}

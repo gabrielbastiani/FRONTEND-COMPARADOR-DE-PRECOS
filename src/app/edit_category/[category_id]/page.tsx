@@ -264,6 +264,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                 >
                                     Adicionar subcategoria
                                 </Button>
+
                             </div>
                             <div className={styles.contentValues}>
                                 <Input

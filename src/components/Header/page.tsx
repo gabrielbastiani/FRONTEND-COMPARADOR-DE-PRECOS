@@ -28,8 +28,8 @@ export function Header() {
         const apiClient = setupAPIClient();
         async function loadCategorys() {
             try {
-                const { data } = await apiClient.get('/all_zeros_levels_categorys');
-                setCategorys(data || []);
+                const { data } = await apiClient.get('/all_categorys');
+                setCategorys(data.all_categorys || []);
 
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);

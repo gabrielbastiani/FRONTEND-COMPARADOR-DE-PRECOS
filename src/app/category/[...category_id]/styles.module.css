@@ -1,0 +1,84 @@
+.mainContainer {
+    min-height: 100vh;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    flex-direction: column;
+}
+
+.mainContainer h1 {
+    color: white;
+}
+
+.grid_container {
+    display: grid;
+    grid-template-columns: 400px 400px;
+    padding: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+.text {
+    color: rgb(190, 182, 182);
+    text-align: center;
+    margin: 80px 0;
+}
+
+.grid_item_indisponivel {
+    background-color: rgba(176, 166, 166, 0.516);
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    margin: 26px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    justify-content: space-between;
+    cursor: pointer;
+    border-left: 10px solid red
+}
+
+.grid_item {
+    background-color: white;
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    margin: 26px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    justify-content: space-between;
+    cursor: pointer;
+    border-left: 10px solid red
+}
+
+.grid_item button {
+    background-color: white;
+    border: none;
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.contentText {
+    width: 65%;
+    display: flex;
+    margin-bottom: 40px;
+    justify-content: space-between;
+}
+
+.contentText svg {
+    cursor: pointer;
+}
+
+@media (max-width: 798px) {
+    .grid_container {
+        grid-template-columns: 400px;
+    }
+}
