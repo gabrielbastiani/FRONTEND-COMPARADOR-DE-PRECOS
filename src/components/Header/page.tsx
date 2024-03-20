@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from "react";
 import { CiLogin } from 'react-icons/ci';
 
@@ -21,6 +22,8 @@ type CategorysProps = {
 
 export function Header() {
 
+    const router = useRouter();
+
     const { signOut, user } = useContext(AuthContext);
     const [categorys, setCategorys] = useState<CategorysProps[]>();
 
@@ -29,7 +32,7 @@ export function Header() {
         async function loadCategorys() {
             try {
                 const { data } = await apiClient.get('/all_categorys');
-                setCategorys(data.all_categorys || []);
+                setCategorys(data?.all_categorys || []);
 
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -50,7 +53,11 @@ export function Header() {
                 null
                 :
                 <div className={styles.topMenuLojas}>
-                    <button>LOJAS</button>
+                    <button
+                        onClick={ () => router.push('/stores')}
+                    >
+                        LOJAS
+                    </button>
                 </div>
             }
             <div className={styles.menuItems}>

@@ -1,0 +1,70 @@
+.mainContainer {
+    min-height: 100vh;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    flex-direction: column;
+}
+
+.contentText {
+    width: 65%;
+    display: flex;
+    margin-bottom: 40px;
+    justify-content: space-between;
+}
+
+.contentText svg {
+    cursor: pointer;
+}
+
+.contentText h1 {
+    color: white;
+}
+
+.mainContainer h1 {
+    color: white;
+}
+
+.grid_container {
+    display: grid;
+    grid-template-columns: 400px 400px;
+    padding: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+.grid_item {
+    background-color: white;
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    margin: 26px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    height: 110px;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.grid_item img {
+    margin-right: 40px;
+}
+
+.grid_item button {
+    background-color: white;
+    border: none;
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+@media (max-width: 798px) {
+    .grid_container {
+        grid-template-columns: 400px;
+    }
+}
