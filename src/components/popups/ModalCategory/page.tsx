@@ -1,19 +1,22 @@
-"use client"
+'use client'
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FiX } from 'react-icons/fi';
 import Modal from 'react-modal';
 
-import { Header } from '@/components/Header/page';
 import LoadingRequests from '@/components/LoadingRequests/page';
-import { ModalCategory } from '@/components/popups/ModalCategory/page';
 
+import { setupAPIClient } from '../../../services/api';
 import styles from './styles.module.css';
 
-import { setupAPIClient } from '@/services/api';
 
+interface ModalCategoryRequest {
+    isOpen: boolean;
+    categoryId: string;
+    onRequestClose: () => void;
+}
 
 type CategorysProps = {
     id: string;
@@ -25,23 +28,36 @@ type CategorysProps = {
     nivel: number;
 }
 
-export default function Category({ params }: { params: { slug: string, category_id: string } }) {
+export function ModalCategory({ isOpen, onRequestClose, categoryId }: ModalCategoryRequest) {
+
+    console.log(categoryId)
 
     const router = useRouter();
 
     const [sub_categorys, setSub_categorys] = useState<CategorysProps[]>();
     const [nameCategory, subNameCategory] = useState<string>("");
-    const [categoryIds, setCategoryIds] = useState<string>("");
     const [nivelCategory, subNivelCategory] = useState<number>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [modalVisible, setModalVisible] = useState(false);
+
+    const customStyles = {
+        content: {
+            top: '50%',
+            bottom: 'auto',
+            left: '50%',
+            right: 'auto',
+            padding: '30px',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'black',
+            zIndex: 9999999
+        }
+    };
 
     useEffect(() => {
         setLoading(true);
         const apiClient = setupAPIClient();
         async function loadSubCategory() {
             try {
-                const { data } = await apiClient.get(`/sub_categorys_category?parentId=${params?.category_id[1]}`);
+                const { data } = await apiClient.get(`/sub_categorys_category?parentId=${categoryId}`);
                 setSub_categorys(data?.all_subcategorys || []);
                 subNameCategory(data?.categorys?.name);
                 subNivelCategory(data?.categorys?.nivel);
@@ -52,37 +68,30 @@ export default function Category({ params }: { params: { slug: string, category_
             }
         }
         loadSubCategory();
-    }, [params.category_id]);
-
-    function handleCloseModal() {
-        setModalVisible(false);
-    }
-
-    async function handleOpenModal(id: string) {
-        setModalVisible(true);
-        setCategoryIds(id);
-    }
-
-    Modal.setAppElement('body');
+    }, [categoryId]);
 
 
     return (
-        <>
+        <Modal
+            isOpen={isOpen}
+            onRequestClose={onRequestClose}
+            style={customStyles}
+        >
+            <button
+                type='button'
+                onClick={onRequestClose}
+                className='react-modal-close'
+                style={{ background: 'transparent', border: 0, cursor: 'pointer' }}
+            >
+                <FiX size={45} color="#f34748" />
+            </button>
+
             {loading ?
                 <LoadingRequests />
                 :
                 <>
-                    <Header />
-                    <main className={styles.mainContainer}>
-                        <div className={styles.contentText}>
-                            <FaArrowLeft
-                                onClick={() => router.back()}
-                                size={32}
-                                color='white'
-                            />
-                            <h1>{nivelCategory === 0 ? "Categoria - " + nameCategory : "Subcategoria - " + nameCategory}</h1>
-                            <div></div>
-                        </div>
+                    <div className={styles.mainContainer}>
+                        <h1>{nivelCategory === 0 ? + nameCategory : nameCategory}</h1>
                         <div className={styles.grid_container}>
                             {sub_categorys?.length === 0 ?
                                 <strong className={styles.text}>Adicione a subcategoria referente a categoria {nameCategory}</strong>
@@ -99,7 +108,7 @@ export default function Category({ params }: { params: { slug: string, category_
                                                     </button>
                                                     :
                                                     <div className={styles.grid_item}>
-                                                        <button onClick={() => handleOpenModal(item.id)}>
+                                                        <button onClick={() => router.push(`/products/`)}>
                                                             <strong>
                                                                 {item.name}
                                                             </strong>
@@ -115,16 +124,9 @@ export default function Category({ params }: { params: { slug: string, category_
                                 </>
                             }
                         </div>
-                    </main>
+                    </div>
                 </>
             }
-            {modalVisible && (
-                <ModalCategory
-                    isOpen={modalVisible}
-                    onRequestClose={handleCloseModal}
-                    categoryId={categoryIds}
-                />
-            )}
-        </>
+        </Modal>
     )
 }
