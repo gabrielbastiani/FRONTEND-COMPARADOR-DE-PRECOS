@@ -34,6 +34,34 @@ export default function Stores() {
 
     const [loading, setLoading] = useState(false);
 
+    async function handleStoreSUMIGProducts() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/sumig_machines_weld`);
+            setLoading(false);
+            toast.success(`Produtos da SUMIG capturados com sucesso`)
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da SUMIG`)
+            setLoading(false);
+        }
+    }
+
+    async function handleStoreESABProducts() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/esab_machines_weld`);
+            setLoading(false);
+            toast.success(`Produtos da ESAB capturados com sucesso`)
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da ESAB`)
+            setLoading(false);
+        }
+    }
+
     async function handleStoreProducts(valor1: string, valor2: string) {
         setLoading(true);
         const valorCodificado = encodeURIComponent(String(valor1));
@@ -76,7 +104,7 @@ export default function Stores() {
                         <div className={styles.grid_container}>
                             <div className={styles.grid_item}>
                                 <button
-                                /* onClick={} */
+                                onClick={handleStoreSUMIGProducts}
                                 >
                                     <Image src={sumig} width={80} height={40} alt="SUMIG" />
                                     <strong>
@@ -87,7 +115,7 @@ export default function Stores() {
 
                             <div className={styles.grid_item}>
                                 <button
-                                /* onClick={} */
+                                onClick={handleStoreESABProducts}
                                 >
                                     <Image src={esab} width={80} height={70} alt="Esab" />
                                     <strong>
