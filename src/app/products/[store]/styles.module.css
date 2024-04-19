@@ -1,0 +1,15 @@
+.mainContainer {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    padding-top: 80px;
+}
+
+.content {
+    width: 90%;
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    border-left: solid 7px red;
+}

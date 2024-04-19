@@ -30,8 +30,6 @@ type CategorysProps = {
 
 export function ModalCategory({ isOpen, onRequestClose, categoryId }: ModalCategoryRequest) {
 
-    console.log(categoryId)
-
     const router = useRouter();
 
     const [sub_categorys, setSub_categorys] = useState<CategorysProps[]>();
