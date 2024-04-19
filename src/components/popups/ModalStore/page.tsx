@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';

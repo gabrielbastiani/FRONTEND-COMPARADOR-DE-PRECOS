@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
@@ -40,7 +41,7 @@ export default function Products({ params }: { params: { store: string } }) {
             }
         }
         loadStoreProducts();
-    },[params?.store]);
+    }, [params?.store]);
 
     console.log(listProducts)
 
@@ -54,10 +55,25 @@ export default function Products({ params }: { params: { store: string } }) {
 
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>
-
+                            <div className={styles.titleBox}>
+                                <h1 className={styles.titulo}>{params?.store}</h1>
+                            </div>
+                            <div className={styles.grid_container}>
+                                {listProducts?.map((item) => {
+                                    return (
+                                        <>
+                                            <div className={styles.item1}>
+                                                <Image src={item?.image} width={70} height={70} alt={item?.title_product} />
+                                            </div>
+                                            <div className={styles.item2}>Main</div>
+                                            <div className={styles.item3}>Right</div>
+                                            <div className={styles.item4}>Footer</div>
+                                        </>
+                                    )
+                                })}
+                            </div>
                         </article>
                     </main>
-
                 </>
             }
         </>

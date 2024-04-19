@@ -13,3 +13,55 @@
     border-radius: 10px;
     border-left: solid 7px red;
 }
+
+.titleBox {
+    margin: 30px;
+}
+
+.titulo {
+    color: black;
+    position: relative;
+    display: inline-block;
+}
+
+.titulo::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 50%;
+    height: 5px;
+    background-color: red;
+}
+
+.item1 {
+    grid-area: menu;
+}
+
+.item2 {
+    grid-area: main;
+}
+
+.item3 {
+    grid-area: right;
+}
+
+.item4 {
+    grid-area: footer;
+}
+
+.grid_container {
+    display: grid;
+    grid-template-areas:
+        'menu main main main right right'
+        'menu footer footer footer footer footer';
+    gap: 10px;
+    padding: 10px;
+}
+
+.grid_container>div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+}
