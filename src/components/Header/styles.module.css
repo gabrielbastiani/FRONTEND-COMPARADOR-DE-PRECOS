@@ -15,10 +15,11 @@
 .topMenuLojas button {
     color: white;
     font-weight: 800;
-    background-color: green;
+    background-color: rgb(17, 192, 17);
     padding: 10px;
     border-radius: 6px;
     cursor: pointer;
+    border: none;
 }
 
 .topMenuLojas button:hover {

@@ -67,8 +67,6 @@ export default function Stores() {
         }
     }
 
-    
-
     function handleCloseModal() {
         setModalVisible(false);
     }
