@@ -80,6 +80,19 @@ export default function Products({ params }: { params: { store: string } }) {
         }
     }
 
+    /* useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadCategorys() {
+            try {
+                const response = await apiClient.get(`/findDataStore?store=${params?.store}`);
+                setStore(response?.data?.store || "");
+            } catch (error) {
+                console.log(error.response.data);
+            }
+        }
+        loadCategorys();
+    }, []); */
+
     function handleCloseModal() {
         setModalVisible(false);
     }
