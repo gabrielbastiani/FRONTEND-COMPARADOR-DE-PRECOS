@@ -11,6 +11,14 @@
     width: 65%;
 }
 
+.selectImput {
+    width: 300px;
+    padding: 7px;
+    border-radius: 5px;
+    border: solid 2px red;
+    margin-bottom: 15px;
+}
+
 .content {
     width: 90%;
     display: flex;

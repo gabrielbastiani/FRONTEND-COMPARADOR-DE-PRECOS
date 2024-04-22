@@ -24,7 +24,11 @@ export default function Add_subcategory({ params }: { params: { category_id: str
     const [subNameCategory, setSubNameCategory] = useState("");
     const [order, setOrder] = useState<number>(Number);
     const [loading, setLoading] = useState<boolean>(false);
+    const [typeCategory, setTypeCategory] = useState<string>("");
 
+    function handleChangeTypeCategory(e: any) {
+        setTypeCategory(e.target.value);
+    }
 
     useEffect(() => {
         setLoading(true);
@@ -57,7 +61,8 @@ export default function Add_subcategory({ params }: { params: { category_id: str
                 name: subNameCategory,
                 nivel: 1,
                 order: order,
-                parentId: params?.category_id
+                parentId: params?.category_id,
+                type_category: typeCategory
             });
 
             setSubNameCategory("");
@@ -108,6 +113,16 @@ export default function Add_subcategory({ params }: { params: { category_id: str
                                     value={subNameCategory}
                                     onChange={(e) => setSubNameCategory(e.target.value)}
                                 />
+
+                                <select
+                                    className={styles.selectImput}
+                                    onChange={handleChangeTypeCategory}
+                                >
+                                    <option value="">Selecione aqui o tipo da categoria...</option>
+                                    <option value="amperes">Amperes</option>
+                                    <option value="process">Processo de soldagem</option>
+                                    <option value="accessory">Acessorios para soldagem</option>
+                                </select>
 
                                 <Input
                                     style={{ width: '300px' }}

@@ -32,7 +32,12 @@ export default function Edit_category({ params }: { params: { category_id: strin
     const [imageCategory, setImageCategory] = useState("");
     const [categoryPhotoUrl, setCategoryPhotoUrl] = useState<string | null>(null);
     const [categoryPhoto, setCategoryPhoto] = useState<File | null>(null);
+    const [typeCategory, setTypeCategory] = useState<string>("");
+    const [type_category, setType_category] = useState<string>("");
 
+    function handleChangeTypeCategory(e: any) {
+        setTypeCategory(e.target.value);
+    }
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -43,6 +48,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                 setOrderCategory(data?.order);
                 setStatus(data?.status || "");
                 setImageCategory(data?.image || "");
+                setType_category(data?.type_category || "");
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
             }
@@ -107,6 +113,34 @@ export default function Edit_category({ params }: { params: { category_id: strin
 
         } catch (error) {
             toast.error('Erro ao atualizar a ordem da categoria');
+            /* @ts-ignore */
+            console.log(error.response.data);
+            setLoading(false);
+        }
+
+    }
+
+    async function updateTypeCategory() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            if (typeCategory === '') {
+                toast.error('Não deixe o tipo da categoria em branco')
+                console.log("'Não deixe o tipo da categoria em branco");
+                setLoading(false);
+                return;
+            }
+
+            await apiClient.put(`/update_type_category?category_id=${params?.category_id}`, { type_category: typeCategory });
+
+            toast.success('Tipo da categoria atualizada com sucesso!!!');
+
+            setLoading(false);
+
+            loadCategory();
+
+        } catch (error) {
+            toast.error('Erro ao atualizar o tipo da categoria');
             /* @ts-ignore */
             console.log(error.response.data);
             setLoading(false);
@@ -281,6 +315,29 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                     color: 'white'
                                 }}
                                     onClick={updateOrder}
+                                >
+                                    Salvar
+                                </Button>
+                            </div>
+
+                            <div className={styles.contentValues}>
+                                <select
+                                    className={styles.selectImput}
+                                    onChange={handleChangeTypeCategory}
+                                >
+                                    <option value="">{type_category === "" ? "Selecione aqui o tipo da categoria..." : type_category}</option>
+                                    <option value="amperes">Amperes</option>
+                                    <option value="process">Processo de soldagem</option>
+                                    <option value="accessory">Acessorios para soldagem</option>
+                                </select>
+
+                                <Button style={{
+                                    backgroundColor: 'green',
+                                    width: '80px',
+                                    height: '35px',
+                                    color: 'white'
+                                }}
+                                    onClick={updateTypeCategory}
                                 >
                                     Salvar
                                 </Button>
