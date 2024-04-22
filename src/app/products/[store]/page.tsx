@@ -8,6 +8,8 @@ import Modal from 'react-modal';
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalEditCategory } from "@/components/popups/ModalEditCategory/page";
+import { ModalRegisterCategory } from "@/components/popups/ModalRegisterCategory/page";
+import { ModalWarning } from "@/components/popups/ModalWarning/page";
 
 import styles from "./styles.module.css";
 
@@ -30,7 +32,9 @@ export default function Products({ params }: { params: { store: string } }) {
 
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [modalWarning, setModalWarning] = useState<boolean>(false);
+    const [modalRegisterCategory, setModalRegisterCategory] = useState<boolean>(false);
     const [idProduct, setIdProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
 
@@ -80,26 +84,30 @@ export default function Products({ params }: { params: { store: string } }) {
         }
     }
 
-    /* useEffect(() => {
-        const apiClient = setupAPIClient();
-        async function loadCategorys() {
-            try {
-                const response = await apiClient.get(`/findDataStore?store=${params?.store}`);
-                setStore(response?.data?.store || "");
-            } catch (error) {
-                console.log(error.response.data);
-            }
-        }
-        loadCategorys();
-    }, []); */
-
     function handleCloseModal() {
         setModalVisible(false);
     }
 
     async function handleOpenModal(id: string) {
         setModalVisible(true);
-        setIdProduct(id)
+        setIdProduct(id);
+    }
+
+    function handleCloseModalWarning() {
+        setModalWarning(false);
+    }
+
+    async function handleOpenModalWarning(id: string) {
+        setModalWarning(true);
+        setIdProduct(id);
+    }
+
+    function handleCloseModalRegisterCategory() {
+        setModalRegisterCategory(false);
+    }
+
+    async function handleOpenModalRegisterCategory() {
+        setModalRegisterCategory(true);
     }
 
     Modal.setAppElement('body');
@@ -159,14 +167,13 @@ export default function Products({ params }: { params: { store: string } }) {
                                                         >
                                                             Ver produto
                                                         </button>
-                                                        <div className={styles.boxCategoryAdd}>
-                                                            <select>categoria</select>
-                                                            <button
-                                                                className={styles.addCategoryButton}
-                                                            >
-                                                                Adicionar
-                                                            </button>
-                                                        </div>
+
+                                                        <button
+                                                            onClick={() => handleOpenModalWarning(item?.id)}
+                                                            className={styles.addCategoryButton}
+                                                        >
+                                                            Cadastrar produto
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -187,6 +194,24 @@ export default function Products({ params }: { params: { store: string } }) {
                     onRequestClose={handleCloseModal}
                     productId={idProduct}
                     productLoad={loadStoreProducts}
+                />
+            )}
+
+            {modalRegisterCategory && (
+                <ModalRegisterCategory
+                    isOpen={modalRegisterCategory}
+                    onRequestClose={handleCloseModalRegisterCategory}
+                    productId={idProduct}
+                />
+            )}
+
+            {modalWarning && (
+                <ModalWarning
+                    isOpen={modalWarning}
+                    onRequestClose={handleCloseModalWarning}
+                    productId={idProduct}
+                    modalBrand={handleOpenModal}
+                    modalRegisterCategory={handleOpenModalRegisterCategory}
                 />
             )}
         </>

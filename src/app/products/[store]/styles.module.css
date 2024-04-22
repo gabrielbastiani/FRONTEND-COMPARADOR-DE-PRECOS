@@ -94,6 +94,7 @@
     border-radius: 5px;
     width: 100%;
     cursor: pointer;
+    margin-bottom: 15px;
 }
 
 .box span {
@@ -111,7 +112,7 @@
     color: white;
     border-radius: 5px;
     font-weight: 600;
-    width: 42%;
+    width: 100%;
     cursor: pointer;
 }
 
