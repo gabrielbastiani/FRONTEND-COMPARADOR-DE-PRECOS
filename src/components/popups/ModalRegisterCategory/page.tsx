@@ -123,6 +123,7 @@ export function ModalRegisterCategory({ isOpen, onRequestClose, productId }: Mod
                                 onChange={handleChangeTypeCategory}
                             >
                                 <option>Selecione aqui...</option>
+                                <option value="Não possui amperagem">Não possui amperagem</option>
                                 {categoryAmpere?.map((cat) => {
                                     return (
                                         <option key={cat.id} value={cat?.name}>{cat?.name}</option>
@@ -143,6 +144,7 @@ export function ModalRegisterCategory({ isOpen, onRequestClose, productId }: Mod
                                 onChange={handleChangeTypeCategory}
                             >
                                 <option>Selecione aqui...</option>
+                                <option value="Não se aplica a processo de soldagem">Não se aplica a processo de soldagem</option>
                                 {categoryProcess?.map((proc) => {
                                     return (
                                         <option key={proc.id} value={proc?.name}>{proc?.name}</option>
@@ -163,6 +165,7 @@ export function ModalRegisterCategory({ isOpen, onRequestClose, productId }: Mod
                                 onChange={handleChangeTypeCategory}
                             >
                                 <option>Selecione aqui...</option>
+                                <option value="Não é acessorio">Não é acessorio</option>
                                 {categoryAcessory?.map((aces) => {
                                     return (
                                         <option key={aces.id} value={aces?.name}>{aces?.name}</option>
