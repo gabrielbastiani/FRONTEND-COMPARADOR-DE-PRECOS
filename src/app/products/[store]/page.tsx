@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import Modal from 'react-modal';
+import { toast } from "react-toastify";
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalEditCategory } from "@/components/popups/ModalEditCategory/page";
-import { ModalRegisterCategory } from "@/components/popups/ModalRegisterCategory/page";
 import { ModalWarning } from "@/components/popups/ModalWarning/page";
 
 import styles from "./styles.module.css";
@@ -26,6 +26,7 @@ type ProductsStoreProps = {
     brand: string;
     link: string;
     created_at: string;
+    Product: any;
 }
 
 export default function Products({ params }: { params: { store: string } }) {
@@ -34,7 +35,6 @@ export default function Products({ params }: { params: { store: string } }) {
     const [loading, setLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalWarning, setModalWarning] = useState<boolean>(false);
-    const [modalRegisterCategory, setModalRegisterCategory] = useState<boolean>(false);
     const [idProduct, setIdProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
 
@@ -42,7 +42,7 @@ export default function Products({ params }: { params: { store: string } }) {
         const apiClient = setupAPIClient();
         async function loadStore() {
             try {
-                const response = await apiClient.get(`/findDataStore?store=${params?.store}`);
+                const response = await apiClient.get(`/findDataStore?slug=${params?.store}`);
                 setStore(response?.data?.store || "");
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -56,7 +56,7 @@ export default function Products({ params }: { params: { store: string } }) {
         async function loadStoreProducts() {
             setLoading(true);
             try {
-                const response = await apiClient.get(`/store_products?store=${params?.store}`);
+                const response = await apiClient.get(`/store_products?slug=${params?.store}`);
                 setListProducts(response?.data || []);
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
@@ -75,11 +75,26 @@ export default function Products({ params }: { params: { store: string } }) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            const response = await apiClient.get(`/store_products?store=${params?.store}`);
+            const response = await apiClient.get(`/store_products?slug=${params?.store}`);
             setListProducts(response?.data || []);
             setLoading(false);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
+            setLoading(false);
+        }
+    }
+
+    async function deleteproduct(id: string) {
+        const apiClient = setupAPIClient();
+        setLoading(true);
+        try {
+            await apiClient.delete(`/delete_product?product_id=${id}`);
+            loadStoreProducts();
+            toast.success("Produto descadastrado com sucesso");
+            setLoading(false);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error("Erro ao descadastrar esse produto")
             setLoading(false);
         }
     }
@@ -102,15 +117,10 @@ export default function Products({ params }: { params: { store: string } }) {
         setIdProduct(id);
     }
 
-    function handleCloseModalRegisterCategory() {
-        setModalRegisterCategory(false);
-    }
-
-    async function handleOpenModalRegisterCategory() {
-        setModalRegisterCategory(true);
-    }
-
     Modal.setAppElement('body');
+
+
+    console.log(listProducts)
 
 
     return (
@@ -136,7 +146,7 @@ export default function Products({ params }: { params: { store: string } }) {
 
                                             <div className={styles.containerInfos}>
                                                 <div className={styles.imageProduct}>
-                                                    <Image src={item?.image} quality={90} width={140} height={125} alt={item?.title_product} />
+                                                    <Image src={item?.image} quality={100} width={140} height={125} alt={item?.title_product} />
                                                 </div>
 
                                                 <div className={styles.gridContainerProduct}>
@@ -168,12 +178,23 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             Ver produto
                                                         </button>
 
-                                                        <button
-                                                            onClick={() => handleOpenModalWarning(item?.id)}
-                                                            className={styles.addCategoryButton}
-                                                        >
-                                                            Cadastrar produto
-                                                        </button>
+                                                        {item.Product.length === 1 ?
+                                                            <button
+                                                                style={{ backgroundColor: 'gray' }}
+                                                                onClick={() => deleteproduct(item?.Product[0]?.id)}
+                                                                className={styles.addCategoryButton}
+                                                            >
+                                                                Descadastrar produto
+                                                            </button>
+                                                            :
+                                                            <button
+                                                                onClick={() => handleOpenModalWarning(item?.id)}
+                                                                className={styles.addCategoryButton}
+                                                            >
+                                                                Cadastrar produto
+                                                            </button>
+                                                        }
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -197,21 +218,14 @@ export default function Products({ params }: { params: { store: string } }) {
                 />
             )}
 
-            {modalRegisterCategory && (
-                <ModalRegisterCategory
-                    isOpen={modalRegisterCategory}
-                    onRequestClose={handleCloseModalRegisterCategory}
-                    productId={idProduct}
-                />
-            )}
-
             {modalWarning && (
                 <ModalWarning
                     isOpen={modalWarning}
                     onRequestClose={handleCloseModalWarning}
                     productId={idProduct}
+                    store={params?.store}
                     modalBrand={handleOpenModal}
-                    modalRegisterCategory={handleOpenModalRegisterCategory}
+                    productLoad={loadStoreProducts}
                 />
             )}
         </>

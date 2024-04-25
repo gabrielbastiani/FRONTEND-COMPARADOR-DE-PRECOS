@@ -43,7 +43,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
             try {
-                const response = await apiClient.get(`/store_products?store=${valor2}`);
+                const response = await apiClient.get(`/store_products?slug=${valor2}`);
                 setListProducts(response?.data || []);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -55,7 +55,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
     async function loadStoreProducts() {
         const apiClient = setupAPIClient();
         try {
-            const response = await apiClient.get(`/store_products?store=${valor2}`);
+            const response = await apiClient.get(`/store_products?slug=${valor2}`);
             setListProducts(response?.data || []);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
@@ -70,6 +70,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
             await apiClient.get(`/search_products?urlSearchStore=${valorCodificado}&stores=${valor2}`);
             setLoading(false);
             toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
+            onRequestClose();
             loadStoreProducts();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
@@ -85,19 +86,20 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
             onRequestClose={onRequestClose}
             style={customStyles}
         >
-            <button
-                type='button'
-                onClick={onRequestClose}
-                className='react-modal-close'
-                style={{ background: 'transparent', border: 0, cursor: 'pointer' }}
-            >
-                <FiX size={45} color="#f34748" />
-            </button>
 
             {loading ?
                 <LoadingRequests />
                 :
                 <>
+                    <button
+                        type='button'
+                        onClick={onRequestClose}
+                        className='react-modal-close'
+                        style={{ background: 'transparent', border: 0, cursor: 'pointer' }}
+                    >
+                        <FiX size={45} color="#f34748" />
+                    </button>
+
                     <div className={styles.mainContainer}>
                         <h1>Escolha uma opção</h1>
                         <div className={styles.containerButton}>
