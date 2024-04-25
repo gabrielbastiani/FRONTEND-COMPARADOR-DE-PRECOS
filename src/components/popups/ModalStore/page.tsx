@@ -39,23 +39,34 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
         }
     };
 
+    function removerAcentos(s: any) {
+        return s.normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/ +/g, "-")
+            .replace(/-{2,}/g, "-")
+            .replace(/[/]/g, "-");
+    }
+
+    const valueStore: string = removerAcentos(valor2);
+
     useEffect(() => {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
             try {
-                const response = await apiClient.get(`/store_products?slug=${valor2}`);
+                const response = await apiClient.get(`/store_products?slug=${valueStore}`);
                 setListProducts(response?.data || []);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
             }
         }
         loadStoreProducts();
-    }, [valor2]);
+    }, [valueStore]);
 
     async function loadStoreProducts() {
         const apiClient = setupAPIClient();
         try {
-            const response = await apiClient.get(`/store_products?slug=${valor2}`);
+            const response = await apiClient.get(`/store_products?slug=${valueStore}`);
             setListProducts(response?.data || []);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
@@ -107,7 +118,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
                                 null
                                 :
                                 <button
-                                    onClick={() => router.push(`/products/${valor2}`)}
+                                    onClick={() => router.push(`/products/${valueStore}`)}
                                 >
                                     Ver os produtos dessa loja
                                 </button>

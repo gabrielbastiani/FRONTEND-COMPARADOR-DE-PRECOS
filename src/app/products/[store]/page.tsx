@@ -223,7 +223,7 @@ export default function Products({ params }: { params: { store: string } }) {
                     isOpen={modalWarning}
                     onRequestClose={handleCloseModalWarning}
                     productId={idProduct}
-                    store={params?.store}
+                    store={store}
                     modalBrand={handleOpenModal}
                     productLoad={loadStoreProducts}
                 />
