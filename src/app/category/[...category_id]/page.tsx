@@ -4,11 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { FaArrowLeft } from 'react-icons/fa';
-import Modal from 'react-modal';
 
 import { Header } from '@/components/Header/page';
 import LoadingRequests from '@/components/LoadingRequests/page';
-import { ModalCategory } from '@/components/popups/ModalCategory/page';
 
 import styles from './styles.module.css';
 
@@ -31,10 +29,8 @@ export default function Category({ params }: { params: { slug: string, category_
 
     const [sub_categorys, setSub_categorys] = useState<CategorysProps[]>();
     const [nameCategory, subNameCategory] = useState<string>("");
-    const [categoryIds, setCategoryIds] = useState<string>("");
     const [nivelCategory, subNivelCategory] = useState<number>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -53,17 +49,6 @@ export default function Category({ params }: { params: { slug: string, category_
         }
         loadSubCategory();
     }, [params.category_id]);
-
-    function handleCloseModal() {
-        setModalVisible(false);
-    }
-
-    async function handleOpenModal(id: string) {
-        setModalVisible(true);
-        setCategoryIds(id);
-    }
-
-    Modal.setAppElement('body');
 
 
     return (
@@ -99,7 +84,7 @@ export default function Category({ params }: { params: { slug: string, category_
                                                     </button>
                                                     :
                                                     <div className={styles.grid_item}>
-                                                        <button onClick={() => handleOpenModal(item.id)}>
+                                                        <button onClick={() => router.push(`/category/${item?.slug}/${item?.id}`)}>
                                                             <strong>
                                                                 {item.name}
                                                             </strong>
@@ -118,13 +103,6 @@ export default function Category({ params }: { params: { slug: string, category_
                     </main>
                 </>
             }
-            {modalVisible && (
-                <ModalCategory
-                    isOpen={modalVisible}
-                    onRequestClose={handleCloseModal}
-                    categoryId={categoryIds}
-                />
-            )}
         </>
     )
 }
