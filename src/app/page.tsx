@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import { CiEdit } from 'react-icons/ci';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaProductHunt } from 'react-icons/fa';
 
 import { Header } from "@/components/Header/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
@@ -88,6 +88,9 @@ export default function Home() {
                             </button>
                             <span style={{ backgroundColor: 'white' }}>
                               <CiEdit color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
+                              <br />
+                              <br />
+                              <FaProductHunt onClick={() => router.push(`/category_products/${item?.slug}`)} size={28} />
                             </span>
                           </div>
                         }
