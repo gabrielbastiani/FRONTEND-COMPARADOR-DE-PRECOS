@@ -32,6 +32,7 @@ type ProductsProps = {
     slug: string;
     created_at: string;
     productCategory: {
+        map(arg0: (item: { name: any; }) => any): import("react").ReactNode;
         id: string;
         product_id: string;
         name: string;
