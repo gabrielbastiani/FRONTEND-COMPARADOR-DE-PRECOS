@@ -120,9 +120,6 @@ export default function Products({ params }: { params: { store: string } }) {
     Modal.setAppElement('body');
 
 
-    console.log(listProducts)
-
-
     return (
         <>
             {loading ?

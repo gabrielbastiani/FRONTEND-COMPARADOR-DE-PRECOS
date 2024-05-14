@@ -6,6 +6,7 @@ import { CiEdit } from "react-icons/ci";
 import { toast } from "react-toastify";
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
+import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 
 import styles from "./styles.module.css";
@@ -30,10 +31,11 @@ type ProductsProps = {
     store: string;
     slug: string;
     created_at: string;
-    ProductCategory: {
+    productCategory: {
         id: string;
         product_id: string;
-        Category: {
+        name: string;
+        category: {
             id: string;
             name: string;
             slug: string;
@@ -47,11 +49,31 @@ type ProductsProps = {
     }
 }
 
+type CategorysProps = {
+    id: string;
+    name: string;
+    slug: string;
+    image: string;
+}
+
 export default function List_products({ params }: { params: { store: string } }) {
 
     const [listProducts, setListProducts] = useState<ProductsProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
     const [store, setStore] = useState<string>("");
+    const [categorys, setCategorys] = useState<CategorysProps[]>();
+    const [nameCategory, setNameCategory] = useState<string>("");
+    const [idProduct, setIdProduct] = useState<string>("");
+    const [order, setOrder] = useState<number>(Number);
+
+
+    async function handleIdProduct(id: string) {
+        setIdProduct(id);
+    }
+
+    function handleNameCategory(e: any) {
+        setNameCategory(e.target.value);
+    }
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -99,6 +121,42 @@ export default function List_products({ params }: { params: { store: string } })
         }
     }
 
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadCategorys() {
+            try {
+                const { data } = await apiClient.get('/all_categorys');
+                setCategorys(data?.all_categorys || []);
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+            }
+        }
+        loadCategorys();
+    }, []);
+
+    /*  */
+
+    async function handleRegisterCategory() {
+        const apiClient = setupAPIClient();
+        setLoading(true);
+        try {
+            await apiClient.post(`/create_category_product`, {
+                product_id: idProduct,
+                name: nameCategory,
+                order: order
+            });
+            setLoading(false);
+            toast.success("Categoria registrada com sucesso");
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            setLoading(false);
+            toast.error("Erro ao cadastrar categoria no produto");
+        }
+    }
+
+
+
+
     async function deleteproduct(id: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
@@ -116,6 +174,7 @@ export default function List_products({ params }: { params: { store: string } })
 
 
     console.log(listProducts)
+
 
 
     return (
@@ -157,9 +216,7 @@ export default function List_products({ params }: { params: { store: string } })
                                                             <div className={styles.boxBrand}>
                                                                 <strong>MARCA:&nbsp;</strong>
                                                                 <span>{item?.storeProduct?.brand}</span>
-                                                                <button
-
-                                                                >
+                                                                <button>
                                                                     <CiEdit color='red' size={21} />
                                                                 </button>
                                                             </div>
@@ -179,15 +236,36 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 Ver produto
                                                             </button>
 
+                                                            <span style={{ color: 'black' }}>{item?.ProductCategory?.name}</span>
+
+                                                            <select
+                                                                className={styles.selectImput}
+                                                                onChange={handleNameCategory}
+                                                                onClick={() => handleIdProduct(item?.id)}
+                                                            >
+                                                                <option value="">Selecione as categoria aqui...</option>
+                                                                {categorys?.map((cat) => {
+                                                                    return (
+                                                                        <>
+                                                                            <option value={cat?.name}>{cat.name}</option>
+                                                                        </>
+                                                                    )
+                                                                })}
+                                                            </select>
+
+                                                            <Input
+                                                                placeholder="Ordem"
+                                                                type='number'
+                                                                value={order}/* @ts-ignore */
+                                                                onChange={(e) => setOrder(e.target.value)}
+                                                            />
 
                                                             <button
-
                                                                 className={styles.addCategoryButton}
+                                                                onClick={handleRegisterCategory}
                                                             >
-                                                                Cadastrar produto
+                                                                Cadastrar categoria
                                                             </button>
-
-
                                                         </div>
                                                     </div>
                                                 </div>
