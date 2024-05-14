@@ -134,8 +134,6 @@ export default function List_products({ params }: { params: { store: string } })
         loadCategorys();
     }, []);
 
-    /*  */
-
     async function handleRegisterCategory() {
         const apiClient = setupAPIClient();
         setLoading(true);
@@ -236,7 +234,11 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 Ver produto
                                                             </button>
 
-                                                            <span style={{ color: 'black' }}>{item?.productCategory?.name}</span>
+                                                            <span style={{ color: 'black' }}>{item?.productCategory.map((item: { name: any; }) => {
+                                                                return (
+                                                                    item.name
+                                                                )
+                                                            })}</span>
 
                                                             <select
                                                                 className={styles.selectImput}
