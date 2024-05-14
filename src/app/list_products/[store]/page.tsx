@@ -144,6 +144,7 @@ export default function List_products({ params }: { params: { store: string } })
                 name: nameCategory,
                 order: order
             });
+            loadStoreProducts();
             setLoading(false);
             toast.success("Categoria registrada com sucesso");
         } catch (error) {/* @ts-ignore */
@@ -235,11 +236,13 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 Ver produto
                                                             </button>
 
-                                                            <span style={{ color: 'black' }}>{item?.productCategory.map((item: { name: any; }) => {
+                                                            {item?.productCategory.map((item: { name: any; }) => {
                                                                 return (
-                                                                    item.name
+                                                                    <>
+                                                                        <span>{item.name}</span>
+                                                                    </>
                                                                 )
-                                                            })}</span>
+                                                            })}
 
                                                             <select
                                                                 className={styles.selectImput}
