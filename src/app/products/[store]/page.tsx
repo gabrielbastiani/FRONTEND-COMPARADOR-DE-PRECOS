@@ -26,7 +26,7 @@ type ProductsStoreProps = {
     brand: string;
     link: string;
     created_at: string;
-    Product: any;
+    product: any;
 }
 
 export default function Products({ params }: { params: { store: string } }) {
@@ -175,10 +175,10 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             Ver produto
                                                         </button>
 
-                                                        {item.Product.length === 1 ?
+                                                        {item.product.length === 1 ?
                                                             <button
                                                                 style={{ backgroundColor: 'gray' }}
-                                                                onClick={() => deleteproduct(item?.Product[0]?.id)}
+                                                                onClick={() => deleteproduct(item?.product[0]?.id)}
                                                                 className={styles.addCategoryButton}
                                                             >
                                                                 Descadastrar produto

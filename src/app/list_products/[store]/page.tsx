@@ -236,7 +236,7 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 Ver produto
                                                             </button>
 
-                                                            <span style={{ color: 'black' }}>{item?.ProductCategory?.name}</span>
+                                                            <span style={{ color: 'black' }}>{item?.productCategory?.name}</span>
 
                                                             <select
                                                                 className={styles.selectImput}
