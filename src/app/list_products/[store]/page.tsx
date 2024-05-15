@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
+import { ModalDateProduct } from "@/components/popups/ModalDateProduct/page";
 import { ModalDeleteProduct } from "@/components/popups/ModalDeleteProduct/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
 
@@ -36,8 +37,8 @@ type ProductsProps = {
     slug: string;
     created_at: string;
     productCategory: {
+        map(arg0: (item: any) => import("react").JSX.Element): unknown;
         length: number;
-        map(arg0: (item: { name: any; }) => any): import("react").ReactNode;
         id: string;
         product_id: string;
         name: string;
@@ -70,9 +71,12 @@ export default function List_products({ params }: { params: { store: string } })
     const [categorys, setCategorys] = useState<CategorysProps[]>();
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
+    const [categoryName, setCategoryName] = useState<string>("");
     const [order, setOrder] = useState<number>(Number);
+    const [orderCategory, setOrderCategory] = useState<number>(Number);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleDeleteProduct, setModalVisibleDeleteProduct] = useState<boolean>(false);
+    const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
 
     async function handleIdProduct(id: string) {
         setIdProduct(id);
@@ -178,6 +182,17 @@ export default function List_products({ params }: { params: { store: string } })
         setModalVisibleDeleteProduct(false);
     }
 
+    async function handleOpenModalDateProduct(id: string, name: string, order: number) {
+        setModalVisibleDateProduct(true);
+        setIdProduct(id);
+        setCategoryName(name);
+        setOrderCategory(order);
+    }
+
+    function handleCloseModalDateProduct() {
+        setModalVisibleDateProduct(false);
+    }
+
     Modal.setAppElement('body');
 
 
@@ -259,7 +274,7 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 <>
                                                                     <strong className={styles.categoryStrong}>Categorias</strong>
 
-                                                                    {item?.productCategory.map((item: { name: any; }) => {
+                                                                    {item?.productCategory.map((item) => {
                                                                         return (
                                                                             <ul key={item.name}>
                                                                                 <li
@@ -269,6 +284,8 @@ export default function List_products({ params }: { params: { store: string } })
                                                                                     <CiEdit
                                                                                         color='red'
                                                                                         size={21}
+                                                                                        cursor="pointer"
+                                                                                        onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
                                                                                     />
                                                                                 </li>
                                                                             </ul>
@@ -328,6 +345,16 @@ export default function List_products({ params }: { params: { store: string } })
                             isOpen={modalVisibleDeleteProduct}
                             onRequestClose={handleCloseModalDeleteProduct}
                             productId={idProduct}
+                            productLoad={loadStoreProducts}
+                        />
+                    )}
+                    {modalVisibleDateProduct && (
+                        <ModalDateProduct
+                            isOpen={modalVisibleDateProduct}
+                            onRequestClose={handleCloseModalDateProduct}
+                            productCategory={idProduct}
+                            nameCategory={categoryName}
+                            positionCategory={orderCategory}
                             productLoad={loadStoreProducts}
                         />
                     )}
