@@ -18,7 +18,7 @@ interface ModalStoreRequest {
     productLoad: () => void;
 }
 
-export function ModalEditCategory({ isOpen, onRequestClose, productLoad, productId }: ModalStoreRequest) {
+export function ModalEditBrand({ isOpen, onRequestClose, productLoad, productId }: ModalStoreRequest) {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [brand, setBrand] = useState<string>("");

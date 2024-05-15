@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
-import { ModalEditCategory } from "@/components/popups/ModalEditCategory/page";
+import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
 import { ModalWarning } from "@/components/popups/ModalWarning/page";
 
 import styles from "./styles.module.css";
@@ -207,7 +207,7 @@ export default function Products({ params }: { params: { store: string } }) {
                 </>
             }
             {modalVisible && (
-                <ModalEditCategory
+                <ModalEditBrand
                     isOpen={modalVisible}
                     onRequestClose={handleCloseModal}
                     productId={idProduct}

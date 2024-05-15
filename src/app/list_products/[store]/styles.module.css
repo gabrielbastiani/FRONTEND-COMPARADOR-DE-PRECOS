@@ -96,6 +96,36 @@
     width: 23%;
 }
 
+.selectImput {
+    width: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    border: solid 2px red;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.notFoundCategs {
+    font-size: 14px;
+    color: red;
+}
+
+.categoryStrong {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.categs {
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.position {
+    display: flex;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
 .buttonProduto {
     border: none;
     background-color: red;

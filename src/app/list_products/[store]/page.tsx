@@ -3,11 +3,14 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
+import { FaTrashAlt } from "react-icons/fa";
+import Modal from 'react-modal';
 import { toast } from "react-toastify";
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
+import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
 
 import styles from "./styles.module.css";
 
@@ -32,6 +35,7 @@ type ProductsProps = {
     slug: string;
     created_at: string;
     productCategory: {
+        length: number;
         map(arg0: (item: { name: any; }) => any): import("react").ReactNode;
         id: string;
         product_id: string;
@@ -66,7 +70,7 @@ export default function List_products({ params }: { params: { store: string } })
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
     const [order, setOrder] = useState<number>(Number);
-
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     async function handleIdProduct(id: string) {
         setIdProduct(id);
@@ -154,9 +158,6 @@ export default function List_products({ params }: { params: { store: string } })
         }
     }
 
-
-
-
     async function deleteproduct(id: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
@@ -172,8 +173,16 @@ export default function List_products({ params }: { params: { store: string } })
         }
     }
 
+    async function handleOpenModal(id: string) {
+        setModalVisible(true);
+        setIdProduct(id);
+    }
 
-    console.log(listProducts)
+    function handleCloseModal() {
+        setModalVisible(false);
+    }
+
+    Modal.setAppElement('body');
 
 
 
@@ -216,7 +225,9 @@ export default function List_products({ params }: { params: { store: string } })
                                                             <div className={styles.boxBrand}>
                                                                 <strong>MARCA:&nbsp;</strong>
                                                                 <span>{item?.storeProduct?.brand}</span>
-                                                                <button>
+                                                                <button
+                                                                    onClick={() => handleOpenModal(item?.storeProduct?.id)}
+                                                                >
                                                                     <CiEdit color='red' size={21} />
                                                                 </button>
                                                             </div>
@@ -228,7 +239,17 @@ export default function List_products({ params }: { params: { store: string } })
                                                             </div>
                                                         </div>
 
+                                                        <div>
+                                                            <FaTrashAlt
+                                                                size={25}
+                                                                color="red"
+                                                                cursor="pointer"
+                                                                onClick={() => deleteproduct(item?.id)}
+                                                            />
+                                                        </div>
+
                                                         <div className={styles.boxCategory}>
+                                                        
                                                             <button
                                                                 className={styles.buttonProduto}
                                                                 onClick={() => handleButtonClick(item?.storeProduct?.link)}
@@ -236,13 +257,21 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 Ver produto
                                                             </button>
 
-                                                            {item?.productCategory.map((item: { name: any; }) => {
-                                                                return (
-                                                                    <>
-                                                                        <span>{item.name}</span>
-                                                                    </>
-                                                                )
-                                                            })}
+                                                            {item?.productCategory?.length === 0 ?
+                                                                <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
+                                                                :
+                                                                <>
+                                                                    <strong className={styles.categoryStrong}>Categorias</strong>
+
+                                                                    {item?.productCategory.map((item: { name: any; }) => {
+                                                                        return (
+                                                                            <>
+                                                                                <li className={styles.categs}>{item.name}</li>
+                                                                            </>
+                                                                        )
+                                                                    })}
+                                                                </>
+                                                            }
 
                                                             <select
                                                                 className={styles.selectImput}
@@ -259,6 +288,7 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 })}
                                                             </select>
 
+                                                            <label className={styles.position}>Posição da categoria</label>
                                                             <Input
                                                                 placeholder="Ordem"
                                                                 type='number'
@@ -285,6 +315,14 @@ export default function List_products({ params }: { params: { store: string } })
                             }
                         </article>
                     </main>
+                    {modalVisible && (
+                        <ModalEditBrand
+                            isOpen={modalVisible}
+                            onRequestClose={handleCloseModal}
+                            productId={idProduct}
+                            productLoad={loadStoreProducts}
+                        />
+                    )}
                 </>
             }
         </>
