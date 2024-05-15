@@ -1,0 +1,17 @@
+.containerContent {
+    justify-content: center;
+    align-items: center;
+    border-radius: 3%;
+    z-index: 9999999999999;
+}
+
+.containerButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 26px;
+}
+
+.containerContent h2 {
+    color: white;
+    margin-top: 17px;
+}

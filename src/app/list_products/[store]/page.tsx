@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
+import { ModalDeleteProduct } from "@/components/popups/ModalDeleteProduct/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
 
 import styles from "./styles.module.css";
@@ -71,6 +72,7 @@ export default function List_products({ params }: { params: { store: string } })
     const [idProduct, setIdProduct] = useState<string>("");
     const [order, setOrder] = useState<number>(Number);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [modalVisibleDeleteProduct, setModalVisibleDeleteProduct] = useState<boolean>(false);
 
     async function handleIdProduct(id: string) {
         setIdProduct(id);
@@ -158,21 +160,6 @@ export default function List_products({ params }: { params: { store: string } })
         }
     }
 
-    async function deleteproduct(id: string) {
-        const apiClient = setupAPIClient();
-        setLoading(true);
-        try {
-            await apiClient.delete(`/delete_product?product_id=${id}`);
-            loadStoreProducts();
-            toast.success("Produto descadastrado com sucesso");
-            setLoading(false);
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error("Erro ao descadastrar esse produto")
-            setLoading(false);
-        }
-    }
-
     async function handleOpenModal(id: string) {
         setModalVisible(true);
         setIdProduct(id);
@@ -180,6 +167,15 @@ export default function List_products({ params }: { params: { store: string } })
 
     function handleCloseModal() {
         setModalVisible(false);
+    }
+
+    async function handleOpenModalDeleteProduct(id: string) {
+        setModalVisibleDeleteProduct(true);
+        setIdProduct(id);
+    }
+
+    function handleCloseModalDeleteProduct() {
+        setModalVisibleDeleteProduct(false);
     }
 
     Modal.setAppElement('body');
@@ -244,12 +240,12 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 size={25}
                                                                 color="red"
                                                                 cursor="pointer"
-                                                                onClick={() => deleteproduct(item?.id)}
+                                                                onClick={() => handleOpenModalDeleteProduct(item?.id)}
                                                             />
                                                         </div>
 
                                                         <div className={styles.boxCategory}>
-                                                        
+
                                                             <button
                                                                 className={styles.buttonProduto}
                                                                 onClick={() => handleButtonClick(item?.storeProduct?.link)}
@@ -265,9 +261,17 @@ export default function List_products({ params }: { params: { store: string } })
 
                                                                     {item?.productCategory.map((item: { name: any; }) => {
                                                                         return (
-                                                                            <>
-                                                                                <li className={styles.categs}>{item.name}</li>
-                                                                            </>
+                                                                            <ul key={item.name}>
+                                                                                <li
+                                                                                    className={styles.categs}
+                                                                                >
+                                                                                    {item.name}
+                                                                                    <CiEdit
+                                                                                        color='red'
+                                                                                        size={21}
+                                                                                    />
+                                                                                </li>
+                                                                            </ul>
                                                                         )
                                                                     })}
                                                                 </>
@@ -279,13 +283,9 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 onClick={() => handleIdProduct(item?.id)}
                                                             >
                                                                 <option value="">Selecione as categoria aqui...</option>
-                                                                {categorys?.map((cat) => {
-                                                                    return (
-                                                                        <>
-                                                                            <option value={cat?.name}>{cat.name}</option>
-                                                                        </>
-                                                                    )
-                                                                })}
+                                                                {categorys?.map((cat) => (
+                                                                    <option key={cat?.id} value={cat?.name}>{cat.name}</option>
+                                                                ))}
                                                             </select>
 
                                                             <label className={styles.position}>Posição da categoria</label>
@@ -319,6 +319,14 @@ export default function List_products({ params }: { params: { store: string } })
                         <ModalEditBrand
                             isOpen={modalVisible}
                             onRequestClose={handleCloseModal}
+                            productId={idProduct}
+                            productLoad={loadStoreProducts}
+                        />
+                    )}
+                    {modalVisibleDeleteProduct && (
+                        <ModalDeleteProduct
+                            isOpen={modalVisibleDeleteProduct}
+                            onRequestClose={handleCloseModalDeleteProduct}
                             productId={idProduct}
                             productLoad={loadStoreProducts}
                         />
