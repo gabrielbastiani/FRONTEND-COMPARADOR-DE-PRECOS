@@ -14,10 +14,11 @@ import styles from './styles.module.css';
 interface ModalCategoryRequest {
     isOpen: boolean;
     categoryId: string;
+    nameCategory: string;
     onRequestClose: () => void;
 }
 
-export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId }: ModalCategoryRequest) {
+export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId, nameCategory }: ModalCategoryRequest) {
 
     const router = useRouter();
 
@@ -39,7 +40,7 @@ export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId }: Moda
         try {
             const apiClient = setupAPIClient();
 
-            await apiClient.delete(`/delete_category?category_id=${categoryId}`);
+            await apiClient.delete(`/delete_category?category_id=${categoryId}&name=${nameCategory}`);
             toast.success(`Categoria deletada com sucesso.`);
 
             router.push('/');
@@ -47,8 +48,8 @@ export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId }: Moda
             onRequestClose();
 
         } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error('Ops erro ao deletar a categoria!');
+            console.log(error.response.data.error);/* @ts-ignore */
+            toast.error(`${error.response.data.error}`);
         }
     }
 

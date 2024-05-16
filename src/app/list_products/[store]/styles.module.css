@@ -118,6 +118,9 @@
 .categs {
     margin-bottom: 4px;
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .position {

@@ -24,12 +24,12 @@ export default function Edit_category({ params }: { params: { category_id: strin
 
     const router = useRouter();
 
-    const [nameCategory, setNameCategory] = useState("");
-    const [orderCategory, setOrderCategory] = useState("");
-    const [status, setStatus] = useState("");
-    const [modalVisible, setModalVisible] = useState(false);
+    const [nameCategory, setNameCategory] = useState<string>("");
+    const [orderCategory, setOrderCategory] = useState<string>("");
+    const [status, setStatus] = useState<string>("");
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [imageCategory, setImageCategory] = useState("");
+    const [imageCategory, setImageCategory] = useState<string>("");
     const [categoryPhotoUrl, setCategoryPhotoUrl] = useState<string | null>(null);
     const [categoryPhoto, setCategoryPhoto] = useState<File | null>(null);
     const [typeCategory, setTypeCategory] = useState<string>("");
@@ -189,7 +189,6 @@ export default function Edit_category({ params }: { params: { category_id: strin
         }
 
         if (image.type === 'image/jpeg' || image.type === 'image/png') {
-
             setCategoryPhoto(image);
             setCategoryPhotoUrl(URL.createObjectURL(e.target.files[0]))
 
@@ -407,6 +406,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                     isOpen={modalVisible}
                     onRequestClose={handleCloseModalDelete}
                     categoryId={params?.category_id}
+                    nameCategory={nameCategory}
                 />
             )}
         </>

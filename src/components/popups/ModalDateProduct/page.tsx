@@ -109,7 +109,7 @@ export function ModalDateProduct({ isOpen, onRequestClose, productCategory, prod
                             />
 
                             <Button
-                                style={{ width: '40%', fontWeight: "bold", fontSize: '1.2rem', backgroundColor: 'green' }}
+                                style={{ width: '40%', fontWeight: "bold", fontSize: '14px', backgroundColor: 'green' }}
                                 onClick={updateOrder}
                             >
                                 Atualizar posição
@@ -118,7 +118,7 @@ export function ModalDateProduct({ isOpen, onRequestClose, productCategory, prod
                             <h3>Deletar essa categoria desse produto?</h3>
 
                             <Button
-                                style={{ width: '40%', fontWeight: "bold", fontSize: '1.2rem' }}
+                                style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
                                 onClick={deleteCategoryProduct}
                             >
                                 Deletar
