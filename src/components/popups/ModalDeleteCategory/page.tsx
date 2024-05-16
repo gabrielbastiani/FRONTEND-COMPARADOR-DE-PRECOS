@@ -14,11 +14,11 @@ import styles from './styles.module.css';
 interface ModalCategoryRequest {
     isOpen: boolean;
     categoryId: string;
-    nameCategory: string;
+    slugNameCategory: string;
     onRequestClose: () => void;
 }
 
-export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId, nameCategory }: ModalCategoryRequest) {
+export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId, slugNameCategory }: ModalCategoryRequest) {
 
     const router = useRouter();
 
@@ -35,12 +35,11 @@ export function ModalDeleteCategory({ isOpen, onRequestClose, categoryId, nameCa
         }
     };
 
-
     async function handleDeleteCategory() {
         try {
             const apiClient = setupAPIClient();
 
-            await apiClient.delete(`/delete_category?category_id=${categoryId}&name=${nameCategory}`);
+            await apiClient.delete(`/delete_category?category_id=${categoryId}&slug=${slugNameCategory}`);
             toast.success(`Categoria deletada com sucesso.`);
 
             router.push('/');

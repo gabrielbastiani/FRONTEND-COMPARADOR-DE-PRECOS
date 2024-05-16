@@ -25,6 +25,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
     const router = useRouter();
 
     const [nameCategory, setNameCategory] = useState<string>("");
+    const [slugNameCategory, setSlugNameCategory] = useState<string>("");
     const [orderCategory, setOrderCategory] = useState<string>("");
     const [status, setStatus] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -45,6 +46,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
             try {
                 const { data } = await apiClient.get(`/find_unique_category?category_id=${params?.category_id}`);
                 setNameCategory(data?.name || "");
+                setSlugNameCategory(data?.slug || "");
                 setOrderCategory(data?.order);
                 setStatus(data?.status || "");
                 setImageCategory(data?.image || "");
@@ -288,7 +290,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
 
                                 <Button
                                     style={{
-                                        backgroundColor: 'green',
+                                        backgroundColor: 'red',
                                         width: '160px',
                                         height: '35px',
                                         color: 'white'
@@ -406,7 +408,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                     isOpen={modalVisible}
                     onRequestClose={handleCloseModalDelete}
                     categoryId={params?.category_id}
-                    nameCategory={nameCategory}
+                    slugNameCategory={slugNameCategory}
                 />
             )}
         </>
