@@ -29,7 +29,7 @@ type ProductsProps = {
         title_product: string;
         price: number;
         brand: string;
-        link: string;
+        link: string;ima e
         created_at: string;
     }
     storeProduct_id: string;
