@@ -50,7 +50,6 @@ export default function Category_products({ params }: { params: { category_slug:
     const [listProducts, setListProducts] = useState<ProductsProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
     const [nameCategory, setNameCategory] = useState<string>("");
-    const [slugNameCategory, setSlugNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleDeleteProduct, setModalVisibleDeleteProduct] = useState<boolean>(false);
@@ -63,7 +62,6 @@ export default function Category_products({ params }: { params: { category_slug:
                 const { data } = await apiClient.get(`/products_category?slug=${params?.category_slug}`);
                 setListProducts(data?.product || []);
                 setNameCategory(data?.productDate?.name || "");
-                setSlugNameCategory(data?.productDate?.slug || "");
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
