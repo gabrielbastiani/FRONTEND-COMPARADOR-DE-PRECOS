@@ -14,14 +14,12 @@ import styles from './styles.module.css';
 
 interface ModalDeleteProductRequest {
     isOpen: boolean;
-    productId: string;
+    productCategory: string;
     onRequestClose: () => void;
     productLoad: () => void;
 }
 
-export function ModalDeleteProduct({ isOpen, onRequestClose, productId, productLoad }: ModalDeleteProductRequest) {
-
-    console.log(productId)
+export function ModalProductCategory({ isOpen, onRequestClose, productCategory, productLoad }: ModalDeleteProductRequest) {
 
     const customStyles = {
         content: {
@@ -38,18 +36,18 @@ export function ModalDeleteProduct({ isOpen, onRequestClose, productId, productL
 
     const [loading, setLoading] = useState<boolean>(false);
 
-    async function deleteproduct() {
+    async function deleteCategoryProduct() {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.delete(`/delete_product?product_id=${productId}`);
+            await apiClient.delete(`/delete_category_product?productCategory_id=${productCategory}`);
             productLoad();
-            toast.success("Produto descadastrado com sucesso");
+            toast.success("Produto deletado dessa categoria com sucesso");
             setLoading(false);
             onRequestClose();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error("Erro ao descadastrar esse produto");
+            toast.error("Erro ao deletar esse produto dessa categoria");
             setLoading(false);
         }
     }
@@ -77,12 +75,12 @@ export function ModalDeleteProduct({ isOpen, onRequestClose, productId, productL
 
                     <div className={styles.containerContent}>
 
-                        <h2>Deseja mesmo deletar esse produto?</h2>
+                        <h2>Deseja deletar esse produto desta categoria?</h2>
 
                         <div className={styles.containerButton}>
                             <Button
-                                style={{ width: '40%', fontWeight: "bold", fontSize: '1.2rem' }}
-                                onClick={deleteproduct}
+                                style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
+                                onClick={deleteCategoryProduct}
                             >
                                 Deletar
                             </Button>
