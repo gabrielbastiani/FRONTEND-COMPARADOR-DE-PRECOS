@@ -62,8 +62,8 @@ export default function Category_products({ params }: { params: { category_slug:
             try {
                 const { data } = await apiClient.get(`/products_category?slug=${params?.category_slug}`);
                 setListProducts(data?.product || []);
-                setNameCategory(data?.productDate?.name);
-                setSlugNameCategory(data?.productDate?.slug);
+                setNameCategory(data?.productDate?.name || "");
+                setSlugNameCategory(data?.productDate?.slug || "");
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -77,8 +77,8 @@ export default function Category_products({ params }: { params: { category_slug:
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            const response = await apiClient.get(`/register_products?slug=${slugNameCategory}`);
-            setListProducts(response?.data || []);
+            const { data } = await apiClient.get(`/products_category?slug=${params?.category_slug}`);
+            setListProducts(data?.product || []);
             setLoading(false);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
@@ -128,7 +128,7 @@ export default function Category_products({ params }: { params: { category_slug:
 
                             {listProducts?.length === 0 ?
                                 <div className={styles.notFound}>
-                                    <h2>Não há produtos refernete a essa empresa cadastrada no momento...</h2>
+                                    <h2>Não há produtos cadastros nessa categoria no momento...</h2>
                                 </div>
                                 :
                                 <div className={styles.grid_container}>
@@ -152,7 +152,7 @@ export default function Category_products({ params }: { params: { category_slug:
                                                                 <strong>MARCA:&nbsp;</strong>
                                                                 <span>{item?.product?.storeProduct?.brand}</span>
                                                                 <button
-                                                                    onClick={() => handleOpenModal(item?.id)}
+                                                                    onClick={() => handleOpenModal(item?.product?.storeProduct_id)}
                                                                 >
                                                                     <CiEdit color='red' size={21} />
                                                                 </button>
