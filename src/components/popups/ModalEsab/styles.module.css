@@ -1,0 +1,29 @@
+.containerContent {
+    justify-content: center;
+    align-items: center;
+    border-radius: 3%;
+    z-index: 9999999999999;
+}
+
+.mainContainer h1 {
+    color: white;
+    margin-top: 20px;
+}
+
+.containerButton {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 26px;
+}
+
+.containerButton button {
+    background-color: green;
+    color: white;
+    font-weight: 800;
+    padding: 10px;
+    margin: 13px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
