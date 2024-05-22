@@ -27,6 +27,7 @@ type ProductsProps = {
         store: string;
         image: string;
         title_product: string;
+        slug_title_product: string;
         price: number;
         brand: string;
         link: string;

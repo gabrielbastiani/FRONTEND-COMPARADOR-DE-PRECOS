@@ -42,6 +42,7 @@ type ProductsProps = {
             slug: string;
             store: string;
             title_product: string;
+            slug_title_product: string;
         }
     }
 }
@@ -186,7 +187,7 @@ export default function Category_products({ params }: { params: { category_slug:
 
                                                             <button
                                                                 className={styles.buttonPrices}
-                                                                onClick={() => router.push(`/historico_preco/${item?.product_id}`)}
+                                                                onClick={() => router.push(`/historico_preco/${item?.product?.storeProduct?.slug_title_product}`)}
                                                             >
                                                                 Historico de Preços
                                                             </button>
