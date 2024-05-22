@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
@@ -46,6 +47,8 @@ type ProductsProps = {
 }
 
 export default function Category_products({ params }: { params: { category_slug: string } }) {
+
+    const router = useRouter();
 
     const [listProducts, setListProducts] = useState<ProductsProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -179,6 +182,13 @@ export default function Category_products({ params }: { params: { category_slug:
                                                                 onClick={() => handleButtonClick(item?.product?.storeProduct?.link)}
                                                             >
                                                                 Ver produto
+                                                            </button>
+
+                                                            <button
+                                                                className={styles.buttonPrices}
+                                                                onClick={() => router.push(`/historico_preco/${item?.product_id}`)}
+                                                            >
+                                                                Historico de Preços
                                                             </button>
 
                                                         </div>
