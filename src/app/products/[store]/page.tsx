@@ -36,6 +36,7 @@ export default function Products({ params }: { params: { store: string } }) {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalWarning, setModalWarning] = useState<boolean>(false);
     const [idProduct, setIdProduct] = useState<string>("");
+    const [title, setTitle] = useState<string>("");
     const [store, setStore] = useState<string>("");
 
     useEffect(() => {
@@ -112,9 +113,10 @@ export default function Products({ params }: { params: { store: string } }) {
         setModalWarning(false);
     }
 
-    async function handleOpenModalWarning(id: string) {
+    async function handleOpenModalWarning(id: string, title_product: string) {
         setModalWarning(true);
         setIdProduct(id);
+        setTitle(title_product);
     }
 
     Modal.setAppElement('body');
@@ -185,7 +187,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             </button>
                                                             :
                                                             <button
-                                                                onClick={() => handleOpenModalWarning(item?.id)}
+                                                                onClick={() => handleOpenModalWarning(item?.id, item?.title_product)}
                                                                 className={styles.addCategoryButton}
                                                             >
                                                                 Cadastrar produto
@@ -220,6 +222,7 @@ export default function Products({ params }: { params: { store: string } }) {
                     isOpen={modalWarning}
                     onRequestClose={handleCloseModalWarning}
                     productId={idProduct}
+                    titleProduct={title}
                     store={store}
                     modalBrand={handleOpenModal}
                     productLoad={loadStoreProducts}

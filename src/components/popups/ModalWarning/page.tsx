@@ -16,12 +16,13 @@ interface Modalequest {
     isOpen: boolean;
     onRequestClose: () => void;
     productId: string;
+    titleProduct: string;
     modalBrand: any;
     store: string;
     productLoad: () => void;
 }
 
-export function ModalWarning({ isOpen, onRequestClose, productId, modalBrand, productLoad, store }: Modalequest) {
+export function ModalWarning({ isOpen, onRequestClose, productId, modalBrand, productLoad, store, titleProduct }: Modalequest) {
 
     const customStyles = {
         content: {
@@ -48,7 +49,8 @@ export function ModalWarning({ isOpen, onRequestClose, productId, modalBrand, pr
         setLoading(true);
         try {
             await apiClient.post(`/create_product?storeProduct_id=${productId}`, {
-                store: store
+                store: store,
+                title_product: titleProduct
             });
             toast.success("Produto registrado com sucesso");
             onRequestClose();
