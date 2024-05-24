@@ -16,6 +16,9 @@ import { CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContai
 export default function Historico_preco({ params }: { params: { slug_title_product: string } }) {
 
     const [listProducts, setListProducts] = useState<any[]>([]);
+    const [name, setName] = useState<string>("");
+    const [link, setLink] = useState<string>("");
+    const [store, setStore] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -23,8 +26,11 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
         async function loadStoreProducts() {
             setLoading(true);
             try {
-                const response = await apiClient.get(`/find_product_history?slug_title_product=${params?.slug_title_product}`);
-                setListProducts(response?.data || []);
+                const { data } = await apiClient.get(`/find_product_history?slug_title_product=${params?.slug_title_product}`);
+                setListProducts(data?.product || []);
+                setLink(data?.date_product?.link || "");
+                setName(data?.date_product?.title_product || "");
+                setStore(data?.date_product?.store || "");
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -44,13 +50,17 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
 
     const CustomizedLabel: FunctionComponent<any> = (props: any) => {
         const { x, y, stroke, value } = props;
-      
+
         return (
-          <text x={x} y={y} dy={-4} fill={stroke} fontSize={14} textAnchor="middle">
-            {value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-          </text>
+            <text x={x} y={y} dy={-4} fill={stroke} fontSize={14} textAnchor="middle">
+                {value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </text>
         );
-      };
+    };
+
+    const handleButtonClick = (link: string) => {
+        window.open(`${link}`, '_blank');
+    };
 
 
     return (
@@ -68,6 +78,21 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
                             </div>
 
                             <div className={styles.grid_container}>
+
+                                <h2>{name}</h2>
+                                <br />
+                                <h3>LOJA: {store}</h3>
+                                <br />
+                                <br />
+                                <button
+                                    className={styles.buttonProduto}
+                                    onClick={() => handleButtonClick(link)}
+                                >
+                                    Ver produto
+                                </button>
+                                <br />
+                                <br />
+                                <br />
                                 <ResponsiveContainer width="100%" height={400}>
                                     <ComposedChart
                                         width={500}
