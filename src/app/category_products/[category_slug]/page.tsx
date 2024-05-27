@@ -187,7 +187,7 @@ export default function Category_products({ params }: { params: { category_slug:
 
                                                             <button
                                                                 className={styles.buttonPrices}
-                                                                onClick={() => router.push(`/historico_preco/${item?.product?.storeProduct?.slug_title_product}`)}
+                                                                onClick={() => router.push(`/historico_preco/${item?.product?.storeProduct?.slug}/${item?.product?.storeProduct?.slug_title_product}`)}
                                                             >
                                                                 Historico de Preços
                                                             </button>

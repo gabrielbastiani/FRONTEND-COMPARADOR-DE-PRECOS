@@ -13,7 +13,7 @@ import moment from "moment";
 import { CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 
-export default function Historico_preco({ params }: { params: { slug_title_product: string } }) {
+export default function Historico_preco({ params }: { params: { slug_title_product: string, slug: string } }) {
 
     const [listProducts, setListProducts] = useState<any[]>([]);
     const [name, setName] = useState<string>("");
@@ -27,12 +27,16 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
         setShowCoparative(!showCoparative);
     }
 
+    console.log(params?.slug)
+    
+    console.log(listProducts)
+
     useEffect(() => {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
             setLoading(true);
             try {
-                const { data } = await apiClient.get(`/find_product_history?slug_title_product=${params?.slug_title_product}`);
+                const { data } = await apiClient.get(`/find_product_history?slug_title_product=${params?.slug_title_product}&slug=${params?.slug}`);
                 setListProducts(data?.product || []);
                 setLink(data?.date_product?.link || "");
                 setName(data?.date_product?.title_product || "");
@@ -44,7 +48,7 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
             }
         }
         loadStoreProducts();
-    }, [params?.slug_title_product]);
+    }, [params.slug, params?.slug_title_product]);
 
     const date_product: any = [];
     (listProducts || []).forEach((item) => {
