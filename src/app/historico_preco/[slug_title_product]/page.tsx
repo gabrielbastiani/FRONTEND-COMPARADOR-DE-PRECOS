@@ -20,6 +20,12 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
     const [link, setLink] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [average, setAverage] = useState<number>(0);
+    const [showCoparative, setShowCoparative] = useState<boolean>(false);
+
+    const showOrHide = () => {
+        setShowCoparative(!showCoparative);
+    }
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -61,6 +67,13 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
     const handleButtonClick = (link: string) => {
         window.open(`${link}`, '_blank');
     };
+
+    useEffect(() => {
+        const amounts = listProducts.map(transaction => transaction.price);
+        const total = amounts.reduce((acc, amount) => acc + amount, 0);
+        const avg = total / amounts.length;
+        setAverage(avg);
+    }, [listProducts]);
 
 
     return (
@@ -112,6 +125,22 @@ export default function Historico_preco({ params }: { params: { slug_title_produ
                                         </Line>
                                     </ComposedChart>
                                 </ResponsiveContainer>
+                                <br />
+                                <h2>Média de preço: <strong className={styles.media}>{average.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></h2>
+                                <br />
+                                <br />
+                                <br />
+                                <button
+                                    className={styles.buttonComparative}
+                                    onClick={showOrHide}
+                                >
+                                    Comparar com outras lojas
+                                </button>
+                                {showCoparative ?
+                                    <h1 style={{ color: 'black' }}>ABRIU</h1>
+                                    :
+                                    <h1 style={{ color: 'black' }}>FECHOU</h1>
+                                }
                             </div>
                         </article>
                     </main>
