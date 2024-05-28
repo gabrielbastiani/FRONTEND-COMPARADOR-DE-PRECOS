@@ -10,12 +10,13 @@ import styles from "./styles.module.css";
 
 import { setupAPIClient } from "@/services/api";
 import moment from "moment";
-import { CartesianGrid, ComposedChart, LabelList, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, ComposedChart, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 
 export default function Historico_preco({ params }: { params: { slug: string, slug_title_product: string } }) {
 
     const [listProducts, setListProducts] = useState<any[]>([]);
+    const [comparativeProducts, setComparativeProducts] = useState<any[]>([]);
     const [name, setName] = useState<string>("");
     const [link, setLink] = useState<string>("");
     const [store, setStore] = useState<string>("");
@@ -38,6 +39,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
             try {
                 const { data } = await apiClient.get(`/find_product_history?slug_title_product=${params?.slug_title_product[1]}&slug=${params?.slug_title_product[0]}`);
                 setListProducts(data?.product || []);
+                setComparativeProducts(data?.allProduct || []);
                 setLink(data?.date_product?.link || "");
                 setName(data?.date_product?.title_product || "");
                 setStore(data?.date_product?.store || "");
@@ -98,6 +100,9 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
     }, [listProducts]);
 
 
+    console.log(comparativeProducts);
+
+
     return (
         <>
             {loading ?
@@ -148,9 +153,9 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                     </ComposedChart>
                                 </ResponsiveContainer>
                                 <br />
-                                <h2>Média de preço: <strong className={styles.media}>{average.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></h2>
-                                <h2>Menor de preço: <strong className={styles.media}>{minValue !== null ? `${minValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : 'Não encontrado'}</strong> em {timeMinValue !== null ? moment(timeMinValue).format('DD/MM/YYYY - HH:mm') : 'Não encontrado'}</h2>
-                                <h2>Maior de preço: <strong className={styles.media}>{maxAmount !== null ? `${maxAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : 'Não encontrado'}</strong> em {creationDate !== null ? moment(creationDate).format('DD/MM/YYYY - HH:mm') : 'Não encontrado'}</h2>
+                                <h3>Média de preço: <strong className={styles.media}>{average.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></h3>
+                                <h3>Menor de preço: <strong className={styles.media}>{minValue !== null ? `${minValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : 'Não encontrado'}</strong> em {timeMinValue !== null ? moment(timeMinValue).format('DD/MM/YYYY - HH:mm') : 'Não encontrado'}</h3>
+                                <h3>Maior de preço: <strong className={styles.media}>{maxAmount !== null ? `${maxAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : 'Não encontrado'}</strong> em {creationDate !== null ? moment(creationDate).format('DD/MM/YYYY - HH:mm') : 'Não encontrado'}</h3>
                                 <br />
                                 <br />
                                 <br />
@@ -161,7 +166,22 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                     Comparar com outras lojas
                                 </button>
                                 {showCoparative ?
-                                    <h1 style={{ color: 'black' }}>ABRIU</h1>
+                                    <ResponsiveContainer width="100%" height={400}>
+                                        <LineChart
+                                            data={comparativeProducts}
+                                            margin={{
+                                                top: 5, right: 30, left: 20, bottom: 5,
+                                            }}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="created_at" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Legend />
+                                            <Line type="monotone" dataKey="price" stroke="#8884d8" />
+                                            <Line type="monotone" dataKey="store" stroke="#82ca9d" />
+                                        </LineChart>
+                                    </ResponsiveContainer>
                                     :
                                     <h1 style={{ color: 'black' }}>FECHOU</h1>
                                 }
