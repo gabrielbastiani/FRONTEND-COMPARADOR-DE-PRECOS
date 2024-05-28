@@ -21,6 +21,10 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
     const [store, setStore] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [average, setAverage] = useState<number>(0);
+    const [minValue, setMinValue] = useState<number>(0);
+    const [timeMinValue, setTimeMinValue] = useState();
+    const [maxAmount, setMaxAmount] = useState<number>(0);
+    const [creationDate, setCreationDate] = useState();
     const [showCoparative, setShowCoparative] = useState<boolean>(false);
 
     const showOrHide = () => {
@@ -73,6 +77,24 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         const total = amounts.reduce((acc, amount) => acc + amount, 0);
         const avg = total / amounts.length;
         setAverage(avg);
+
+        if (listProducts.length > 0) {
+            const minRecord = listProducts.reduce((minRecord, currentRecord) => {
+                return currentRecord.price < minRecord.price ? currentRecord : minRecord;
+            }, listProducts[0]);
+            setMinValue(minRecord.price);
+            setTimeMinValue(minRecord.created_at);
+        }
+
+        if (listProducts.length > 0) {
+            const maxRecord = listProducts.reduce((prev, current) => {
+                return (prev.price > current.price) ? prev : current;
+            });
+
+            setMaxAmount(maxRecord.price);
+            setCreationDate(maxRecord.created_at);
+        }
+
     }, [listProducts]);
 
 
@@ -127,6 +149,8 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                 </ResponsiveContainer>
                                 <br />
                                 <h2>Média de preço: <strong className={styles.media}>{average.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></h2>
+                                <h2>Menor de preço: <strong className={styles.media}>{minValue !== null ? `${minValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : 'Não encontrado'}</strong> em {timeMinValue !== null ? moment(timeMinValue).format('DD/MM/YYYY - HH:mm') : 'Não encontrado'}</h2>
+                                <h2>Maior de preço: <strong className={styles.media}>{maxAmount !== null ? `${maxAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : 'Não encontrado'}</strong> em {creationDate !== null ? moment(creationDate).format('DD/MM/YYYY - HH:mm') : 'Não encontrado'}</h2>
                                 <br />
                                 <br />
                                 <br />
