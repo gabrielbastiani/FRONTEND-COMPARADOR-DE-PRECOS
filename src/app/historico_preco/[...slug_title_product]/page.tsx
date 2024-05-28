@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 
 import { setupAPIClient } from "@/services/api";
 import moment from "moment";
-import { CartesianGrid, ComposedChart, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, ComposedChart, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 
 export default function Historico_preco({ params }: { params: { slug: string, slug_title_product: string } }) {
@@ -103,6 +103,22 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
     console.log(comparativeProducts);
 
 
+    // Agrupar os dados por loja
+    const groupedData = comparativeProducts.reduce((acc, item) => {
+        if (!acc[item.store]) {
+            acc[item.store] = [];
+        }
+        acc[item.store].push(item);
+        return acc;
+    }, {});
+
+    // Transformar em um array de objetos para Recharts
+    const chartData = Object.keys(groupedData).map(store => ({
+        store,
+        data: groupedData[store]
+    }));
+
+
     return (
         <>
             {loading ?
@@ -167,20 +183,22 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                 </button>
                                 {showCoparative ?
                                     <ResponsiveContainer width="100%" height={400}>
-                                        <LineChart
-                                            data={comparativeProducts}
-                                            margin={{
-                                                top: 5, right: 30, left: 20, bottom: 5,
-                                            }}
-                                        >
+                                        <LineChart width={600} height={300} data={chartData}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="created_at" />
                                             <YAxis />
                                             <Tooltip />
                                             <Legend />
-                                            <Line type="monotone" dataKey="Amazon.com" stroke="#8884d8" />
-                                            <Line type="monotone" dataKey="Americanas" stroke="#82ca9d" />
-                                            <Line type="monotone" dataKey="Dutra Máquinas" stroke="#4d5772" />
+                                            {Object.keys(groupedData).map((store, index) => (
+                                                <Line
+                                                    key={store}
+                                                    type="monotone"
+                                                    dataKey="price"
+                                                    data={groupedData[store]}
+                                                    name={store}
+                                                    stroke={index === 0 ? "#8884d8" : index === 1 ? "#82ca9d" : "#ffc658"}
+                                                />
+                                            ))}
                                         </LineChart>
                                     </ResponsiveContainer>
                                     :
