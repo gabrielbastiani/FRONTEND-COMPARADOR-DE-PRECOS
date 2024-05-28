@@ -178,8 +178,9 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                             <YAxis />
                                             <Tooltip />
                                             <Legend />
-                                            <Line type="monotone" dataKey="price" stroke="#8884d8" />
-                                            <Line type="monotone" dataKey="store" stroke="#82ca9d" />
+                                            <Line type="monotone" dataKey="Amazon.com" stroke="#8884d8" />
+                                            <Line type="monotone" dataKey="Americanas" stroke="#82ca9d" />
+                                            <Line type="monotone" dataKey="Dutra Máquinas" stroke="#4d5772" />
                                         </LineChart>
                                     </ResponsiveContainer>
                                     :
