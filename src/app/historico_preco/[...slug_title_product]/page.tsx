@@ -127,6 +127,10 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         );
     };
 
+    const handleButtonClickComaratives = (e: any, payload: any) => {
+        window.open(`${payload?.payload?.link}`, '_blank');
+    };
+
 
     return (
         <>
@@ -206,6 +210,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                                     data={groupedData[store]}
                                                     name={store}
                                                     stroke={index === 0 ? "#8884d8" : index === 1 ? "#82ca9d" : "#ffc658"}
+                                                    activeDot={{ onClick: handleButtonClickComaratives }}
                                                 >
                                                     <LabelList content={<CustomizedLabelComparative />} />
                                                 </Line>
