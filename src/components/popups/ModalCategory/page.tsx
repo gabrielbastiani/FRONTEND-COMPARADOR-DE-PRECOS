@@ -136,8 +136,6 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         }
     }
 
-    console.log(registerCategorys)
-
 
     return (
         <Modal
