@@ -22,7 +22,7 @@
     margin-top: 17px;
 }
 
-.containerContent h3 {
+.containerContent h4 {
     color: white;
     margin-top: 17px;
     margin-bottom: 15px;
@@ -72,4 +72,5 @@
     display: flex;
     margin-bottom: 5px;
     font-size: 14px;
+    color: white;
 }

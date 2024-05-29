@@ -196,7 +196,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                                                         Atualizar posição
                                                     </Button>
 
-                                                    <h3>Deletar essa categoria desse produto?</h3>
+                                                    <h4>Deletar essa categoria desse produto?</h4>
 
                                                     <Button
                                                         style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
@@ -204,6 +204,11 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                                                     >
                                                         Deletar
                                                     </Button>
+                                                    <br />
+                                                    <br />
+                                                    <hr />
+                                                    <br />
+                                                    <br />
                                                 </>
                                                 :
                                                 null
@@ -227,6 +232,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                         </select>
 
                         <label className={styles.position}>Posição da categoria</label>
+
                         <Input
                             placeholder="Ordem"
                             type='number'
