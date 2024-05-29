@@ -203,3 +203,15 @@
     cursor: pointer;
     margin-bottom: 15px;
 }
+
+.searchProduto {
+    border: none;
+    background-color: gray;
+    color: white;
+    padding: 6px;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 50%;
+    cursor: pointer;
+    margin-bottom: 15px;
+}

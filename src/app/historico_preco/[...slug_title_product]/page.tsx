@@ -2,6 +2,7 @@
 
 
 import { FunctionComponent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
@@ -19,6 +20,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
     const [comparativeProducts, setComparativeProducts] = useState<any[]>([]);
     const [name, setName] = useState<string>("");
     const [link, setLink] = useState<string>("");
+    const [linkSearch, setLinkSearch] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [average, setAverage] = useState<number>(0);
@@ -41,6 +43,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                 setListProducts(data?.product || []);
                 setComparativeProducts(data?.allProduct || []);
                 setLink(data?.date_product?.link || "");
+                setLinkSearch(data?.date_product?.link_search || "");
                 setName(data?.date_product?.title_product || "");
                 setStore(data?.date_product?.store || "");
                 setLoading(false);
@@ -131,6 +134,21 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         window.open(`${payload?.payload?.link}`, '_blank');
     };
 
+    async function handleStoreProducts() {
+        setLoading(true);
+        const valorCodificado = encodeURIComponent(String(linkSearch));
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/search_products?urlSearchStore=${valorCodificado}&stores=${store}`);
+            setLoading(false);
+            toast.success(`Produtos da concorrência ${store} capturados com sucesso`);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da concorrência ${store}`);
+            setLoading(false);
+        }
+    }
+
 
     return (
         <>
@@ -158,6 +176,13 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                     onClick={() => handleButtonClick(link)}
                                 >
                                     Ver produto
+                                </button>
+
+                                <button
+                                    className={styles.searchProduto}
+                                    onClick={handleStoreProducts}
+                                >
+                                    Atualizar preço
                                 </button>
                                 <br />
                                 <br />
