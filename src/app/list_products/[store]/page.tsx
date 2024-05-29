@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
@@ -25,6 +26,7 @@ type ProductsProps = {
     storeProduct: {
         id: string;
         store: string;
+        slug: string;
         image: string;
         title_product: string;
         slug_title_product: string;
@@ -65,6 +67,8 @@ type CategorysProps = {
 }
 
 export default function List_products({ params }: { params: { store: string } }) {
+
+    const router = useRouter();
 
     const [listProducts, setListProducts] = useState<ProductsProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -267,6 +271,13 @@ export default function List_products({ params }: { params: { store: string } })
                                                                 onClick={() => handleButtonClick(item?.storeProduct?.link)}
                                                             >
                                                                 Ver produto
+                                                            </button>
+
+                                                            <button
+                                                                className={styles.buttonPrices}
+                                                                onClick={() => router.push(`/historico_preco/${item?.storeProduct?.slug}/${item?.storeProduct?.slug_title_product}`)}
+                                                            >
+                                                                Historico de preços
                                                             </button>
 
                                                             {item?.productCategory?.length === 0 ?
