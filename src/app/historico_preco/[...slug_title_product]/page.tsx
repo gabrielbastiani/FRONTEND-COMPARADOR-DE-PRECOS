@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 
 import { setupAPIClient } from "@/services/api";
 import moment from "moment";
-import { Bar, BarChart, CartesianGrid, ComposedChart, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, ComposedChart, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 
 export default function Historico_preco({ params }: { params: { slug: string, slug_title_product: string } }) {
@@ -99,12 +99,12 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
 
     }, [listProducts]);
 
+    const formattedData = comparativeProducts.map(item => ({
+        ...item,
+        data: moment(item.created_at).format('DD/MM/YYYY - HH:mm')
+    }));
 
-    console.log(comparativeProducts);
-
-
-    // Agrupar os dados por loja
-    const groupedData = comparativeProducts.reduce((acc, item) => {
+    const groupedData = formattedData.reduce((acc, item) => {
         if (!acc[item.store]) {
             acc[item.store] = [];
         }
@@ -112,11 +112,20 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         return acc;
     }, {});
 
-    // Transformar em um array de objetos para Recharts
     const chartData = Object.keys(groupedData).map(store => ({
         store,
         data: groupedData[store]
     }));
+
+    const CustomizedLabelComparative: FunctionComponent<any> = (props: any) => {
+        const { x, y, stroke, value } = props;
+
+        return (
+            <text x={x} y={y} dy={-4} fill={stroke} fontSize={14} textAnchor="middle">
+                {value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </text>
+        );
+    };
 
 
     return (
@@ -184,8 +193,8 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                 {showCoparative ?
                                     <ResponsiveContainer width="100%" height={400}>
                                         <LineChart width={600} height={300} data={chartData}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="created_at" />
+                                            <CartesianGrid strokeDasharray="6 6" />
+                                            <XAxis dataKey="data" />
                                             <YAxis />
                                             <Tooltip />
                                             <Legend />
@@ -197,12 +206,14 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                                     data={groupedData[store]}
                                                     name={store}
                                                     stroke={index === 0 ? "#8884d8" : index === 1 ? "#82ca9d" : "#ffc658"}
-                                                />
+                                                >
+                                                    <LabelList content={<CustomizedLabelComparative />} />
+                                                </Line>
                                             ))}
                                         </LineChart>
                                     </ResponsiveContainer>
                                     :
-                                    <h1 style={{ color: 'black' }}>FECHOU</h1>
+                                    null
                                 }
                             </div>
                         </article>
