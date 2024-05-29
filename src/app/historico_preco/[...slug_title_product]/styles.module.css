@@ -215,3 +215,8 @@
     cursor: pointer;
     margin-bottom: 15px;
 }
+
+.boxButtons {
+    display: flex;
+    flex-direction: column;
+}

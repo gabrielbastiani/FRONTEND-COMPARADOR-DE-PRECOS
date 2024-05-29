@@ -55,6 +55,24 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         loadStoreProducts();
     }, [params?.slug_title_product]);
 
+    async function loadStoreProducts() {
+        const apiClient = setupAPIClient();
+        setLoading(true);
+        try {
+            const { data } = await apiClient.get(`/find_product_history?slug_title_product=${params?.slug_title_product[1]}&slug=${params?.slug_title_product[0]}`);
+            setListProducts(data?.product || []);
+            setComparativeProducts(data?.allProduct || []);
+            setLink(data?.date_product?.link || "");
+            setLinkSearch(data?.date_product?.link_search || "");
+            setName(data?.date_product?.title_product || "");
+            setStore(data?.date_product?.store || "");
+            setLoading(false);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            setLoading(false);
+        }
+    }
+
     const date_product: any = [];
     (listProducts || []).forEach((item) => {
         date_product.push({
@@ -142,9 +160,38 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
             await apiClient.get(`/search_products?urlSearchStore=${valorCodificado}&stores=${store}`);
             setLoading(false);
             toast.success(`Produtos da concorrência ${store} capturados com sucesso`);
+            loadStoreProducts();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             toast.error(`Erro ao carregar dados da concorrência ${store}`);
+            setLoading(false);
+        }
+    }
+
+    async function handleStoreESABProducts() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/esab_machines_weld`);
+            setLoading(false);
+            toast.success(`Produtos da ESAB capturados com sucesso`);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da ESAB`);
+            setLoading(false);
+        }
+    }
+
+    async function handleStoreSUMIGProducts() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/sumig_machines_weld`);
+            setLoading(false);
+            toast.success(`Produtos da SUMIG capturados com sucesso`);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da SUMIG`);
             setLoading(false);
         }
     }
@@ -171,19 +218,21 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                 <h3>LOJA: {store}</h3>
                                 <br />
                                 <br />
-                                <button
-                                    className={styles.buttonProduto}
-                                    onClick={() => handleButtonClick(link)}
-                                >
-                                    Ver produto
-                                </button>
+                                <div className={styles.boxButtons}>
+                                    <button
+                                        className={styles.buttonProduto}
+                                        onClick={() => handleButtonClick(link)}
+                                    >
+                                        Ver produto
+                                    </button>
 
-                                <button
-                                    className={styles.searchProduto}
-                                    onClick={handleStoreProducts}
-                                >
-                                    Atualizar preço
-                                </button>
+                                    <button
+                                        className={styles.searchProduto}
+                                        onClick={handleStoreProducts}
+                                    >
+                                        Atualizar preços
+                                    </button>
+                                </div>
                                 <br />
                                 <br />
                                 <br />
