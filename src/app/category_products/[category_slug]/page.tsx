@@ -9,6 +9,7 @@ import Modal from 'react-modal';
 
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
+import { ModalCategory } from "@/components/popups/ModalCategory/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
 import { ModalProductCategory } from "@/components/popups/ModalProductCategory/page";
 
@@ -56,7 +57,8 @@ export default function Category_products({ params }: { params: { category_slug:
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [modalVisibleDeleteProduct, setModalVisibleDeleteProduct] = useState<boolean>(false);
+    const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
+    const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -102,12 +104,21 @@ export default function Category_products({ params }: { params: { category_slug:
     }
 
     async function handleOpenModalDeleteProduct(id: string) {
-        setModalVisibleDeleteProduct(true);
+        setModalVisibleCategorysProduct(true);
         setIdProduct(id);
     }
 
     function handleCloseModalDeleteProduct() {
-        setModalVisibleDeleteProduct(false);
+        setModalVisibleCategorysProduct(false);
+    }
+
+    async function handleOpenModalCategorys(id: string) {
+        setModalVisibleCategorys(true);
+        setIdProduct(id);
+    }
+
+    function handleCloseModalCategorys() {
+        setModalVisibleCategorys(false);
     }
 
     Modal.setAppElement('body');
@@ -186,6 +197,13 @@ export default function Category_products({ params }: { params: { category_slug:
                                                             </button>
 
                                                             <button
+                                                                className={styles.buttonProdutoCategs}
+                                                                onClick={() => handleOpenModalCategorys(item?.product?.id)}
+                                                            >
+                                                                Registros de categorias
+                                                            </button>
+
+                                                            <button
                                                                 className={styles.buttonPrices}
                                                                 onClick={() => router.push(`/historico_preco/${item?.product?.storeProduct?.slug}/${item?.product?.storeProduct?.slug_title_product}`)}
                                                             >
@@ -213,10 +231,18 @@ export default function Category_products({ params }: { params: { category_slug:
                             productLoad={loadStoreProducts}
                         />
                     )}
-                    {modalVisibleDeleteProduct && (
+                    {modalVisibleCategorysProduct && (
                         <ModalProductCategory
-                            isOpen={modalVisibleDeleteProduct}
+                            isOpen={modalVisibleCategorysProduct}
                             onRequestClose={handleCloseModalDeleteProduct}
+                            productCategory={idProduct}
+                            productLoad={loadStoreProducts}
+                        />
+                    )}
+                    {modalVisibleCategorys && (
+                        <ModalCategory
+                            isOpen={modalVisibleCategorys}
+                            onRequestClose={handleCloseModalCategorys}
                             productCategory={idProduct}
                             productLoad={loadStoreProducts}
                         />

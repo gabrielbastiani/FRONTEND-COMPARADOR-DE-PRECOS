@@ -1,0 +1,75 @@
+.containerContent {
+    justify-content: center;
+    align-items: center;
+    border-radius: 3%;
+    z-index: 9999999999999;
+}
+
+.containerButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 26px;
+    flex-direction: column;
+}
+
+.containerButton label {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.containerContent h2 {
+    color: white;
+    margin-top: 17px;
+}
+
+.containerContent h3 {
+    color: white;
+    margin-top: 17px;
+    margin-bottom: 15px;
+}
+
+.selectImput {
+    width: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    border: solid 2px red;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.position {
+    display: flex;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.addCategoryButton {
+    border: none;
+    background-color: rgb(14, 171, 14);
+    padding: 6px;
+    color: white;
+    border-radius: 5px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+}
+
+.categs {
+    margin-bottom: 4px;
+    font-size: 14px;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notFoundCategs {
+    font-size: 14px;
+    color: red;
+}
+
+.position {
+    display: flex;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
