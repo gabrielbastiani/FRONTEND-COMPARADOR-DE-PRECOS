@@ -168,31 +168,32 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         }
     }
 
-    async function handleStoreESABProducts() {
+    async function handleStoreSUMIGOrEsabProducts() {
         setLoading(true);
         const apiClient = setupAPIClient();
-        try {
-            await apiClient.get(`/esab_machines_weld`);
-            setLoading(false);
-            toast.success(`Produtos da ESAB capturados com sucesso`);
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error(`Erro ao carregar dados da ESAB`);
-            setLoading(false);
+        if (store === "ESAB") {
+            try {
+                await apiClient.get(`/esab_machines_weld`);
+                setLoading(false);
+                toast.success(`Produtos da ESAB capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da ESAB`);
+                setLoading(false);
+            }
         }
-    }
-
-    async function handleStoreSUMIGProducts() {
-        setLoading(true);
-        const apiClient = setupAPIClient();
-        try {
-            await apiClient.get(`/sumig_machines_weld`);
-            setLoading(false);
-            toast.success(`Produtos da SUMIG capturados com sucesso`);
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error(`Erro ao carregar dados da SUMIG`);
-            setLoading(false);
+        if (store === "SUMIG") {
+            try {
+                await apiClient.get(`/sumig_machines_weld`);
+                setLoading(false);
+                toast.success(`Produtos da SUMIG capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da SUMIG`);
+                setLoading(false);
+            }
         }
     }
 
@@ -226,12 +227,22 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                         Ver produto
                                     </button>
 
-                                    <button
-                                        className={styles.searchProduto}
-                                        onClick={handleStoreProducts}
-                                    >
-                                        Atualizar preços
-                                    </button>
+                                    {store === "SUMIG" || store === "ESAB" ?
+                                        <button
+                                            className={styles.searchProduto}
+                                            onClick={handleStoreSUMIGOrEsabProducts}
+                                        >
+                                            Atualizar preços
+                                        </button>
+                                        :
+                                        <button
+                                            className={styles.searchProduto}
+                                            onClick={handleStoreProducts}
+                                        >
+                                            Atualizar preços
+                                        </button>
+                                    }
+
                                 </div>
                                 <br />
                                 <br />
