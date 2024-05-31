@@ -197,6 +197,21 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         }
     }
 
+    async function handleAllStoreProductsMachines() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/search_all_stores_machines`);
+            setLoading(false);
+            toast.success(`Produtos da concorrência capturados com sucesso`);
+            loadStoreProducts();
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da concorrência`);
+            setLoading(false);
+        }
+    }
+
 
     return (
         <>
@@ -280,28 +295,39 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                                     Comparar com outras lojas
                                 </button>
                                 {showCoparative ?
-                                    <ResponsiveContainer width="100%" height={400}>
-                                        <LineChart width={600} height={300} data={chartData}>
-                                            <CartesianGrid strokeDasharray="6 6" />
-                                            <XAxis dataKey="data" />
-                                            <YAxis />
-                                            <Tooltip />
-                                            <Legend />
-                                            {Object.keys(groupedData).map((store, index) => (
-                                                <Line
-                                                    key={store}
-                                                    type="monotone"
-                                                    dataKey="price"
-                                                    data={groupedData[store]}
-                                                    name={store}
-                                                    stroke={index === 0 ? "#8884d8" : index === 1 ? "#82ca9d" : "#ffc658"}
-                                                    activeDot={{ onClick: handleButtonClickComaratives }}
-                                                >
-                                                    <LabelList content={<CustomizedLabelComparative />} />
-                                                </Line>
-                                            ))}
-                                        </LineChart>
-                                    </ResponsiveContainer>
+                                    <>
+                                        <button
+                                            className={styles.searchProduto}
+                                            onClick={handleAllStoreProductsMachines}
+                                        >
+                                            Atualizar preços de todas as lojas
+                                        </button>
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <LineChart width={600} height={300} data={chartData}>
+                                                <CartesianGrid strokeDasharray="6 6" />
+                                                <XAxis dataKey="data" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                {Object.keys(groupedData).map((store, index) => (
+                                                    <Line
+                                                        key={store}
+                                                        type="monotone"
+                                                        dataKey="price"
+                                                        data={groupedData[store]}
+                                                        name={store}
+                                                        stroke={index === 0 ? "#8884d8" : index === 1 ? "#82ca9d" : "#ffc658"}
+                                                        activeDot={{ onClick: handleButtonClickComaratives }}
+                                                    >
+                                                        <LabelList content={<CustomizedLabelComparative />} />
+                                                    </Line>
+                                                ))}
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </>
                                     :
                                     null
                                 }
