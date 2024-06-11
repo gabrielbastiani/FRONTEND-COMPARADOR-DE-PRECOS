@@ -153,39 +153,39 @@ export default function Stores() {
 
                             <div className={styles.grid_item}>
                                 <button
-                                    onClick={() => handleOpenModal('https://www.google.com/search?sca_esv=584838229&tbm=shop&sxsrf=ACQVn0_wJfSTuXc6puQpufdi7SJl0HJM-Q:1710955161295&q=maquina+de+solda&tbs=mr:1,merchagg:g134886126%7Cm134880504&sa=X&ved=0ahUKEwj71fXUrIOFAxVDAbkGHRyNCjYQsysIuQkoAA&biw=1592&bih=752&dpr=1', 'Amazon.com')} data-valor1="valor1" data-valor2="valor2"
+                                    onClick={() => handleOpenModal('https://www.google.com/search?sca_esv=584838229&tbm=shop&sxsrf=ACQVn0_wJfSTuXc6puQpufdi7SJl0HJM-Q:1710955161295&q=maquina+de+solda&tbs=mr:1,merchagg:g134886126%7Cm134880504&sa=X&ved=0ahUKEwj71fXUrIOFAxVDAbkGHRyNCjYQsysIuQkoAA&biw=1592&bih=752&dpr=1', 'Amazon.com.br - Seller')} data-valor1="valor1" data-valor2="valor2"
                                 >
-                                    <Image src={amazon} width={70} height={70} alt="Amazon.com" />
+                                    <Image src={amazon} width={70} height={70} alt="Amazon.com.br - Seller" />
                                     <strong>
-                                        Amazon.com
+                                        Amazon.com.br - Seller
                                     </strong>
                                 </button>
 
                                 <FaProductHunt
-                                    onClick={() => router.push(`/list_products/amazon.com`)}
+                                    onClick={() => router.push(`/list_products/amazon.com.br-seller`)}
                                     size={28}
                                 />
 
-                                <span>{listProducts.filter(item => item.slug === "amazon.com").length}</span>
+                                <span>{listProducts.filter(item => item.slug === "amazon.com.br-seller").length}</span>
 
                             </div>
 
                             <div className={styles.grid_item}>
                                 <button
-                                    onClick={() => handleOpenModal("https://www.google.com/search?sca_esv=584838229&tbm=shop&sxsrf=ACQVn09ZpQa6AarvDV0CC_cutsi5fDC3ZA:1710955611105&q=maquina+de+solda&tbs=mr:1,merchagg:g103278022%7Cm110551677%7Cm143935386&sa=X&ved=0ahUKEwiC77OrroOFAxXGqpUCHaJDDEEQsysItgkoAQ&biw=1592&bih=752&dpr=1", "Americanas")} data-valor1="valor1" data-valor2="valor2"
+                                    onClick={() => handleOpenModal("https://www.google.com/search?sca_esv=584838229&tbm=shop&sxsrf=ACQVn09ZpQa6AarvDV0CC_cutsi5fDC3ZA:1710955611105&q=maquina+de+solda&tbs=mr:1,merchagg:g103278022%7Cm110551677%7Cm143935386&sa=X&ved=0ahUKEwiC77OrroOFAxXGqpUCHaJDDEEQsysItgkoAQ&biw=1592&bih=752&dpr=1", "Americanas.com")} data-valor1="valor1" data-valor2="valor2"
                                 >
-                                    <Image src={americanas} width={70} height={70} alt="americanas" />
+                                    <Image src={americanas} width={70} height={70} alt="americanas.com" />
                                     <strong>
-                                        Americanas
+                                        Americanas.com
                                     </strong>
                                 </button>
 
                                 <FaProductHunt
-                                    onClick={() => router.push(`/list_products/americanas`)}
+                                    onClick={() => router.push(`/list_products/americanas.com`)}
                                     size={28}
                                 />
 
-                                <span>{listProducts.filter(item => item.slug === "americanas").length}</span>
+                                <span>{listProducts.filter(item => item.slug === "americanas.com").length}</span>
 
                             </div>
 
@@ -324,20 +324,20 @@ export default function Stores() {
 
                             <div className={styles.grid_item}>
                                 <button
-                                    onClick={() => handleOpenModal("https://www.google.com/search?sca_esv=584838229&tbm=shop&sxsrf=ACQVn0_CZ8OXadsOxwFY0GxF_MWcp1Dibw:1710957106051&q=maquina+de+solda&tbs=mr:1,merchagg:g115172300%7Cm143195331&sa=X&ved=0ahUKEwjjhKD0s4OFAxXCppUCHeJ8DhAQsysI1QkoEA&biw=1592&bih=752&dpr=1", "Ponto Frio")} data-valor1="valor1" data-valor2="valor2"
+                                    onClick={() => handleOpenModal("https://www.google.com/search?sca_esv=584838229&tbm=shop&sxsrf=ACQVn0_CZ8OXadsOxwFY0GxF_MWcp1Dibw:1710957106051&q=maquina+de+solda&tbs=mr:1,merchagg:g115172300%7Cm143195331&sa=X&ved=0ahUKEwjjhKD0s4OFAxXCppUCHeJ8DhAQsysI1QkoEA&biw=1592&bih=752&dpr=1", "Pontofrio.com")} data-valor1="valor1" data-valor2="valor2"
                                 >
-                                    <Image src={pontofrio} width={80} height={30} alt="Ponto Frio" />
+                                    <Image src={pontofrio} width={80} height={30} alt="Pontofrio.com" />
                                     <strong>
-                                        Ponto Frio
+                                        Pontofrio.com
                                     </strong>
                                 </button>
 
                                 <FaProductHunt
-                                    onClick={() => router.push(`/list_products/ponto-frio`)}
+                                    onClick={() => router.push(`/list_products/pontofrio.com`)}
                                     size={28}
                                 />
 
-                                <span>{listProducts.filter(item => item.slug === "ponto-frio").length}</span>
+                                <span>{listProducts.filter(item => item.slug === "pontofrio.com").length}</span>
 
                             </div>
 
