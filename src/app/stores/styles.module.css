@@ -28,7 +28,7 @@
 
 .grid_container {
     display: grid;
-    grid-template-columns: 400px 400px;
+    grid-template-columns: 460px 460px;
     padding: 10px;
     width: 100%;
     justify-content: center;
@@ -46,6 +46,7 @@
     height: 110px;
     justify-content: space-between;
     cursor: pointer;
+    /* width: 100%; */
 }
 
 .grid_item img {
