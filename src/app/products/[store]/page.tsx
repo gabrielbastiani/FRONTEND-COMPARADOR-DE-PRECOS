@@ -32,12 +32,25 @@ type ProductsStoreProps = {
 export default function Products({ params }: { params: { store: string } }) {
 
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(10);
     const [loading, setLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalWarning, setModalWarning] = useState<boolean>(false);
     const [idProduct, setIdProduct] = useState<string>("");
     const [title, setTitle] = useState<string>("");
     const [store, setStore] = useState<string>("");
+
+    const initialFilters = {
+        filter: '',
+        minPrice: '',
+        maxPrice: '',
+        sort: 'price',
+        order: 'asc',
+        limit: 10 // Default limit
+    };
+
+    const [filters, setFilters] = useState(initialFilters);
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -55,35 +68,108 @@ export default function Products({ params }: { params: { store: string } }) {
     useEffect(() => {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
-            setLoading(true);
             try {
-                const response = await apiClient.get(`/store_products?slug=${params?.store}`);
-                setListProducts(response?.data || []);
-                setLoading(false);
+                const response = await apiClient.get(`/page_products`, {
+                    params: {
+                        slug: params?.store,
+                        page: currentPage,
+                        limit: filters.limit,
+                        filter: filters.filter,
+                        sort: filters.sort,
+                        order: filters.order,
+                        minPrice: filters.minPrice,
+                        maxPrice: filters.maxPrice
+                    },
+                });
+                setListProducts(response?.data?.product || []);
+                setTotalPages(response.data.totalPages);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
-                setLoading(false);
             }
         }
         loadStoreProducts();
-    }, [params?.store]);
-
-    const handleButtonClick = (link: string) => {
-        window.open(`${link}`, '_blank');
-    };
+    }, [currentPage, filters.filter, filters.limit, filters.maxPrice, filters.minPrice, filters.order, filters.sort, params?.store]);
 
     async function loadStoreProducts() {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            const response = await apiClient.get(`/store_products?slug=${params?.store}`);
-            setListProducts(response?.data || []);
+            const response = await apiClient.get(`/page_products`, {
+                params: {
+                    slug: params?.store,
+                    page: currentPage,
+                    limit: filters.limit,
+                    filter: filters.filter,
+                    sort: filters.sort,
+                    order: filters.order,
+                    minPrice: filters.minPrice,
+                    maxPrice: filters.maxPrice
+                },
+            });
+            setListProducts(response?.data?.product || []);
+            setTotalPages(response.data.totalPages);
             setLoading(false);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             setLoading(false);
         }
     }
+
+    const updateFilter = (filter: string, value: string | number) => {
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [filter]: value,
+        }));
+    };
+
+    const applyFilters = () => {
+        setCurrentPage(1); // Reset the current page when applying filters
+        loadStoreProducts();
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        updateFilter('limit', parseInt(e.target.value));
+        setCurrentPage(1); // Reset to first page when limit changes
+    };
+
+    const renderPagination = () => {
+        const pages = [];
+        const maxPagesToShow = 10;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = startPage + maxPagesToShow - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+                <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    disabled={i === currentPage}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        return pages;
+    };
+
+    const resetFilters = () => {
+        setFilters(initialFilters); // Reset filters to initial state
+        setCurrentPage(1); // Reset to the first page
+    };
+
+    const handleButtonClick = (link: string) => {
+        window.open(`${link}`, '_blank');
+    };
 
     async function deleteproduct(id: string) {
         const apiClient = setupAPIClient();
@@ -134,8 +220,39 @@ export default function Products({ params }: { params: { store: string } }) {
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
                                 <h1 className={styles.titulo}>{store}</h1>
+                                <div>
+                                    <input type="text" value={filters.filter} onChange={(e) => updateFilter('filter', e.target.value)} placeholder="Busque aqui..." />
+                                    <input type="text" value={filters.minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} placeholder="Preço minimo (EX: 250)" />
+                                    <input type="text" value={filters.maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} placeholder="Preço maximo (EX: 2000)" />
+                                    <button onClick={applyFilters}>Aplicar filtro de preço</button>
+                                    <select value={filters.sort} onChange={(e) => updateFilter('sort', e.target.value)}>
+                                        <option value="price">Preço</option>
+                                        <option value="created_at">Data</option>
+                                    </select>
+                                    <select value={filters.order} onChange={(e) => updateFilter('order', e.target.value)}>
+                                        <option value="desc">Menor para o maior</option>
+                                        <option value="asc">Maior para o menor</option>
+                                    </select>
+                                    <label>Produtos por página: </label>
+                                    <select value={filters.limit} onChange={handleLimitChange}>
+                                        <option value={5}>5</option>
+                                        <option value={10}>10</option>
+                                        <option value={20}>20</option>
+                                        <option value={50}>50</option>
+                                    </select>
+                                    <button onClick={resetFilters}>Resetar filtros</button>
+                                </div>
                             </div>
                             <div className={styles.grid_container}>
+                                <div>
+                                    <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
+                                    {renderPagination()}
+                                    <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+                                </div>
+
+                                <div>
+                                    Página {currentPage} of {totalPages}
+                                </div>
                                 {listProducts?.map((item, index) => {
                                     return (
                                         <div key={index}>
