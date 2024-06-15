@@ -46,8 +46,8 @@ export default function Products({ params }: { params: { store: string } }) {
         minPrice: '',
         maxPrice: '',
         sort: 'price',
-        order: 'asc',
-        limit: 10 // Default limit
+        order: 'desc',
+        limit: 10
     };
 
     const [filters, setFilters] = useState(initialFilters);
@@ -123,7 +123,7 @@ export default function Products({ params }: { params: { store: string } }) {
     };
 
     const applyFilters = () => {
-        setCurrentPage(1); // Reset the current page when applying filters
+        setCurrentPage(1);
         loadStoreProducts();
     };
 
@@ -133,7 +133,7 @@ export default function Products({ params }: { params: { store: string } }) {
 
     const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         updateFilter('limit', parseInt(e.target.value));
-        setCurrentPage(1); // Reset to first page when limit changes
+        setCurrentPage(1);
     };
 
     const renderPagination = () => {
@@ -150,6 +150,7 @@ export default function Products({ params }: { params: { store: string } }) {
         for (let i = startPage; i <= endPage; i++) {
             pages.push(
                 <button
+                    className={styles.buttonsPages}
                     key={i}
                     onClick={() => handlePageChange(i)}
                     disabled={i === currentPage}
@@ -163,8 +164,8 @@ export default function Products({ params }: { params: { store: string } }) {
     };
 
     const resetFilters = () => {
-        setFilters(initialFilters); // Reset filters to initial state
-        setCurrentPage(1); // Reset to the first page
+        setFilters(initialFilters);
+        setCurrentPage(1);
     };
 
     const handleButtonClick = (link: string) => {
@@ -230,8 +231,8 @@ export default function Products({ params }: { params: { store: string } }) {
                                         <option value="created_at">Data</option>
                                     </select>
                                     <select value={filters.order} onChange={(e) => updateFilter('order', e.target.value)}>
-                                        <option value="desc">Menor para o maior</option>
-                                        <option value="asc">Maior para o menor</option>
+                                        <option value="desc">Maior para o menor</option>
+                                        <option value="asc">Menor para o maior</option>
                                     </select>
                                     <label>Produtos por página: </label>
                                     <select value={filters.limit} onChange={handleLimitChange}>
@@ -244,15 +245,6 @@ export default function Products({ params }: { params: { store: string } }) {
                                 </div>
                             </div>
                             <div className={styles.grid_container}>
-                                <div>
-                                    <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
-                                    {renderPagination()}
-                                    <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</button>
-                                </div>
-
-                                <div>
-                                    Página {currentPage} of {totalPages}
-                                </div>
                                 {listProducts?.map((item, index) => {
                                     return (
                                         <div key={index}>
@@ -320,6 +312,15 @@ export default function Products({ params }: { params: { store: string } }) {
                                         </div>
                                     )
                                 })}
+                                <div className={styles.boxPages}>
+                                    <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Voltar</button>
+                                    {renderPagination()}
+                                    <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Avançar</button>
+                                </div>
+
+                                <div className={styles.boxPagesTotal}>
+                                    Página {currentPage} de {totalPages}
+                                </div>
                             </div>
                         </article>
                     </main>
