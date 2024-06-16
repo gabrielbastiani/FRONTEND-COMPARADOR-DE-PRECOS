@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Modal from 'react-modal';
 import { toast } from "react-toastify";
 
+import { Button } from "@/components/Button/page";
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
@@ -150,9 +152,9 @@ export default function Products({ params }: { params: { store: string } }) {
         for (let i = startPage; i <= endPage; i++) {
             pages.push(
                 <button
-                    className={styles.buttonsPages}
                     key={i}
                     onClick={() => handlePageChange(i)}
+                    className={`${styles.paginationButton} ${i === currentPage ? styles.current : ''}`}
                     disabled={i === currentPage}
                 >
                     {i}
@@ -221,27 +223,40 @@ export default function Products({ params }: { params: { store: string } }) {
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
                                 <h1 className={styles.titulo}>{store}</h1>
-                                <div>
-                                    <input type="text" value={filters.filter} onChange={(e) => updateFilter('filter', e.target.value)} placeholder="Busque aqui..." />
-                                    <input type="text" value={filters.minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} placeholder="Preço minimo (EX: 250)" />
-                                    <input type="text" value={filters.maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} placeholder="Preço maximo (EX: 2000)" />
-                                    <button onClick={applyFilters}>Aplicar filtro de preço</button>
-                                    <select value={filters.sort} onChange={(e) => updateFilter('sort', e.target.value)}>
-                                        <option value="price">Preço</option>
-                                        <option value="created_at">Data</option>
-                                    </select>
-                                    <select value={filters.order} onChange={(e) => updateFilter('order', e.target.value)}>
-                                        <option value="desc">Maior para o menor</option>
-                                        <option value="asc">Menor para o maior</option>
-                                    </select>
-                                    <label>Produtos por página: </label>
-                                    <select value={filters.limit} onChange={handleLimitChange}>
-                                        <option value={5}>5</option>
-                                        <option value={10}>10</option>
-                                        <option value={20}>20</option>
-                                        <option value={50}>50</option>
-                                    </select>
-                                    <button onClick={resetFilters}>Resetar filtros</button>
+                                <div className={styles.containerFilters}>
+                                    <div className={styles.boxFilters}>
+                                        <label>Pesquisar: </label>
+                                        <input type="text" value={filters.filter} onChange={(e) => updateFilter('filter', e.target.value)} placeholder="Busque aqui..." />
+                                    </div>
+                                    <div className={styles.boxFilters}>
+                                        <label>Por faixa de preço: </label>
+                                        De&nbsp;&nbsp;
+                                        <input type="text" value={filters.minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} placeholder="Preço minimo (EX: 250)" />
+                                        Até&nbsp;&nbsp;&nbsp;
+                                        <input type="text" value={filters.maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} placeholder="Preço máximo (EX: 2000)" />
+                                        <Button onClick={applyFilters}>Aplicar filtro de preço</Button>
+                                    </div>
+                                    <div className={styles.boxFilters}>
+                                        <label>Ordenação: </label>
+                                        <select value={filters.sort} onChange={(e) => updateFilter('sort', e.target.value)}>
+                                            <option value="price">Preço</option>
+                                            <option value="created_at">Data</option>
+                                        </select>
+                                        <select value={filters.order} onChange={(e) => updateFilter('order', e.target.value)}>
+                                            <option value="desc">Maior para o menor</option>
+                                            <option value="asc">Menor para o maior</option>
+                                        </select>
+                                    </div>
+                                    <div className={styles.boxFilters}>
+                                        <label>Produtos por página: </label>
+                                        <select value={filters.limit} onChange={handleLimitChange}>
+                                            <option value={5}>5</option>
+                                            <option value={10}>10</option>
+                                            <option value={20}>20</option>
+                                            <option value={50}>50</option>
+                                        </select>
+                                        <Button onClick={resetFilters}>Resetar filtros</Button>
+                                    </div>
                                 </div>
                             </div>
                             <div className={styles.grid_container}>
@@ -313,9 +328,9 @@ export default function Products({ params }: { params: { store: string } }) {
                                     )
                                 })}
                                 <div className={styles.boxPages}>
-                                    <button disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Voltar</button>
+                                    <button className={styles.buttonPrevius} disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}><FaArrowLeft size={25} /></button>
                                     {renderPagination()}
-                                    <button disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Avançar</button>
+                                    <button className={styles.buttonNext} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}><FaArrowRight size={25} /></button>
                                 </div>
 
                                 <div className={styles.boxPagesTotal}>
