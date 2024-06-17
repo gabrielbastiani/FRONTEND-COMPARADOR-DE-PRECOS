@@ -89,11 +89,19 @@ export function ModalSumig({ isOpen, onRequestClose }: ModalStoreRequest) {
                             {listProducts?.length === 0 ?
                                 null
                                 :
-                                <button
-                                    onClick={() => router.push(`/products/sumig`)}
-                                >
-                                    Ver os produtos dessa loja
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => router.push(`/products/maquinas_de_solda/sumig`)}
+                                    >
+                                        Máquinas de solda dessa loja
+                                    </button>
+
+                                    <button
+                                        onClick={() => router.push(`/products/maquinas_corte_plasma/sumig`)}
+                                    >
+                                        Máquinas de corte plasma dessa loja
+                                    </button>
+                                </>
                             }
                             <button
                                 style={{ backgroundColor: 'gray' }}
