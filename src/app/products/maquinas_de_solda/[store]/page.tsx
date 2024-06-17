@@ -71,7 +71,7 @@ export default function Products({ params }: { params: { store: string } }) {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
             try {
-                const response = await apiClient.get(`/page_products`, {
+                const response = await apiClient.get(`/page_products_machine_weld`, {
                     params: {
                         slug: params?.store,
                         page: currentPage,
@@ -96,7 +96,7 @@ export default function Products({ params }: { params: { store: string } }) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            const response = await apiClient.get(`/page_products`, {
+            const response = await apiClient.get(`/page_products_machine_weld`, {
                 params: {
                     slug: params?.store,
                     page: currentPage,

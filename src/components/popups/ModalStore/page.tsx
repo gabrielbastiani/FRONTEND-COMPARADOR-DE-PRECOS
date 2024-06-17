@@ -16,10 +16,11 @@ interface ModalStoreRequest {
     isOpen: boolean;
     valor1: string;
     valor2: string;
+    valor3: string;
     onRequestClose: () => void;
 }
 
-export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStoreRequest) {
+export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: ModalStoreRequest) {
 
     const router = useRouter();
 
@@ -73,12 +74,29 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
         }
     }
 
-    async function handleStoreProducts() {
+    async function handleStoreMachineWelding() {
         setLoading(true);
         const valorCodificado = encodeURIComponent(String(valor1));
         const apiClient = setupAPIClient();
         try {
-            await apiClient.get(`/search_products?urlSearchStore=${valorCodificado}&stores=${valor2}`);
+            await apiClient.get(`/search_machines_welding?urlSearchStore=${valorCodificado}&stores=${valor2}`);
+            setLoading(false);
+            toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
+            onRequestClose();
+            loadStoreProducts();
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da concorrência ${valor2}`);
+            setLoading(false);
+        }
+    }
+
+    async function handleStoreMachineCut() {
+        setLoading(true);
+        const valorCodificado = encodeURIComponent(String(valor3));
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/search_machines_cut?urlSearchStore=${valorCodificado}&stores=${valor2}`);
             setLoading(false);
             toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
             onRequestClose();
@@ -117,18 +135,39 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2 }: ModalStor
                             {listProducts?.length === 0 ?
                                 null
                                 :
-                                <button
-                                    onClick={() => router.push(`/products/${valueStore}`)}
-                                >
-                                    Ver os produtos dessa loja
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => router.push(`/products/maquinas_de_solda/${valueStore}`)}
+                                    >
+                                        Máquinas de solda dessa loja
+                                    </button>
+                                    {valor3 === "NA" ?
+                                        null
+                                        :
+                                        <button
+                                            onClick={() => router.push(`/products/maquinas_corte_plasma/${valueStore}`)}
+                                        >
+                                            Máquinas de corte plasma dessa loja
+                                        </button>
+                                    }
+                                </>
                             }
                             <button
                                 style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreProducts}
+                                onClick={handleStoreMachineWelding}
                             >
-                                Gerar uma nova lista de produtos dessa loja
+                                Gerar uma nova lista de máquinas de solda dessa loja
                             </button>
+                            {valor3 === "NA" ?
+                                null
+                                :
+                                <button
+                                    style={{ backgroundColor: 'gray' }}
+                                    onClick={handleStoreMachineCut}
+                                >
+                                    Gerar uma nova lista de máquinas de corte plasma dessa loja
+                                </button>
+                            }
                         </div>
                     </div>
                 </>

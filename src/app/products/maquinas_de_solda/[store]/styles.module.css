@@ -1,0 +1,211 @@
+.mainContainer {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    padding-top: 80px;
+}
+
+.content {
+    width: 90%;
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    border-left: solid 7px red;
+    flex-direction: column;
+}
+
+.titleBox {
+    margin: 30px;
+}
+
+.titulo {
+    color: black;
+    position: relative;
+    display: inline-block;
+}
+
+.titulo::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 50%;
+    height: 5px;
+    background-color: red;
+}
+
+.title {
+    width: 69%;
+    display: flex;
+}
+
+.title h3 {
+    margin-left: 194px;
+}
+
+.grid_container {
+    margin: 20px;
+}
+
+.boxBrand {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.boxData {
+    margin-top: 4px;
+}
+
+.boxBrand button {
+    margin-left: 75px;
+    border: none;
+    border-radius: 5px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.containerInfos {
+    display: flex;
+    margin: 30px;
+}
+
+.imageProduct {
+    margin-right: 25px;
+}
+
+.gridContainerProduct {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+.boxCategory {
+    width: 23%;
+}
+
+.buttonProduto {
+    border: none;
+    background-color: red;
+    color: white;
+    padding: 6px;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.box span {
+    color: red;
+}
+
+.box strong span {
+    padding-bottom: 3px;
+}
+
+.addCategoryButton {
+    border: none;
+    background-color: rgb(14, 171, 14);
+    padding: 6px;
+    color: white;
+    border-radius: 5px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+}
+
+.divisorBox {
+    width: 100%;
+    margin-bottom: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.divisorBox hr {
+    width: 20%;
+    height: 2px;
+    border: none;
+    background-color: red;
+}
+
+.boxPages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.boxPagesTotal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.paginationButton {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 10%;
+    color: #333;
+    padding: 5px 10px;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.paginationButton:hover {
+    background-color: #ddd;
+}
+
+.current {
+    background-color: rgb(17, 192, 17);
+    border-radius: 10%;
+    color: #fff;
+    border-color: orange;
+    cursor: default;
+}
+
+
+.buttonNext {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.buttonPrevius {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.containerFilters {
+    margin-top: 25px;
+}
+
+.boxFilters {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.boxFilters label {
+    margin-right: 10px;
+}
+
+.boxFilters input {
+    padding: 5px;
+    border-radius: 10px;
+    width: 20%;
+    margin-right: 15px;
+}
+
+.boxFilters select {
+    border-radius: 8px;
+    padding: 5px;
+    width: 13%;
+    text-align: center;
+    margin-right: 10px;
+}

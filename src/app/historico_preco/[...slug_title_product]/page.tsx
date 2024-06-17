@@ -157,7 +157,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         const valorCodificado = encodeURIComponent(String(linkSearch));
         const apiClient = setupAPIClient();
         try {
-            await apiClient.get(`/search_products?urlSearchStore=${valorCodificado}&stores=${store}`);
+            await apiClient.get(`/search_machines_welding?urlSearchStore=${valorCodificado}&stores=${store}`);
             setLoading(false);
             toast.success(`Produtos da concorrência ${store} capturados com sucesso`);
             loadStoreProducts();
