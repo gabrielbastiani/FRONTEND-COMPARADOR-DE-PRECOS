@@ -32,6 +32,8 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
         }
     };
 
+    const esab = "esab";
+
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [listProducts, setListProducts] = useState<any[]>();
@@ -49,11 +51,25 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
         loadStoreProducts();
     }, []);
 
-    async function handleStoreESABProducts() {
+    async function handleStoreMachineWelding() {
         setLoading(true);
         const apiClient = setupAPIClient();
         try {
             await apiClient.get(`/esab_machines_weld`);
+            setLoading(false);
+            toast.success(`Produtos da ESAB capturados com sucesso`);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da ESAB`);
+            setLoading(false);
+        }
+    }
+
+    async function handleStoreMachineCut() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/search_machines_cut_esab`);
             setLoading(false);
             toast.success(`Produtos da ESAB capturados com sucesso`);
         } catch (error) {/* @ts-ignore */
@@ -86,21 +102,32 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
                     <div className={styles.mainContainer}>
                         <h1>Escolha uma opção</h1>
                         <div className={styles.containerButton}>
-                            {listProducts?.length === 0 ?
-                                null
-                                :
-                                <button
-                                    onClick={() => router.push(`/products/esab`)}
-                                >
-                                    Ver os produtos dessa loja
-                                </button>
-                            }
+                            <button
+                                onClick={() => router.push(`/products/maquinas_de_solda/${esab}`)}
+                            >
+                                Máquinas de solda dessa loja
+                            </button>
+
+                            <button
+                                onClick={() => router.push(`/products/maquinas_corte_plasma/${esab}`)}
+                            >
+                                Máquinas de corte plasma dessa loja
+                            </button>
+
                             <button
                                 style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreESABProducts}
+                                onClick={handleStoreMachineWelding}
                             >
-                                Gerar uma nova lista de produtos dessa loja
+                                Gerar uma nova lista de máquinas de solda dessa loja
                             </button>
+
+                            <button
+                                style={{ backgroundColor: 'gray' }}
+                                onClick={handleStoreMachineCut}
+                            >
+                                Gerar uma nova lista de máquinas de corte plasma dessa loja
+                            </button>
+
                         </div>
                     </div>
                 </>
