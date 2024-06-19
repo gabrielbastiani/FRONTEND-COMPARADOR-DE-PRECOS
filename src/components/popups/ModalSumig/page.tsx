@@ -36,6 +36,11 @@ export function ModalSumig({ isOpen, onRequestClose }: ModalStoreRequest) {
     const [loading, setLoading] = useState<boolean>(false);
     const [listProducts, setListProducts] = useState<any[]>();
 
+    const machinesWelding = listProducts?.filter(item => item.slug_type === "maquinas-de-solda" && item.slug === "sumig");
+    const machinesCut = listProducts?.filter(item => item.slug_type === "maquinas-de-corte-plasma-manual" && item.slug === "sumig");
+
+    const sumig = "sumig";
+
     useEffect(() => {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
@@ -49,11 +54,25 @@ export function ModalSumig({ isOpen, onRequestClose }: ModalStoreRequest) {
         loadStoreProducts();
     }, []);
 
-    async function handleStoreSUMIGProducts() {
+    async function handleStoreSUMIGMachinesWelding() {
         setLoading(true);
         const apiClient = setupAPIClient();
         try {
             await apiClient.get(`/sumig_machines_weld`);
+            setLoading(false);
+            toast.success(`Produtos da SUMIG capturados com sucesso`);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+            toast.error(`Erro ao carregar dados da SUMIG`);
+            setLoading(false);
+        }
+    }
+
+    async function handleStoreSUMIGMachinesCut() {
+        setLoading(true);
+        const apiClient = setupAPIClient();
+        try {
+            await apiClient.get(`/sumig_machines_cut`);
             setLoading(false);
             toast.success(`Produtos da SUMIG capturados com sucesso`);
         } catch (error) {/* @ts-ignore */
@@ -86,28 +105,38 @@ export function ModalSumig({ isOpen, onRequestClose }: ModalStoreRequest) {
                     <div className={styles.mainContainer}>
                         <h1>Escolha uma opção</h1>
                         <div className={styles.containerButton}>
-                            {listProducts?.length === 0 ?
+                            {machinesWelding?.length === 0 ?
                                 null
                                 :
-                                <>
-                                    <button
-                                        onClick={() => router.push(`/products/maquinas_de_solda/sumig`)}
-                                    >
-                                        Máquinas de solda dessa loja
-                                    </button>
-
-                                    <button
-                                        onClick={() => router.push(`/products/maquinas_corte_plasma/sumig`)}
-                                    >
-                                        Máquinas de corte plasma dessa loja
-                                    </button>
-                                </>
+                                <button
+                                    onClick={() => router.push(`/products/maquinas_de_solda/${sumig}`)}
+                                >
+                                    Máquinas de solda dessa loja
+                                </button>
                             }
+
+                            {machinesCut?.length === 0 ?
+                                null
+                                :
+                                <button
+                                    onClick={() => router.push(`/products/maquinas_corte_plasma/${sumig}`)}
+                                >
+                                    Máquinas de corte plasma dessa loja
+                                </button>
+                            }
+
                             <button
                                 style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreSUMIGProducts}
+                                onClick={handleStoreSUMIGMachinesWelding}
                             >
-                                Gerar uma nova lista de produtos dessa loja
+                                Gerar uma nova lista de máquinas de solda dessa loja
+                            </button>
+
+                            <button
+                                style={{ backgroundColor: 'gray' }}
+                                onClick={handleStoreSUMIGMachinesCut}
+                            >
+                                Gerar uma nova lista de máquinas de corte plasma dessa loja
                             </button>
                         </div>
                     </div>

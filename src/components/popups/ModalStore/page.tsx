@@ -27,6 +27,11 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
     const [loading, setLoading] = useState<boolean>(false);
     const [listProducts, setListProducts] = useState<any[]>();
 
+    const valueStore: string = removerAcentos(valor2);
+
+    const machinesWelding = listProducts?.filter(item => item.slug_type === "maquinas-de-solda" && item.slug === valueStore);
+    const machinesCut = listProducts?.filter(item => item.slug_type === "maquinas-de-corte-plasma-manual" && item.slug === valueStore);
+
     const customStyles = {
         content: {
             top: '50%',
@@ -48,8 +53,6 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
             .replace(/-{2,}/g, "-")
             .replace(/[/]/g, "-");
     }
-
-    const valueStore: string = removerAcentos(valor2);
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -132,15 +135,20 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
                     <div className={styles.mainContainer}>
                         <h1>Escolha uma opção</h1>
                         <div className={styles.containerButton}>
-                            {listProducts?.length === 0 ?
+                            {machinesWelding?.length === 0 ?
+                                null
+                                :
+                                <button
+                                    onClick={() => router.push(`/products/maquinas_de_solda/${valueStore}`)}
+                                >
+                                    Máquinas de solda dessa loja
+                                </button>
+                            }
+
+                            {machinesCut?.length === 0 ?
                                 null
                                 :
                                 <>
-                                    <button
-                                        onClick={() => router.push(`/products/maquinas_de_solda/${valueStore}`)}
-                                    >
-                                        Máquinas de solda dessa loja
-                                    </button>
                                     {valor3 === "NA" ?
                                         null
                                         :
@@ -152,6 +160,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
                                     }
                                 </>
                             }
+
                             <button
                                 style={{ backgroundColor: 'gray' }}
                                 onClick={handleStoreMachineWelding}

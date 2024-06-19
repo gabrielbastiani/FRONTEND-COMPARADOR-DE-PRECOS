@@ -38,6 +38,9 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
     const [loading, setLoading] = useState<boolean>(false);
     const [listProducts, setListProducts] = useState<any[]>();
 
+    const machinesWelding = listProducts?.filter(item => item.slug_type === "maquinas-de-solda" && item.slug === "esab");
+    const machinesCut = listProducts?.filter(item => item.slug_type === "maquinas-de-corte-plasma-manual" && item.slug === "esab");
+
     useEffect(() => {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
@@ -69,7 +72,7 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
         setLoading(true);
         const apiClient = setupAPIClient();
         try {
-            await apiClient.get(`/search_machines_cut_esab`);
+            await apiClient.get(`/esab_machines_cut`);
             setLoading(false);
             toast.success(`Produtos da ESAB capturados com sucesso`);
         } catch (error) {/* @ts-ignore */
@@ -102,17 +105,25 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
                     <div className={styles.mainContainer}>
                         <h1>Escolha uma opção</h1>
                         <div className={styles.containerButton}>
-                            <button
-                                onClick={() => router.push(`/products/maquinas_de_solda/${esab}`)}
-                            >
-                                Máquinas de solda dessa loja
-                            </button>
+                            {machinesWelding?.length === 0 ?
+                                null
+                                :
+                                <button
+                                    onClick={() => router.push(`/products/maquinas_de_solda/${esab}`)}
+                                >
+                                    Máquinas de solda dessa loja
+                                </button>
+                            }
 
-                            <button
-                                onClick={() => router.push(`/products/maquinas_corte_plasma/${esab}`)}
-                            >
-                                Máquinas de corte plasma dessa loja
-                            </button>
+                            {machinesCut?.length === 0 ?
+                                null
+                                :
+                                <button
+                                    onClick={() => router.push(`/products/maquinas_corte_plasma/${esab}`)}
+                                >
+                                    Máquinas de corte plasma dessa loja
+                                </button>
+                            }
 
                             <button
                                 style={{ backgroundColor: 'gray' }}
