@@ -4,9 +4,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaTrashAlt } from "react-icons/fa";
 import Modal from 'react-modal';
 
+import { Button } from "@/components/Button/page";
 import { HeaderProducts } from "@/components/HeaderProducts/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalCategory } from "@/components/popups/ModalCategory/page";
@@ -54,41 +55,131 @@ export default function Category_products({ params }: { params: { category_slug:
 
     const [listProducts, setListProducts] = useState<ProductsProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(10);
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
 
+    console.log(listProducts)
+
+    const initialFilters = {
+        filter: '',
+        minPrice: '',
+        maxPrice: '',
+        sort: 'price',
+        order: 'desc',
+        limit: 10
+    };
+
+    const [filters, setFilters] = useState(initialFilters);
+
     useEffect(() => {
         const apiClient = setupAPIClient();
         async function loadStoreProducts() {
-            setLoading(true);
             try {
-                const { data } = await apiClient.get(`/products_category?slug=${params?.category_slug}`);
-                setListProducts(data?.product || []);
-                setNameCategory(data?.productDate?.name || "");
-                setLoading(false);
+                const response = await apiClient.get(`/products_category`, {
+                    params: {
+                        slug: params?.category_slug,
+                        page: currentPage,
+                        limit: filters.limit,
+                        filter: filters.filter,
+                        sort: filters.sort,
+                        order: filters.order,
+                        minPrice: filters.minPrice,
+                        maxPrice: filters.maxPrice
+                    },
+                });
+                setListProducts(response?.data?.product || []);
+                setTotalPages(response?.data?.totalPages);
+                setNameCategory(response?.data?.productDate?.name || "");
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
-                setLoading(false);
             }
         }
         loadStoreProducts();
-    }, [params?.category_slug]);
+    }, [currentPage, filters.filter, filters.limit, filters.maxPrice, filters.minPrice, filters.order, filters.sort, params?.category_slug]);
 
     async function loadStoreProducts() {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            const { data } = await apiClient.get(`/products_category?slug=${params?.category_slug}`);
-            setListProducts(data?.product || []);
+            const response = await apiClient.get(`/products_category`, {
+                params: {
+                    slug: params?.category_slug,
+                    page: currentPage,
+                    limit: filters.limit,
+                    filter: filters.filter,
+                    sort: filters.sort,
+                    order: filters.order,
+                    minPrice: filters.minPrice,
+                    maxPrice: filters.maxPrice
+                },
+            });
+            setListProducts(response?.data?.product || []);
+            setTotalPages(response?.data?.totalPages);
+            setNameCategory(response?.data?.productDate?.name || "");
             setLoading(false);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             setLoading(false);
         }
     }
+
+    const updateFilter = (filter: string, value: string | number) => {
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [filter]: value,
+        }));
+    };
+
+    const applyFilters = () => {
+        setCurrentPage(1);
+        loadStoreProducts();
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        updateFilter('limit', parseInt(e.target.value));
+        setCurrentPage(1);
+    };
+
+    const renderPagination = () => {
+        const pages = [];
+        const maxPagesToShow = 10;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = startPage + maxPagesToShow - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+                <button
+                    key={i}
+                    onClick={() => handlePageChange(i)}
+                    className={`${styles.paginationButton} ${i === currentPage ? styles.current : ''}`}
+                    disabled={i === currentPage}
+                >
+                    {i}
+                </button>
+            );
+        }
+
+        return pages;
+    };
+
+    const resetFilters = () => {
+        setFilters(initialFilters);
+        setCurrentPage(1);
+    };
 
     const handleButtonClick = (link: string) => {
         window.open(`${link}`, '_blank');
@@ -137,8 +228,42 @@ export default function Category_products({ params }: { params: { category_slug:
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
                                 <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + nameCategory}</h1>
+                                <div className={styles.containerFilters}>
+                                    <div className={styles.boxFilters}>
+                                        <label>Pesquisar: </label>
+                                        <input type="text" value={filters.filter} onChange={(e) => updateFilter('filter', e.target.value)} placeholder="Busque aqui..." />
+                                    </div>
+                                    <div className={styles.boxFilters}>
+                                        <label>Por faixa de preço: </label>
+                                        De&nbsp;&nbsp;
+                                        <input type="text" value={filters.minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} placeholder="Preço minimo (EX: 250)" />
+                                        Até&nbsp;&nbsp;&nbsp;
+                                        <input type="text" value={filters.maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} placeholder="Preço máximo (EX: 2000)" />
+                                        <Button onClick={applyFilters}>Aplicar filtro de preço</Button>
+                                    </div>
+                                    <div className={styles.boxFilters}>
+                                        <label>Ordenação: </label>
+                                        <select value={filters.sort} onChange={(e) => updateFilter('sort', e.target.value)}>
+                                            <option value="price">Preço</option>
+                                            <option value="created_at">Data</option>
+                                        </select>
+                                        <select value={filters.order} onChange={(e) => updateFilter('order', e.target.value)}>
+                                            <option value="desc">Maior para o menor</option>
+                                            <option value="asc">Menor para o maior</option>
+                                        </select>
+                                    </div>
+                                    <div className={styles.boxFilters}>
+                                        <label>Produtos por página: </label>
+                                        <select value={filters.limit} onChange={handleLimitChange}>
+                                            <option value={5}>5</option>
+                                            <option value={10}>10</option>
+                                            <option value={20}>20</option>
+                                            <option value={50}>50</option>
+                                        </select>
+                                        <Button onClick={resetFilters}>Resetar filtros</Button>
+                                    </div>
+                                </div>
                             </div>
-
                             {listProducts?.length === 0 ?
                                 <div className={styles.notFound}>
                                     <h2>Não há produtos cadastros nessa categoria no momento...</h2>
@@ -221,6 +346,15 @@ export default function Category_products({ params }: { params: { category_slug:
                                     })}
                                 </div>
                             }
+                            <div className={styles.boxPages}>
+                                <button className={styles.buttonPrevius} disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}><FaArrowLeft size={25} /></button>
+                                {renderPagination()}
+                                <button className={styles.buttonNext} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}><FaArrowRight size={25} /></button>
+                            </div>
+
+                            <div className={styles.boxPagesTotal}>
+                                Página {currentPage} de {totalPages}
+                            </div>
                         </article>
                     </main>
                     {modalVisible && (

@@ -187,3 +187,81 @@
     cursor: pointer;
     margin-bottom: 15px;
 }
+
+.boxPages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.boxPagesTotal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.paginationButton {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 10%;
+    color: #333;
+    padding: 5px 10px;
+    margin: 0 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.paginationButton:hover {
+    background-color: #ddd;
+}
+
+.current {
+    background-color: rgb(17, 192, 17);
+    border-radius: 10%;
+    color: #fff;
+    border-color: orange;
+    cursor: default;
+}
+
+
+.buttonNext {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.buttonPrevius {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.containerFilters {
+    margin-top: 25px;
+}
+
+.boxFilters {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.boxFilters label {
+    margin-right: 10px;
+}
+
+.boxFilters input {
+    padding: 5px;
+    border-radius: 10px;
+    width: 20%;
+    margin-right: 15px;
+}
+
+.boxFilters select {
+    border-radius: 8px;
+    padding: 5px;
+    width: 13%;
+    text-align: center;
+    margin-right: 10px;
+}

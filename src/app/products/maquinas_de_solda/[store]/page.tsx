@@ -41,6 +41,7 @@ export default function Products({ params }: { params: { store: string } }) {
     const [modalWarning, setModalWarning] = useState<boolean>(false);
     const [idProduct, setIdProduct] = useState<string>("");
     const [title, setTitle] = useState<string>("");
+    const [price, setPrice] = useState(Number);
     const [store, setStore] = useState<string>("");
 
     const initialFilters = {
@@ -202,10 +203,11 @@ export default function Products({ params }: { params: { store: string } }) {
         setModalWarning(false);
     }
 
-    async function handleOpenModalWarning(id: string, title_product: string) {
+    async function handleOpenModalWarning(id: string, title_product: string, price: number) {
         setModalWarning(true);
         setIdProduct(id);
         setTitle(title_product);
+        setPrice(price);
     }
 
     Modal.setAppElement('body');
@@ -311,7 +313,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             </button>
                                                             :
                                                             <button
-                                                                onClick={() => handleOpenModalWarning(item?.id, item?.title_product)}
+                                                                onClick={() => handleOpenModalWarning(item?.id, item?.title_product, item?.price)}
                                                                 className={styles.addCategoryButton}
                                                             >
                                                                 Cadastrar produto
@@ -356,6 +358,7 @@ export default function Products({ params }: { params: { store: string } }) {
                     onRequestClose={handleCloseModalWarning}
                     productId={idProduct}
                     titleProduct={title}
+                    price={price}
                     store={store}
                     modalBrand={handleOpenModal}
                     productLoad={loadStoreProducts}
