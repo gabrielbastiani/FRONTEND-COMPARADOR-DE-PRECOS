@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -9,9 +10,10 @@ import { toast } from "react-toastify";
 
 import { Button } from "@/components/Button/page";
 import { HeaderProducts } from "@/components/HeaderProducts/page";
+import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
+import { ModalDateProduct } from "@/components/popups/ModalDateProduct/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
-import { ModalWarning } from "@/components/popups/ModalWarning/page";
 
 import styles from "./styles.module.css";
 
@@ -21,27 +23,53 @@ import moment from "moment";
 
 type ProductsStoreProps = {
     id: string;
+    type_product: string;
+    slug_type: string;
     store: string;
+    slug: string;
+    link_search: string;
     image: string;
     title_product: string;
+    slug_title_product: string;
     price: number;
     brand: string;
     link: string;
     created_at: string;
-    product: any;
+    productCategory: {
+        length: number;
+        id: string;
+        storeProduct_id: string;
+        name: string;
+        slug: string;
+        order: number;
+        created_at: string;
+    }
+}
+
+type CategorysProps = {
+    id: string;
+    name: string;
+    slug: string;
+    image: string;
 }
 
 export default function Products({ params }: { params: { store: string } }) {
+
+    const router = useRouter();
 
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(10);
     const [loading, setLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [modalWarning, setModalWarning] = useState<boolean>(false);
     const [idProduct, setIdProduct] = useState<string>("");
-    const [title, setTitle] = useState<string>("");
     const [store, setStore] = useState<string>("");
+    const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
+    const [categoryName, setCategoryName] = useState<string>("");
+    const [order, setOrder] = useState<number>(Number);
+    const [orderCategory, setOrderCategory] = useState<number>(Number);
+    const [nameCategory, setNameCategory] = useState<string>("");
+    const [categorys, setCategorys] = useState<CategorysProps[]>();
 
     const initialFilters = {
         filter: '',
@@ -53,6 +81,19 @@ export default function Products({ params }: { params: { store: string } }) {
     };
 
     const [filters, setFilters] = useState(initialFilters);
+
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadCategorys() {
+            try {
+                const { data } = await apiClient.get('/all_categorys');
+                setCategorys(data?.all_categorys || []);
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+            }
+        }
+        loadCategorys();
+    }, []);
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -117,6 +158,14 @@ export default function Products({ params }: { params: { store: string } }) {
         }
     }
 
+    async function handleIdProduct(id: string) {
+        setIdProduct(id);
+    }
+
+    function handleNameCategory(e: any) {
+        setNameCategory(e.target.value);
+    }
+
     const updateFilter = (filter: string, value: string | number) => {
         setFilters(prevFilters => ({
             ...prevFilters,
@@ -174,18 +223,22 @@ export default function Products({ params }: { params: { store: string } }) {
         window.open(`${link}`, '_blank');
     };
 
-    async function deleteproduct(id: string) {
+    async function handleRegisterCategory(id: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.delete(`/delete_product?product_id=${id}`);
+            await apiClient.post(`/create_category_product`, {
+                storeProduct_id: id,
+                name: nameCategory,
+                order: order
+            });
             loadStoreProducts();
-            toast.success("Produto descadastrado com sucesso");
             setLoading(false);
+            toast.success("Categoria registrada com sucesso");
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error("Erro ao descadastrar esse produto")
             setLoading(false);
+            toast.error("Erro ao cadastrar categoria no produto");
         }
     }
 
@@ -198,14 +251,15 @@ export default function Products({ params }: { params: { store: string } }) {
         setIdProduct(id);
     }
 
-    function handleCloseModalWarning() {
-        setModalWarning(false);
+    async function handleOpenModalDateProduct(id: string, name: string, order: number) {
+        setModalVisibleDateProduct(true);
+        setIdProduct(id);
+        setCategoryName(name);
+        setOrderCategory(order);
     }
 
-    async function handleOpenModalWarning(id: string, title_product: string) {
-        setModalWarning(true);
-        setIdProduct(id);
-        setTitle(title_product);
+    function handleCloseModalDateProduct() {
+        setModalVisibleDateProduct(false);
     }
 
     Modal.setAppElement('body');
@@ -301,22 +355,68 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             Ver produto
                                                         </button>
 
-                                                        {item.product.length === 1 ?
-                                                            <button
-                                                                style={{ backgroundColor: 'gray' }}
-                                                                onClick={() => deleteproduct(item?.product[0]?.id)}
-                                                                className={styles.addCategoryButton}
-                                                            >
-                                                                Descadastrar produto
-                                                            </button>
+                                                        <button
+                                                            className={styles.buttonPrices}
+                                                            onClick={() => router.push(`/historico_preco/${item?.slug}/${item?.slug_title_product}`)}
+                                                        >
+                                                            Historico de preços
+                                                        </button>
+
+                                                        {item?.productCategory?.length === 0 ?
+                                                            <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
                                                             :
-                                                            <button
-                                                                onClick={() => handleOpenModalWarning(item?.id, item?.title_product)}
-                                                                className={styles.addCategoryButton}
-                                                            >
-                                                                Cadastrar produto
-                                                            </button>
+                                                            <>
+                                                                <strong className={styles.categoryStrong}>Categorias</strong>
+
+                                                                {Array.isArray(item?.productCategory) ? (
+                                                                    item?.productCategory.map((item) => {
+                                                                        return (
+                                                                            <ul key={item.name}>
+                                                                                <li
+                                                                                    className={styles.categs}
+                                                                                >
+                                                                                    {item.name}
+                                                                                    <CiEdit
+                                                                                        color='red'
+                                                                                        size={21}
+                                                                                        cursor="pointer"
+                                                                                        onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
+                                                                                    />
+                                                                                </li>
+                                                                            </ul>
+                                                                        )
+                                                                    })
+                                                                ) : (
+                                                                    <p>Recarregue a página por favor...</p>
+                                                                )}
+                                                            </>
                                                         }
+
+                                                        <select
+                                                            className={styles.selectImput}
+                                                            onChange={handleNameCategory}
+                                                            onClick={() => handleIdProduct(item?.id)}
+                                                        >
+                                                            <option value="">Selecione as categoria aqui...</option>
+                                                            {categorys?.map((cat) => (
+                                                                <option key={cat?.id} value={cat?.name}>{cat.name}</option>
+                                                            ))}
+                                                        </select>
+
+                                                        <label className={styles.position}>Posição da categoria</label>
+                                                        <Input
+                                                            placeholder="Ordem"
+                                                            type='number'
+                                                            value={order}/* @ts-ignore */
+                                                            onChange={(e) => setOrder(e.target.value)}
+                                                        />
+
+                                                        <button
+                                                            className={styles.addCategoryButton}
+                                                            onClick={() => handleRegisterCategory(item?.id)}
+                                                        >
+                                                            Cadastrar categoria
+                                                        </button>
 
                                                     </div>
                                                 </div>
@@ -349,15 +449,13 @@ export default function Products({ params }: { params: { store: string } }) {
                     productLoad={loadStoreProducts}
                 />
             )}
-
-            {modalWarning && (
-                <ModalWarning
-                    isOpen={modalWarning}
-                    onRequestClose={handleCloseModalWarning}
-                    productId={idProduct}
-                    titleProduct={title}
-                    store={store}
-                    modalBrand={handleOpenModal}
+            {modalVisibleDateProduct && (
+                <ModalDateProduct
+                    isOpen={modalVisibleDateProduct}
+                    onRequestClose={handleCloseModalDateProduct}
+                    productCategory={idProduct}
+                    nameCategory={categoryName}
+                    positionCategory={orderCategory}
                     productLoad={loadStoreProducts}
                 />
             )}
