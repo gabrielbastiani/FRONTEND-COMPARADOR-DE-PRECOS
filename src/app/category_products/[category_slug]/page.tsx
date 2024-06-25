@@ -20,32 +20,28 @@ import { setupAPIClient } from "@/services/api";
 import moment from "moment";
 
 
-type ProductsProps = {
-    map(arg0: (item: any) => import("react").JSX.Element): unknown;
-    length: number;
-    created_at: string;
+type ProductsStoreProps = {
     id: string;
-    name: string;
-    order: number;
-    product_id: string;
+    type_product: string;
+    slug_type: string;
+    store: string;
     slug: string;
-    product: {
-        created_at: string;
+    link_search: string;
+    image: string;
+    title_product: string;
+    slug_title_product: string;
+    price: number;
+    brand: string;
+    link: string;
+    created_at: string;
+    productCategory: {
+        length: number;
         id: string;
-        store: string;
         storeProduct_id: string;
-        storeProduct: {
-            id: string;
-            brand: string;
-            created_at: string;
-            image: string;
-            link: string;
-            price: number;
-            slug: string;
-            store: string;
-            title_product: string;
-            slug_title_product: string;
-        }
+        name: string;
+        slug: string;
+        order: number;
+        created_at: string;
     }
 }
 
@@ -53,7 +49,7 @@ export default function Category_products({ params }: { params: { category_slug:
 
     const router = useRouter();
 
-    const [listProducts, setListProducts] = useState<ProductsProps[]>();
+    const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(10);
@@ -62,8 +58,6 @@ export default function Category_products({ params }: { params: { category_slug:
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
-
-    console.log(listProducts)
 
     const initialFilters = {
         filter: '',
@@ -92,7 +86,14 @@ export default function Category_products({ params }: { params: { category_slug:
                         maxPrice: filters.maxPrice
                     },
                 });
-                setListProducts(response?.data?.product || []);
+                const uniqueProducts = response?.data?.product?.reduce((acc: any[], product: { title_product: any; }) => {
+                    if (!acc.find(p => p.title_product === product.title_product)) {
+                        acc.push(product);
+                    }
+                    return acc;
+                }, []);
+
+                setListProducts(uniqueProducts || []);
                 setTotalPages(response?.data?.totalPages);
                 setNameCategory(response?.data?.productDate?.name || "");
             } catch (error) {/* @ts-ignore */
@@ -274,29 +275,29 @@ export default function Category_products({ params }: { params: { category_slug:
                                         return (
                                             <div key={index}>
                                                 <div className={styles.title}>
-                                                    <h3>{item?.product?.storeProduct?.title_product}</h3>
+                                                    <h3>{item?.title_product}</h3>
                                                 </div>
 
                                                 <div className={styles.containerInfos}>
                                                     <div className={styles.imageProduct}>
-                                                        <Image src={item?.product?.storeProduct?.image} quality={100} width={140} height={125} alt={item?.product?.storeProduct?.title_product} />
+                                                        <Image src={item?.image} quality={100} width={140} height={125} alt={item?.title_product} />
                                                     </div>
 
                                                     <div className={styles.gridContainerProduct}>
                                                         <div className={styles.box}>
                                                             <strong>LOJA: </strong>
-                                                            <span>{item?.product?.store}</span>
+                                                            <span>{item?.store}</span>
                                                             <div className={styles.boxBrand}>
                                                                 <strong>MARCA:&nbsp;</strong>
-                                                                <span>{item?.product?.storeProduct?.brand}</span>
+                                                                <span>{item?.brand}</span>
                                                                 <button
-                                                                    onClick={() => handleOpenModal(item?.product?.storeProduct_id)}
+                                                                    onClick={() => handleOpenModal(item?.id)}
                                                                 >
                                                                     <CiEdit color='red' size={21} />
                                                                 </button>
                                                             </div>
                                                             <strong>PREÇO: { }</strong>
-                                                            <strong style={{ color: 'red' }}>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(item?.product?.storeProduct?.price)}</strong>
+                                                            <strong style={{ color: 'red' }}>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(item?.price)}</strong>
                                                             <div className={styles.boxData}>
                                                                 <strong>DATA: </strong>
                                                                 <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
@@ -316,21 +317,21 @@ export default function Category_products({ params }: { params: { category_slug:
 
                                                             <button
                                                                 className={styles.buttonProduto}
-                                                                onClick={() => handleButtonClick(item?.product?.storeProduct?.link)}
+                                                                onClick={() => handleButtonClick(item?.link)}
                                                             >
                                                                 Ver produto
                                                             </button>
 
                                                             <button
                                                                 className={styles.buttonProdutoCategs}
-                                                                onClick={() => handleOpenModalCategorys(item?.product?.id)}
+                                                                onClick={() => handleOpenModalCategorys(item?.id)}
                                                             >
                                                                 Registros de categorias
                                                             </button>
 
                                                             <button
                                                                 className={styles.buttonPrices}
-                                                                onClick={() => router.push(`/historico_preco/${item?.product?.storeProduct?.slug}/${item?.product?.storeProduct?.slug_title_product}`)}
+                                                                onClick={() => router.push(`/historico_preco/${item?.slug}/${item?.slug_title_product}`)}
                                                             >
                                                                 Historico de Preços
                                                             </button>

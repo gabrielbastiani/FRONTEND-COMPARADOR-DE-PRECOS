@@ -24,6 +24,10 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
 
     const router = useRouter();
 
+    const handleReload = () => {
+        router.refresh();
+    };
+
     const [loading, setLoading] = useState<boolean>(false);
     const [listProducts, setListProducts] = useState<any[]>();
 
@@ -86,6 +90,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
             setLoading(false);
             toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
             onRequestClose();
+            handleReload();
             loadStoreProducts();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
@@ -103,6 +108,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
             setLoading(false);
             toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
             onRequestClose();
+            handleReload();
             loadStoreProducts();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);

@@ -124,7 +124,14 @@ export default function Products({ params }: { params: { store: string } }) {
                         maxPrice: filters.maxPrice
                     },
                 });
-                setListProducts(response?.data?.product || []);
+                const uniqueProducts = response?.data?.product?.reduce((acc: any[], product: { title_product: any; }) => {
+                    if (!acc.find(p => p.title_product === product.title_product)) {
+                        acc.push(product);
+                    }
+                    return acc;
+                }, []);
+
+                setListProducts(uniqueProducts || []);
                 setTotalPages(response.data.totalPages);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -149,7 +156,14 @@ export default function Products({ params }: { params: { store: string } }) {
                     maxPrice: filters.maxPrice
                 },
             });
-            setListProducts(response?.data?.product || []);
+            const uniqueProducts = response?.data?.product?.reduce((acc: any[], product: { title_product: any; }) => {
+                if (!acc.find(p => p.title_product === product.title_product)) {
+                    acc.push(product);
+                }
+                return acc;
+            }, []);
+
+            setListProducts(uniqueProducts || []);
             setTotalPages(response.data.totalPages);
             setLoading(false);
         } catch (error) {/* @ts-ignore */

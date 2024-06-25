@@ -30,8 +30,6 @@ type CategorysProps = {
 
 export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad }: ModalDeleteProductRequest) {
 
-    console.log(productCategory)
-
     const customStyles = {
         content: {
             top: '50%',
@@ -74,7 +72,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
             try {
                 const { data } = await apiClient.get('/all_categorys');
                 setCategorys(data?.all_categorys || []);
-                const response = await apiClient.get(`/list_categorys_product?product_id=${productCategory}`);
+                const response = await apiClient.get(`/list_categorys_product?storeProduct_id=${productCategory}`);
                 setRegisterCategorys(response.data || []);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -88,7 +86,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         setLoading(true);
         try {
             await apiClient.post(`/create_category_product`, {
-                product_id: productCategory,
+                storeProduct_id: productCategory,
                 name: nameCategory,
                 order: order
             });

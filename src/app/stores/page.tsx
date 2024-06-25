@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaArrowLeft, FaProductHunt } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
 import Modal from 'react-modal';
 
 import { Header } from '@/components/Header/page';
@@ -123,15 +123,8 @@ export default function Stores() {
                                     <strong>
                                         SUMIG
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "sumig").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/sumig`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "sumig").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -142,15 +135,8 @@ export default function Stores() {
                                     <strong>
                                         ESAB
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "esab").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/esab`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "esab").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -161,15 +147,8 @@ export default function Stores() {
                                     <strong>
                                         Amazon.com.br - Seller
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "amazon.com.br-seller").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/amazon.com.br-seller`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "amazon.com.br-seller").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -180,15 +159,8 @@ export default function Stores() {
                                     <strong>
                                         Americanas.com
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "americanas.com").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/americanas.com`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "americanas.com").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -199,15 +171,8 @@ export default function Stores() {
                                     <strong>
                                         Carrefour
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "carrefour").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/carrefour`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "carrefour").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -218,15 +183,8 @@ export default function Stores() {
                                     <strong>
                                         Casas Bahia
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "casas-bahia").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/casas-bahia`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "casas-bahia").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -237,15 +195,8 @@ export default function Stores() {
                                     <strong>
                                         Dutra Máquinas
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "dutra-maquinas").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/dutra-maquinas`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "dutra-maquinas").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -256,15 +207,8 @@ export default function Stores() {
                                     <strong>
                                         Leroy Merlin
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "leroy-merlin").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/leroy-merlin`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "leroy-merlin").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -275,15 +219,8 @@ export default function Stores() {
                                     <strong>
                                         Loja do Mecânico
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "loja-do-mecanico").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/loja-do-mecanico`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "loja-do-mecanico").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -294,15 +231,8 @@ export default function Stores() {
                                     <strong>
                                         Magazine Luiza
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "magazine-luiza").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/magazine-luiza`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "magazine-luiza").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -313,15 +243,8 @@ export default function Stores() {
                                     <strong>
                                         Mercado Livre
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "mercado-livre").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/mercado-livre`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "mercado-livre").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -332,15 +255,8 @@ export default function Stores() {
                                     <strong>
                                         Pontofrio.com
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "pontofrio.com").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/pontofrio.com`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "pontofrio.com").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -351,15 +267,8 @@ export default function Stores() {
                                     <strong>
                                         Shopee
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "shopee").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/shopee`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "shopee").length}</span>
-
                             </div>
 
                             <div className={styles.grid_item}>
@@ -370,15 +279,8 @@ export default function Stores() {
                                     <strong>
                                         Shoptime
                                     </strong>
+                                    <span>{listProducts.filter(item => item.slug === "shoptime").length}</span>
                                 </button>
-
-                                <FaProductHunt
-                                    onClick={() => router.push(`/list_products/shoptime`)}
-                                    size={28}
-                                />
-
-                                <span>{listProducts.filter(item => item.slug === "shoptime").length}</span>
-
                             </div>
                         </div>
                         {
