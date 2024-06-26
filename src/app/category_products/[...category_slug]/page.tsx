@@ -232,7 +232,14 @@ export default function Category_products({ params }: { params: { category_slug:
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
+                                <div className={styles.contentText}>
+                                <FaArrowLeft
+                                    onClick={() => router.back()}
+                                    size={32}
+                                    color='red'
+                                />
                                 <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + titles}</h1>
+                                </div>
                                 <div className={styles.containerFilters}>
                                     <div className={styles.boxFilters}>
                                         <label>Pesquisar: </label>

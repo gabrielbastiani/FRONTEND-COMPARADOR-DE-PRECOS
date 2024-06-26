@@ -31,22 +31,16 @@ export default function Category({ params }: { params: { category_id: string } }
 
     const [sub_categorys, setSub_categorys] = useState<CategorysProps[]>();
     const [nameCategory, subNameCategory] = useState<string>("");
-    const [nivelCategory, subNivelCategory] = useState<number>();
     const [loading, setLoading] = useState<boolean>(false);
-
-    const titles = !nameCategory ? title : nameCategory;
-
-    console.log(title)
 
     useEffect(() => {
         setLoading(true);
         const apiClient = setupAPIClient();
         async function loadSubCategory() {
             try {
-                const { data } = await apiClient.get(`/sub_categorys_category?parentId=${params?.category_id[1]}`);
+                const { data } = await apiClient.get(`/sub_categorys_category?parentId=${params?.category_id[2]}`);
                 setSub_categorys(data?.all_subcategorys || []);
                 subNameCategory(data?.categorys?.name);
-                subNivelCategory(data?.categorys?.nivel);
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -71,7 +65,7 @@ export default function Category({ params }: { params: { category_id: string } }
                                 size={32}
                                 color='white'
                             />
-                            <h1>{nivelCategory === 0 ? "Categoria - " + title : "Subcategoria - " + titles}</h1>
+                            <h1>{"Subcategoria - " + title}</h1>
                             <div></div>
                         </div>
                         <div className={styles.grid_container}>
@@ -90,7 +84,7 @@ export default function Category({ params }: { params: { category_id: string } }
                                                     </button>
                                                     :
                                                     <div className={styles.grid_item}>
-                                                        <button onClick={() => router.push(`/category/${item?.slug}/${item?.id}`)}>
+                                                        <button onClick={() => router.push(`/category/${item?.slug}/${item?.name}/${item?.id}`)}>
                                                             <strong>
                                                                 {item.name}
                                                             </strong>

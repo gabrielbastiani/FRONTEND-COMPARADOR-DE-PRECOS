@@ -277,3 +277,12 @@
     text-align: center;
     margin-right: 10px;
 }
+
+.contentText {
+    display: flex;
+}
+
+.contentText svg {
+    margin-right: 30px;
+    cursor: pointer;
+}

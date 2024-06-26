@@ -224,8 +224,6 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                             onChange={handleNameCategory}
                         >
                             <option value="">Selecione as categoria aqui...</option>
-                            <option value="maquinas-de-solda">Máquinas de solda</option>
-                            <option value="maquinas-de-corte-plasma-manual">Máquinas de corte plasma manual</option>
                             {categorys?.map((cat) => (
                                 <option key={cat?.id} value={cat?.name}>{cat.name}</option>
                             ))}

@@ -246,11 +246,11 @@ export default function Products({ params }: { params: { store: string } }) {
             });
             loadStoreProducts();
             setLoading(false);
-            toast.success("Categoria registrada com sucesso");
+            toast.success("Categoria registrada com sucesso.");
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             setLoading(false);
-            toast.error("Erro ao cadastrar categoria no produto");
+            toast.error("Erro ao cadastrar categoria no produto.");
         }
     }
 
@@ -404,8 +404,6 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             onClick={() => handleIdProduct(item?.id)}
                                                         >
                                                             <option value="">Selecione as categoria aqui...</option>
-                                                            <option value="maquinas-de-solda">Máquinas de solda</option>
-                                                            <option value="maquinas-de-corte-plasma-manual">Máquinas de corte plasma manual</option>
                                                             {categorys?.map((cat) => (
                                                                 <option key={cat?.id} value={cat?.name}>{cat.name}</option>
                                                             ))}
