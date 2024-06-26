@@ -125,19 +125,37 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
                                 </button>
                             }
 
-                            <button
-                                style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreMachineWelding}
-                            >
-                                Gerar uma nova lista de máquinas de solda dessa loja
-                            </button>
+                            {machinesWelding?.length === 0 ?
+                                <button
+                                    style={{ backgroundColor: 'gray' }}
+                                    onClick={handleStoreMachineWelding}
+                                >
+                                    Gerar uma nova lista de máquinas de solda dessa loja
+                                </button>
+                                :
+                                <button
+                                    style={{ backgroundColor: 'orange', color: 'black' }}
+                                    onClick={handleStoreMachineWelding}
+                                >
+                                    Atualizar preços de máquinas de solda dessa loja
+                                </button>
+                            }
 
-                            <button
-                                style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreMachineCut}
-                            >
-                                Gerar uma nova lista de máquinas de corte plasma dessa loja
-                            </button>
+                            {machinesCut?.length === 0 ?
+                                <button
+                                    style={{ backgroundColor: 'gray' }}
+                                    onClick={handleStoreMachineCut}
+                                >
+                                    Gerar uma nova lista de máquinas de corte plasma dessa loja
+                                </button>
+                                :
+                                <button
+                                    style={{ backgroundColor: 'orange', color: 'black' }}
+                                    onClick={handleStoreMachineCut}
+                                >
+                                    Atualizar preços de máquinas de corte plasma dessa loja
+                                </button>
+                            }
 
                         </div>
                     </div>

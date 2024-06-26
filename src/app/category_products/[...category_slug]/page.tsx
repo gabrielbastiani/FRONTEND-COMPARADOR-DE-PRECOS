@@ -8,7 +8,7 @@ import { FaArrowLeft, FaArrowRight, FaTrashAlt } from "react-icons/fa";
 import Modal from 'react-modal';
 
 import { Button } from "@/components/Button/page";
-import { HeaderProducts } from "@/components/HeaderProducts/page";
+import { Header } from "@/components/Header/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalCategory } from "@/components/popups/ModalCategory/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
@@ -45,9 +45,11 @@ type ProductsStoreProps = {
     }
 }
 
-export default function Category_products({ params }: { params: { category_slug: string } }) {
+export default function Category_products({ params }: { params: { category_slug: string, title: string } }) {
 
     const router = useRouter();
+
+    const title = decodeURIComponent(String(params?.category_slug[1]));
 
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -58,6 +60,8 @@ export default function Category_products({ params }: { params: { category_slug:
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
+
+    const titles = !nameCategory ? title : nameCategory;
 
     const initialFilters = {
         filter: '',
@@ -76,7 +80,7 @@ export default function Category_products({ params }: { params: { category_slug:
             try {
                 const response = await apiClient.get(`/products_category`, {
                     params: {
-                        slug: params?.category_slug,
+                        slug: params?.category_slug[0],
                         page: currentPage,
                         limit: filters.limit,
                         filter: filters.filter,
@@ -109,7 +113,7 @@ export default function Category_products({ params }: { params: { category_slug:
         try {
             const response = await apiClient.get(`/products_category`, {
                 params: {
-                    slug: params?.category_slug,
+                    slug: params?.category_slug[0],
                     page: currentPage,
                     limit: filters.limit,
                     filter: filters.filter,
@@ -223,12 +227,12 @@ export default function Category_products({ params }: { params: { category_slug:
                 <LoadingRequests />
                 :
                 <>
-                    <HeaderProducts />
+                    <Header />
 
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
-                                <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + nameCategory}</h1>
+                                <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + titles}</h1>
                                 <div className={styles.containerFilters}>
                                     <div className={styles.boxFilters}>
                                         <label>Pesquisar: </label>

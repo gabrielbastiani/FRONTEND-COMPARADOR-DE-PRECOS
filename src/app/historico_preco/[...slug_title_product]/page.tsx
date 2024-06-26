@@ -4,7 +4,7 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { HeaderProducts } from "@/components/HeaderProducts/page";
+import { Header } from "@/components/Header/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 
 import styles from "./styles.module.css";
@@ -22,6 +22,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
     const [link, setLink] = useState<string>("");
     const [linkSearch, setLinkSearch] = useState<string>("");
     const [store, setStore] = useState<string>("");
+    const [slugType, setSlugType] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [average, setAverage] = useState<number>(0);
     const [minValue, setMinValue] = useState<number>(0);
@@ -46,6 +47,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                 setLinkSearch(data?.date_product?.link_search || "");
                 setName(data?.date_product?.title_product || "");
                 setStore(data?.date_product?.store || "");
+                setSlugType(data?.date_product?.slug_type || "");
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
@@ -66,6 +68,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
             setLinkSearch(data?.date_product?.link_search || "");
             setName(data?.date_product?.title_product || "");
             setStore(data?.date_product?.store || "");
+            setSlugType(data?.date_product?.slug_type || "");
             setLoading(false);
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
@@ -156,22 +159,37 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
         setLoading(true);
         const valorCodificado = encodeURIComponent(String(linkSearch));
         const apiClient = setupAPIClient();
-        try {
-            await apiClient.get(`/search_machines_welding?urlSearchStore=${valorCodificado}&stores=${store}`);
-            setLoading(false);
-            toast.success(`Produtos da concorrência ${store} capturados com sucesso`);
-            loadStoreProducts();
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error(`Erro ao carregar dados da concorrência ${store}`);
-            setLoading(false);
+        if (slugType === "maquinas-de-solda") {
+            try {
+                await apiClient.get(`/search_machines_welding?urlSearchStore=${valorCodificado}&stores=${store}`);
+                setLoading(false);
+                toast.success(`Produtos da concorrência ${store} capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da concorrência ${store}`);
+                setLoading(false);
+            }
+        }
+
+        if (slugType === "maquinas-de-corte-plasma-manual") {
+            try {
+                await apiClient.get(`/search_machines_cut?urlSearchStore=${valorCodificado}&stores=${store}`);
+                setLoading(false);
+                toast.success(`Produtos da concorrência ${store} capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da concorrência ${store}`);
+                setLoading(false);
+            }
         }
     }
 
     async function handleStoreSUMIGOrEsabProducts() {
         setLoading(true);
         const apiClient = setupAPIClient();
-        if (store === "ESAB") {
+        if (store === "ESAB" && slugType === "maquinas-de-solda") {
             try {
                 await apiClient.get(`/esab_machines_weld`);
                 setLoading(false);
@@ -183,9 +201,36 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                 setLoading(false);
             }
         }
-        if (store === "SUMIG") {
+
+        if (store === "ESAB" && slugType === "maquinas-de-corte-plasma-manual") {
+            try {
+                await apiClient.get(`/esab_machines_cut`);
+                setLoading(false);
+                toast.success(`Produtos da ESAB capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da ESAB`);
+                setLoading(false);
+            }
+        }
+
+        if (store === "SUMIG" && slugType === "maquinas-de-solda") {
             try {
                 await apiClient.get(`/sumig_machines_weld`);
+                setLoading(false);
+                toast.success(`Produtos da SUMIG capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da SUMIG`);
+                setLoading(false);
+            }
+        }
+
+        if (store === "SUMIG" && slugType === "maquinas-de-corte-plasma-manual") {
+            try {
+                await apiClient.get(`/sumig_machines_cut`);
                 setLoading(false);
                 toast.success(`Produtos da SUMIG capturados com sucesso`);
                 loadStoreProducts();
@@ -200,16 +245,32 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
     async function handleAllStoreProductsMachines() {
         setLoading(true);
         const apiClient = setupAPIClient();
-        try {
-            await apiClient.get(`/search_all_stores_machines`);
-            setLoading(false);
-            toast.success(`Produtos da concorrência capturados com sucesso`);
-            loadStoreProducts();
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error(`Erro ao carregar dados da concorrência`);
-            setLoading(false);
+        if (slugType === "maquinas-de-solda") {
+            try {
+                await apiClient.get(`/search_all_stores_machines`);
+                setLoading(false);
+                toast.success(`Produtos da concorrência capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da concorrência`);
+                setLoading(false);
+            }
         }
+
+        if (slugType === "maquinas-de-corte-plasma-manual") {
+            try {
+                await apiClient.get(`/search_all_stores_cuts`);
+                setLoading(false);
+                toast.success(`Produtos da concorrência capturados com sucesso`);
+                loadStoreProducts();
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+                toast.error(`Erro ao carregar dados da concorrência`);
+                setLoading(false);
+            }
+        }
+        
     }
 
 
@@ -219,7 +280,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                 <LoadingRequests />
                 :
                 <>
-                    <HeaderProducts />
+                    <Header />
 
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>

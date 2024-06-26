@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -9,7 +8,7 @@ import Modal from 'react-modal';
 import { toast } from "react-toastify";
 
 import { Button } from "@/components/Button/page";
-import { HeaderProducts } from "@/components/HeaderProducts/page";
+import { Header } from "@/components/Header/page";
 import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalDateProduct } from "@/components/popups/ModalDateProduct/page";
@@ -54,8 +53,6 @@ type CategorysProps = {
 }
 
 export default function Products({ params }: { params: { store: string } }) {
-
-    const router = useRouter();
 
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
     const [currentPage, setCurrentPage] = useState(1);
@@ -285,7 +282,7 @@ export default function Products({ params }: { params: { store: string } }) {
                 <LoadingRequests />
                 :
                 <>
-                    <HeaderProducts />
+                    <Header />
 
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>
@@ -369,13 +366,6 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             Ver produto
                                                         </button>
 
-                                                        <button
-                                                            className={styles.buttonPrices}
-                                                            onClick={() => router.push(`/historico_preco/${item?.slug}/${item?.slug_title_product}`)}
-                                                        >
-                                                            Historico de preços
-                                                        </button>
-
                                                         {item?.productCategory?.length === 0 ?
                                                             <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
                                                             :
@@ -412,6 +402,8 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             onClick={() => handleIdProduct(item?.id)}
                                                         >
                                                             <option value="">Selecione as categoria aqui...</option>
+                                                            <option value="maquinas-de-solda">Máquinas de solda</option>
+                                                            <option value="maquinas-de-corte-plasma-manual">Máquinas de corte plasma manual</option>
                                                             {categorys?.map((cat) => (
                                                                 <option key={cat?.id} value={cat?.name}>{cat.name}</option>
                                                             ))}

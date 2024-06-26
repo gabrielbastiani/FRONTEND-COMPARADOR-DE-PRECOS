@@ -15,7 +15,7 @@ import styles from './styles.module.css';
 import { setupAPIClient } from '@/services/api';
 
 
-export default function Add_subcategory({ params }: { params: { category_id: string } }) {
+export default function Add_subcategory({ params }: { params: { category_id: string, title: string } }) {
 
     const router = useRouter();
 
@@ -26,6 +26,9 @@ export default function Add_subcategory({ params }: { params: { category_id: str
     const [loading, setLoading] = useState<boolean>(false);
     const [typeCategory, setTypeCategory] = useState<string>("");
 
+    const title = decodeURIComponent(String(params?.category_id[1]));
+    const titles = !nameCategory ? title : nameCategory;
+
     function handleChangeTypeCategory(e: any) {
         setTypeCategory(e.target.value);
     }
@@ -35,7 +38,7 @@ export default function Add_subcategory({ params }: { params: { category_id: str
         const apiClient = setupAPIClient();
         async function loadCategory() {
             try {
-                const { data } = await apiClient.get(`/find_unique_category?category_id=${params?.category_id}`);
+                const { data } = await apiClient.get(`/find_unique_category?category_id=${params?.category_id[0]}`);
                 setNameCategory(data?.name || "");
                 setLoading(false);
             } catch (error) {/* @ts-ignore */
@@ -61,7 +64,7 @@ export default function Add_subcategory({ params }: { params: { category_id: str
                 name: subNameCategory,
                 nivel: 1,
                 order: order,
-                parentId: params?.category_id,
+                parentId: params?.category_id[0],
                 type_category: typeCategory
             });
 
@@ -100,7 +103,7 @@ export default function Add_subcategory({ params }: { params: { category_id: str
                                     color='white'
                                 />
                                 <div className={styles.text}>
-                                    <h2>{"Categoria - " + `${nameCategory}`}</h2>
+                                    <h2>{"Categoria - " + titles}</h2>
                                 </div>
 
                                 <div className={styles.text}></div>
@@ -119,6 +122,7 @@ export default function Add_subcategory({ params }: { params: { category_id: str
                                     onChange={handleChangeTypeCategory}
                                 >
                                     <option value="">Selecione aqui o tipo da categoria...</option>
+                                    <option value="principal">Principal</option>
                                     <option value="amperes">Amperes</option>
                                     <option value="process">Processo de soldagem</option>
                                     <option value="accessory">Acessorios para soldagem</option>

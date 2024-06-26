@@ -167,22 +167,50 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
                                 </>
                             }
 
-                            <button
-                                style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreMachineWelding}
-                            >
-                                Gerar uma nova lista de máquinas de solda dessa loja
-                            </button>
-                            {valor3 === "NA" ?
-                                null
-                                :
+                            {machinesWelding?.length === 0 ?
                                 <button
                                     style={{ backgroundColor: 'gray' }}
-                                    onClick={handleStoreMachineCut}
+                                    onClick={handleStoreMachineWelding}
                                 >
-                                    Gerar uma nova lista de máquinas de corte plasma dessa loja
+                                    Gerar uma nova lista de máquinas de solda dessa loja
+                                </button>
+                                :
+                                <button
+                                    style={{ backgroundColor: 'orange', color: 'black' }}
+                                    onClick={handleStoreMachineWelding}
+                                >
+                                    Atualizar preços de máquinas de solda dessa loja
                                 </button>
                             }
+
+                            {machinesCut?.length === 0 ?
+                                <>
+                                    {valor3 === "NA" ?
+                                        null
+                                        :
+                                        <button
+                                            style={{ backgroundColor: 'gray' }}
+                                            onClick={handleStoreMachineCut}
+                                        >
+                                            Gerar uma nova lista de máquinas de corte plasma dessa loja
+                                        </button>
+                                    }
+                                </>
+                                :
+                                <>
+                                    {valor3 === "NA" ?
+                                        null
+                                        :
+                                        <button
+                                            style={{ backgroundColor: 'orange', color: 'black' }}
+                                            onClick={handleStoreMachineCut}
+                                        >
+                                            Atualizar preços de máquinas de corte plasma dessa loja
+                                        </button>
+                                    }
+                                </>
+                            }
+
                         </div>
                     </div>
                 </>

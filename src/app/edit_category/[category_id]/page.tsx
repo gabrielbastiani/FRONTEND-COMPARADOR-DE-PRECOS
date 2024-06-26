@@ -327,6 +327,7 @@ export default function Edit_category({ params }: { params: { category_id: strin
                                     onChange={handleChangeTypeCategory}
                                 >
                                     <option value="">{type_category === "" ? "Selecione aqui o tipo da categoria..." : type_category}</option>
+                                    <option value="principal">Principal</option>
                                     <option value="amperes">Amperes</option>
                                     <option value="process">Processo de soldagem</option>
                                     <option value="accessory">Acessorios para soldagem</option>

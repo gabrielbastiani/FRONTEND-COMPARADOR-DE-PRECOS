@@ -125,19 +125,38 @@ export function ModalSumig({ isOpen, onRequestClose }: ModalStoreRequest) {
                                 </button>
                             }
 
-                            <button
-                                style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreSUMIGMachinesWelding}
-                            >
-                                Gerar uma nova lista de máquinas de solda dessa loja
-                            </button>
+                            {machinesWelding?.length === 0 ?
+                                <button
+                                    style={{ backgroundColor: 'gray' }}
+                                    onClick={handleStoreSUMIGMachinesWelding}
+                                >
+                                    Gerar lista de máquinas de solda dessa loja
+                                </button>
+                                :
+                                <button
+                                    style={{ backgroundColor: 'orange', color: 'black' }}
+                                    onClick={handleStoreSUMIGMachinesWelding}
+                                >
+                                    Atualizar preços máquinas de solda dessa loja
+                                </button>
+                            }
 
-                            <button
-                                style={{ backgroundColor: 'gray' }}
-                                onClick={handleStoreSUMIGMachinesCut}
-                            >
-                                Gerar uma nova lista de máquinas de corte plasma dessa loja
-                            </button>
+                            {machinesCut?.length === 0 ?
+                                <button
+                                    style={{ backgroundColor: 'gray' }}
+                                    onClick={handleStoreSUMIGMachinesCut}
+                                >
+                                    Gerar uma nova lista de máquinas de corte plasma dessa loja
+                                </button>
+                                :
+                                <button
+                                    style={{ backgroundColor: 'orange', color: 'black' }}
+                                    onClick={handleStoreSUMIGMachinesCut}
+                                >
+                                    Atualizar preços de máquinas de corte plasma dessa loja
+                                </button>
+                            }
+
                         </div>
                     </div>
                 </>

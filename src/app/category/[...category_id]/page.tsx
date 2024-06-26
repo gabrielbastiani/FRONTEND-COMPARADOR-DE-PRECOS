@@ -23,7 +23,9 @@ type CategorysProps = {
     nivel: number;
 }
 
-export default function Category({ params }: { params: { slug: string, category_id: string } }) {
+export default function Category({ params }: { params: { category_id: string } }) {
+
+    const title = decodeURIComponent(String(params?.category_id[1]));
 
     const router = useRouter();
 
@@ -31,6 +33,10 @@ export default function Category({ params }: { params: { slug: string, category_
     const [nameCategory, subNameCategory] = useState<string>("");
     const [nivelCategory, subNivelCategory] = useState<number>();
     const [loading, setLoading] = useState<boolean>(false);
+
+    const titles = !nameCategory ? title : nameCategory;
+
+    console.log(title)
 
     useEffect(() => {
         setLoading(true);
@@ -65,7 +71,7 @@ export default function Category({ params }: { params: { slug: string, category_
                                 size={32}
                                 color='white'
                             />
-                            <h1>{nivelCategory === 0 ? "Categoria - " + nameCategory : "Subcategoria - " + nameCategory}</h1>
+                            <h1>{nivelCategory === 0 ? "Categoria - " + title : "Subcategoria - " + titles}</h1>
                             <div></div>
                         </div>
                         <div className={styles.grid_container}>
