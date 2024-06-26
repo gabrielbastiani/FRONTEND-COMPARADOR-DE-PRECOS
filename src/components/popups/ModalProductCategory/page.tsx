@@ -20,7 +20,7 @@ interface ModalDeleteProductRequest {
 }
 
 export function ModalProductCategory({ isOpen, onRequestClose, productCategory, productLoad }: ModalDeleteProductRequest) {
-
+    
     const customStyles = {
         content: {
             top: '50%',
