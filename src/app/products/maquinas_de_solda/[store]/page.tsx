@@ -251,9 +251,15 @@ export default function Products({ params }: { params: { store: string } }) {
             setLoading(false);
             toast.success("Categoria registrada com sucesso.");
         } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            setLoading(false);
-            toast.error("Erro ao cadastrar categoria no produto.");
+            if (error.response.data?.error === "Categoria já cadastrada nesse produto!") {
+                /* @ts-ignore */
+                toast.error(error.response.data?.error);
+                setLoading(false);
+            } else {/* @ts-ignore */
+                console.log(error.response.data);
+                setLoading(false);
+                toast.error("Erro ao cadastrar esse produto nesta categoria!")
+            }
         }
     }
 
