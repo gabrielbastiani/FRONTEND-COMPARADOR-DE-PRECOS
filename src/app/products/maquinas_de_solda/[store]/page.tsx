@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -53,6 +54,8 @@ type CategorysProps = {
 }
 
 export default function Products({ params }: { params: { store: string } }) {
+
+    const router = useRouter();
 
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
     const [currentPage, setCurrentPage] = useState(1);
@@ -289,7 +292,14 @@ export default function Products({ params }: { params: { store: string } }) {
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
-                                <h1 className={styles.titulo}>{store}</h1>
+                                <div className={styles.contentText}>
+                                    <FaArrowLeft
+                                        onClick={() => router.back()}
+                                        size={32}
+                                        color='red'
+                                    />
+                                    <h1 className={styles.titulo}>{store}</h1>
+                                </div>
                                 <div className={styles.containerFilters}>
                                     <div className={styles.boxFilters}>
                                         <label>Pesquisar: </label>
