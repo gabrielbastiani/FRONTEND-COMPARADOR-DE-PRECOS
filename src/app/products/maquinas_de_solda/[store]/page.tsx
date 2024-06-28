@@ -36,6 +36,7 @@ type ProductsStoreProps = {
     link: string;
     created_at: string;
     productCategory: {
+        map(arg0: (cat: any, index: any) => void): import("react").ReactNode;
         length: number;
         id: string;
         storeProduct_id: string;
@@ -346,106 +347,118 @@ export default function Products({ params }: { params: { store: string } }) {
                                 {listProducts?.map((item, index) => {
                                     return (
                                         <div key={index}>
-                                            <div className={styles.title}>
-                                                <h3>{item?.title_product}</h3>
-                                            </div>
-
-                                            <div className={styles.containerInfos}>
-                                                <div className={styles.imageProduct}>
-                                                    <Image src={item?.image} quality={100} width={140} height={125} alt={item?.title_product} />
-                                                </div>
-
-                                                <div className={styles.gridContainerProduct}>
-                                                    <div className={styles.box}>
-                                                        <strong>LOJA: </strong>
-                                                        <span>{item?.store}</span>
-                                                        <div className={styles.boxBrand}>
-                                                            <strong>MARCA:&nbsp;</strong>
-                                                            <span>{item?.brand}</span>
-                                                            <button
-                                                                onClick={() => handleOpenModal(item?.id)}
-                                                            >
-                                                                <CiEdit color='red' size={21} />
-                                                            </button>
-                                                        </div>
-                                                        <strong>PREÇO: </strong>
-                                                        <strong style={{ color: 'red' }}>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(item?.price)}</strong>
-                                                        <div className={styles.boxData}>
-                                                            <strong>DATA: </strong>
-                                                            <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className={styles.boxCategory}>
-                                                        <button
-                                                            className={styles.buttonProduto}
-                                                            onClick={() => handleButtonClick(item?.link)}
-                                                        >
-                                                            Ver produto
-                                                        </button>
-
-                                                        {item?.productCategory?.length === 0 ?
-                                                            <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
+                                            {item?.productCategory.map((cat, index) => {
+                                                return (
+                                                    <div key={index}>
+                                                        {cat?.storeProduct_id === item?.id ?
+                                                            null
                                                             :
-                                                            <>
-                                                                <strong className={styles.categoryStrong}>Categorias</strong>
+                                                            <div>
+                                                                <div className={styles.title}>
+                                                                    <h3>{item?.title_product}</h3>
+                                                                </div>
 
-                                                                {Array.isArray(item?.productCategory) ? (
-                                                                    item?.productCategory.map((item) => {
-                                                                        return (
-                                                                            <ul key={item.name}>
-                                                                                <li
-                                                                                    className={styles.categs}
+                                                                <div className={styles.containerInfos}>
+                                                                    <div className={styles.imageProduct}>
+                                                                        <Image src={item?.image} quality={100} width={140} height={125} alt={item?.title_product} />
+                                                                    </div>
+
+                                                                    <div className={styles.gridContainerProduct}>
+                                                                        <div className={styles.box}>
+                                                                            <strong>LOJA: </strong>
+                                                                            <span>{item?.store}</span>
+                                                                            <div className={styles.boxBrand}>
+                                                                                <strong>MARCA:&nbsp;</strong>
+                                                                                <span>{item?.brand}</span>
+                                                                                <button
+                                                                                    onClick={() => handleOpenModal(item?.id)}
                                                                                 >
-                                                                                    {item.name}
-                                                                                    <CiEdit
-                                                                                        color='red'
-                                                                                        size={21}
-                                                                                        cursor="pointer"
-                                                                                        onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
-                                                                                    />
-                                                                                </li>
-                                                                            </ul>
-                                                                        )
-                                                                    })
-                                                                ) : (
-                                                                    <p>Recarregue a página por favor...</p>
-                                                                )}
-                                                            </>
+                                                                                    <CiEdit color='red' size={21} />
+                                                                                </button>
+                                                                            </div>
+                                                                            <strong>PREÇO: </strong>
+                                                                            <strong style={{ color: 'red' }}>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(item?.price)}</strong>
+                                                                            <div className={styles.boxData}>
+                                                                                <strong>DATA: </strong>
+                                                                                <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className={styles.boxCategory}>
+                                                                            <button
+                                                                                className={styles.buttonProduto}
+                                                                                onClick={() => handleButtonClick(item?.link)}
+                                                                            >
+                                                                                Ver produto
+                                                                            </button>
+
+                                                                            {item?.productCategory?.length === 0 ?
+                                                                                <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
+                                                                                :
+                                                                                <>
+                                                                                    <strong className={styles.categoryStrong}>Categorias</strong>
+
+                                                                                    {Array.isArray(item?.productCategory) ? (
+                                                                                        item?.productCategory.map((item) => {
+                                                                                            return (
+                                                                                                <ul key={item.name}>
+                                                                                                    <li
+                                                                                                        className={styles.categs}
+                                                                                                    >
+                                                                                                        {item.name}
+                                                                                                        <CiEdit
+                                                                                                            color='red'
+                                                                                                            size={21}
+                                                                                                            cursor="pointer"
+                                                                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
+                                                                                                        />
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            )
+                                                                                        })
+                                                                                    ) : (
+                                                                                        <p>Recarregue a página por favor...</p>
+                                                                                    )}
+                                                                                </>
+                                                                            }
+
+                                                                            <select
+                                                                                className={styles.selectImput}
+                                                                                onChange={handleNameCategory}
+                                                                                onClick={() => handleIdProduct(item?.id)}
+                                                                            >
+                                                                                <option value="">Selecione as categoria aqui...</option>
+                                                                                {categorys?.map((cat) => (
+                                                                                    <option key={cat?.id} value={cat?.name}>{cat.name}</option>
+                                                                                ))}
+                                                                            </select>
+
+                                                                            <label className={styles.position}>Posição da categoria</label>
+                                                                            <Input
+                                                                                placeholder="Ordem"
+                                                                                type='number'
+                                                                                value={order}/* @ts-ignore */
+                                                                                onChange={(e) => setOrder(e.target.value)}
+                                                                            />
+
+                                                                            <button
+                                                                                className={styles.addCategoryButton}
+                                                                                onClick={() => handleRegisterCategory(item?.id)}
+                                                                            >
+                                                                                Cadastrar categoria
+                                                                            </button>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={styles.divisorBox}>
+                                                                    <hr />
+                                                                </div>
+                                                            </div>
                                                         }
-
-                                                        <select
-                                                            className={styles.selectImput}
-                                                            onChange={handleNameCategory}
-                                                            onClick={() => handleIdProduct(item?.id)}
-                                                        >
-                                                            <option value="">Selecione as categoria aqui...</option>
-                                                            {categorys?.map((cat) => (
-                                                                <option key={cat?.id} value={cat?.name}>{cat.name}</option>
-                                                            ))}
-                                                        </select>
-
-                                                        <label className={styles.position}>Posição da categoria</label>
-                                                        <Input
-                                                            placeholder="Ordem"
-                                                            type='number'
-                                                            value={order}/* @ts-ignore */
-                                                            onChange={(e) => setOrder(e.target.value)}
-                                                        />
-
-                                                        <button
-                                                            className={styles.addCategoryButton}
-                                                            onClick={() => handleRegisterCategory(item?.id)}
-                                                        >
-                                                            Cadastrar categoria
-                                                        </button>
-
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div className={styles.divisorBox}>
-                                                <hr />
-                                            </div>
+                                                )
+                                            })}
                                         </div>
                                     )
                                 })}
