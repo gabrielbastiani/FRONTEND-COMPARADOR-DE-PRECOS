@@ -36,7 +36,6 @@ type ProductsStoreProps = {
     link: string;
     created_at: string;
     productCategory: {
-        map(arg0: (cat: any, index: any) => void): import("react").ReactNode;
         length: number;
         id: string;
         storeProduct_id: string;
@@ -44,7 +43,9 @@ type ProductsStoreProps = {
         slug: string;
         order: number;
         created_at: string;
-    }
+        slug_title_product: string;
+        store: string;
+    }[];
 }
 
 type CategorysProps = {
@@ -58,7 +59,8 @@ export default function Products({ params }: { params: { store: string } }) {
 
     const router = useRouter();
 
-    const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
+    const [listProducts, setListProducts] = useState<ProductsStoreProps[]>([]);
+    const [categorysProducts, setCategorysProducts] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(10);
     const [loading, setLoading] = useState<boolean>(false);
@@ -94,6 +96,19 @@ export default function Products({ params }: { params: { store: string } }) {
             }
         }
         loadCategorys();
+    }, []);
+
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadCategorysProductsAll() {
+            try {
+                const response = await apiClient.get('/list_all_products_categorys');
+                setCategorysProducts(response?.data || []);
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+            }
+        }
+        loadCategorysProductsAll();
     }, []);
 
     useEffect(() => {
@@ -239,14 +254,16 @@ export default function Products({ params }: { params: { store: string } }) {
         window.open(`${link}`, '_blank');
     };
 
-    async function handleRegisterCategory(id: string) {
+    async function handleRegisterCategory(id: string, slug_title_product: string, store: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
             await apiClient.post(`/create_category_product`, {
                 storeProduct_id: id,
                 name: nameCategory,
-                order: order
+                order: order,
+                slug_title_product: slug_title_product,
+                store: store
             });
             loadStoreProducts();
             setLoading(false);
@@ -344,121 +361,109 @@ export default function Products({ params }: { params: { store: string } }) {
                                 </div>
                             </div>
                             <div className={styles.grid_container}>
-                                {listProducts?.map((item, index) => {
+                                {listProducts.filter(product => !categorysProducts.some(category => category.slug_title_product === product.slug_title_product)).map((item, index) => {
                                     return (
                                         <div key={index}>
-                                            {item?.productCategory.map((cat, index) => {
-                                                return (
-                                                    <div key={index}>
-                                                        {cat?.storeProduct_id === item?.id ?
-                                                            null
-                                                            :
-                                                            <div>
-                                                                <div className={styles.title}>
-                                                                    <h3>{item?.title_product}</h3>
-                                                                </div>
+                                            <div className={styles.title}>
+                                                <h3>{item?.title_product}</h3>
+                                            </div>
 
-                                                                <div className={styles.containerInfos}>
-                                                                    <div className={styles.imageProduct}>
-                                                                        <Image src={item?.image} quality={100} width={140} height={125} alt={item?.title_product} />
-                                                                    </div>
+                                            <div className={styles.containerInfos}>
+                                                <div className={styles.imageProduct}>
+                                                    <Image src={item?.image} quality={100} width={140} height={125} alt={item?.title_product} />
+                                                </div>
 
-                                                                    <div className={styles.gridContainerProduct}>
-                                                                        <div className={styles.box}>
-                                                                            <strong>LOJA: </strong>
-                                                                            <span>{item?.store}</span>
-                                                                            <div className={styles.boxBrand}>
-                                                                                <strong>MARCA:&nbsp;</strong>
-                                                                                <span>{item?.brand}</span>
-                                                                                <button
-                                                                                    onClick={() => handleOpenModal(item?.id)}
-                                                                                >
-                                                                                    <CiEdit color='red' size={21} />
-                                                                                </button>
-                                                                            </div>
-                                                                            <strong>PREÇO: </strong>
-                                                                            <strong style={{ color: 'red' }}>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(item?.price)}</strong>
-                                                                            <div className={styles.boxData}>
-                                                                                <strong>DATA: </strong>
-                                                                                <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div className={styles.boxCategory}>
-                                                                            <button
-                                                                                className={styles.buttonProduto}
-                                                                                onClick={() => handleButtonClick(item?.link)}
-                                                                            >
-                                                                                Ver produto
-                                                                            </button>
-
-                                                                            {item?.productCategory?.length === 0 ?
-                                                                                <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
-                                                                                :
-                                                                                <>
-                                                                                    <strong className={styles.categoryStrong}>Categorias</strong>
-
-                                                                                    {Array.isArray(item?.productCategory) ? (
-                                                                                        item?.productCategory.map((item) => {
-                                                                                            return (
-                                                                                                <ul key={item.name}>
-                                                                                                    <li
-                                                                                                        className={styles.categs}
-                                                                                                    >
-                                                                                                        {item.name}
-                                                                                                        <CiEdit
-                                                                                                            color='red'
-                                                                                                            size={21}
-                                                                                                            cursor="pointer"
-                                                                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
-                                                                                                        />
-                                                                                                    </li>
-                                                                                                </ul>
-                                                                                            )
-                                                                                        })
-                                                                                    ) : (
-                                                                                        <p>Recarregue a página por favor...</p>
-                                                                                    )}
-                                                                                </>
-                                                                            }
-
-                                                                            <select
-                                                                                className={styles.selectImput}
-                                                                                onChange={handleNameCategory}
-                                                                                onClick={() => handleIdProduct(item?.id)}
-                                                                            >
-                                                                                <option value="">Selecione as categoria aqui...</option>
-                                                                                {categorys?.map((cat) => (
-                                                                                    <option key={cat?.id} value={cat?.name}>{cat.name}</option>
-                                                                                ))}
-                                                                            </select>
-
-                                                                            <label className={styles.position}>Posição da categoria</label>
-                                                                            <Input
-                                                                                placeholder="Ordem"
-                                                                                type='number'
-                                                                                value={order}/* @ts-ignore */
-                                                                                onChange={(e) => setOrder(e.target.value)}
-                                                                            />
-
-                                                                            <button
-                                                                                className={styles.addCategoryButton}
-                                                                                onClick={() => handleRegisterCategory(item?.id)}
-                                                                            >
-                                                                                Cadastrar categoria
-                                                                            </button>
-
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className={styles.divisorBox}>
-                                                                    <hr />
-                                                                </div>
-                                                            </div>
-                                                        }
+                                                <div className={styles.gridContainerProduct}>
+                                                    <div className={styles.box}>
+                                                        <strong>LOJA: </strong>
+                                                        <span>{item?.store}</span>
+                                                        <div className={styles.boxBrand}>
+                                                            <strong>MARCA:&nbsp;</strong>
+                                                            <span>{item?.brand}</span>
+                                                            <button
+                                                                onClick={() => handleOpenModal(item?.id)}
+                                                            >
+                                                                <CiEdit color='red' size={21} />
+                                                            </button>
+                                                        </div>
+                                                        <strong>PREÇO: </strong>
+                                                        <strong style={{ color: 'red' }}>{new Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(item?.price)}</strong>
+                                                        <div className={styles.boxData}>
+                                                            <strong>DATA: </strong>
+                                                            <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
+                                                        </div>
                                                     </div>
-                                                )
-                                            })}
+
+                                                    <div className={styles.boxCategory}>
+                                                        <button
+                                                            className={styles.buttonProduto}
+                                                            onClick={() => handleButtonClick(item?.link)}
+                                                        >
+                                                            Ver produto
+                                                        </button>
+
+                                                        {item?.productCategory?.length === 0 ?
+                                                            <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
+                                                            :
+                                                            <>
+                                                                <strong className={styles.categoryStrong}>Categorias</strong>
+
+                                                                {Array.isArray(item?.productCategory) ? (
+                                                                    item?.productCategory.map((item) => {
+                                                                        return (
+                                                                            <ul key={item.name}>
+                                                                                <li
+                                                                                    className={styles.categs}
+                                                                                >
+                                                                                    {item.name}
+                                                                                    <CiEdit
+                                                                                        color='red'
+                                                                                        size={21}
+                                                                                        cursor="pointer"
+                                                                                        onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
+                                                                                    />
+                                                                                </li>
+                                                                            </ul>
+                                                                        )
+                                                                    })
+                                                                ) : (
+                                                                    <p>Recarregue a página por favor...</p>
+                                                                )}
+                                                            </>
+                                                        }
+
+                                                        <select
+                                                            className={styles.selectImput}
+                                                            onChange={handleNameCategory}
+                                                            onClick={() => handleIdProduct(item?.id)}
+                                                        >
+                                                            <option value="">Selecione as categoria aqui...</option>
+                                                            {categorys?.map((cat) => (
+                                                                <option key={cat?.id} value={cat?.name}>{cat.name}</option>
+                                                            ))}
+                                                        </select>
+
+                                                        <label className={styles.position}>Posição da categoria</label>
+                                                        <Input
+                                                            placeholder="Ordem"
+                                                            type='number'
+                                                            value={order}/* @ts-ignore */
+                                                            onChange={(e) => setOrder(e.target.value)}
+                                                        />
+
+                                                        <button
+                                                            className={styles.addCategoryButton}
+                                                            onClick={() => handleRegisterCategory(item?.id, item?.slug_title_product, item?.store)}
+                                                        >
+                                                            Cadastrar categoria
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={styles.divisorBox}>
+                                                <hr />
+                                            </div>
                                         </div>
                                     )
                                 })}

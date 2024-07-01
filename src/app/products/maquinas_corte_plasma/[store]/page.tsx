@@ -43,7 +43,9 @@ type ProductsStoreProps = {
         slug: string;
         order: number;
         created_at: string;
-    }
+        slug_title_product: string;
+        store: string;
+    }[];
 }
 
 type CategorysProps = {
@@ -57,7 +59,8 @@ export default function Products({ params }: { params: { store: string } }) {
 
     const router = useRouter();
 
-    const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
+    const [listProducts, setListProducts] = useState<ProductsStoreProps[]>([]);
+    const [categorysProducts, setCategorysProducts] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(10);
     const [loading, setLoading] = useState<boolean>(false);
@@ -93,6 +96,19 @@ export default function Products({ params }: { params: { store: string } }) {
             }
         }
         loadCategorys();
+    }, []);
+
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function loadCategorysProductsAll() {
+            try {
+                const response = await apiClient.get('/list_all_products_categorys');
+                setCategorysProducts(response?.data || []);
+            } catch (error) {/* @ts-ignore */
+                console.log(error.response.data);
+            }
+        }
+        loadCategorysProductsAll();
     }, []);
 
     useEffect(() => {
@@ -341,7 +357,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                 </div>
                             </div>
                             <div className={styles.grid_container}>
-                                {listProducts?.map((item, index) => {
+                            {listProducts.filter(product => !categorysProducts.some(category => category.slug_title_product === product.slug_title_product)).map((item, index) => {
                                     return (
                                         <div key={index}>
                                             <div className={styles.title}>
