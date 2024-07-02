@@ -17,6 +17,8 @@ import styles from './styles.module.css';
 interface ModalDeleteProductRequest {
     isOpen: boolean;
     productCategory: string;
+    store: string;
+    slug_title_product: string;
     onRequestClose: () => void;
     productLoad: () => void;
 }
@@ -28,7 +30,7 @@ type CategorysProps = {
     image: string;
 }
 
-export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad }: ModalDeleteProductRequest) {
+export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad, slug_title_product, store }: ModalDeleteProductRequest) {
 
     const customStyles = {
         content: {
@@ -46,7 +48,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
     const [loading, setLoading] = useState<boolean>(false);
     const [categorys, setCategorys] = useState<CategorysProps[]>();
     const [registerCategorys, setRegisterCategorys] = useState<any[]>([]);
-    const [nameCategory, setNameCategory] = useState<string>("");
+    const [nameCategory, setNameCategory] = useState<{ name: string; categoryId: string | null }>({ name: '', categoryId: null });
     const [order, setOrder] = useState<number>(Number);
     const [activeTab, setActiveTab] = useState("");
 
@@ -61,10 +63,6 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         setActiveTab(id);
         setToogle(state => !state);
     };
-
-    function handleNameCategory(e: any) {
-        setNameCategory(e.target.value);
-    }
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -81,14 +79,23 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         loadCategorys();
     }, [productCategory]);
 
+    const handleNameCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const [name, categoryId] = event.target.value.split(',');
+        setNameCategory({ name, categoryId });
+        console.log('Name:', name, 'Category ID:', categoryId);
+    };
+
     async function handleRegisterCategory() {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
             await apiClient.post(`/create_category_product`, {
                 storeProduct_id: productCategory,
-                name: nameCategory,
-                order: order
+                category_id: nameCategory.categoryId,
+                name: nameCategory.name,
+                order: order,
+                slug_title_product: slug_title_product,
+                store: store
             });
             productLoad();
             setLoading(false);
@@ -231,7 +238,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                         >
                             <option value="">Selecione as categoria aqui...</option>
                             {categorys?.map((cat) => (
-                                <option key={cat?.id} value={cat?.name}>{cat.name}</option>
+                                <option key={cat?.id} value={`${cat?.name},${cat?.id}`}>{cat.name}</option>
                             ))}
                         </select>
 

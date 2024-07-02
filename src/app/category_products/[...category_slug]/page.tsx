@@ -57,6 +57,8 @@ export default function Category_products({ params }: { params: { category_slug:
     const [totalPages, setTotalPages] = useState(10);
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
+    const [slugTitleProduct, setSlugTitleProduct] = useState<string>("");
+    const [store, setStore] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
@@ -208,9 +210,11 @@ export default function Category_products({ params }: { params: { category_slug:
         setModalVisibleCategorysProduct(false);
     }
 
-    async function handleOpenModalCategorys(id: string) {
+    async function handleOpenModalCategorys(id: string, store: string, slug_title_product: string) {
         setModalVisibleCategorys(true);
         setIdProduct(id);
+        setStore(store);
+        setSlugTitleProduct(slug_title_product)
     }
 
     function handleCloseModalCategorys() {
@@ -335,7 +339,7 @@ export default function Category_products({ params }: { params: { category_slug:
 
                                                             <button
                                                                 className={styles.buttonProdutoCategs}
-                                                                onClick={() => handleOpenModalCategorys(item?.id)}
+                                                                onClick={() => handleOpenModalCategorys(item?.id, item?.store, item?.slug_title_product)}
                                                             >
                                                                 Registros de categorias
                                                             </button>
@@ -390,6 +394,8 @@ export default function Category_products({ params }: { params: { category_slug:
                             isOpen={modalVisibleCategorys}
                             onRequestClose={handleCloseModalCategorys}
                             productCategory={idProduct}
+                            store={store}
+                            slug_title_product={slugTitleProduct}
                             productLoad={loadStoreProducts}
                         />
                     )}

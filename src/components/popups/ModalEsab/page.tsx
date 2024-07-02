@@ -61,6 +61,8 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
             await apiClient.get(`/esab_machines_weld`);
             setLoading(false);
             toast.success(`Produtos da ESAB capturados com sucesso`);
+            onRequestClose();
+            window.location.reload();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             toast.error(`Erro ao carregar dados da ESAB`);
@@ -75,6 +77,8 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
             await apiClient.get(`/esab_machines_cut`);
             setLoading(false);
             toast.success(`Produtos da ESAB capturados com sucesso`);
+            onRequestClose();
+            window.location.reload();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             toast.error(`Erro ao carregar dados da ESAB`);
@@ -124,6 +128,10 @@ export function ModalEsab({ isOpen, onRequestClose }: ModalStoreRequest) {
                                     Máquinas de corte plasma dessa loja
                                 </button>
                             }
+
+                            <br />
+                            <hr />
+                            <br />
 
                             {machinesWelding?.length === 0 ?
                                 <button

@@ -2,8 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { BiSolidCategory } from 'react-icons/bi';
 import { CiEdit } from 'react-icons/ci';
-import { FaArrowLeft, FaProductHunt } from 'react-icons/fa';
+import { FaArrowLeft, FaPlusCircle } from 'react-icons/fa';
 
 import { Header } from '@/components/Header/page';
 import LoadingRequests from '@/components/LoadingRequests/page';
@@ -84,15 +85,15 @@ export default function Category({ params }: { params: { category_id: string } }
                                                     </button>
                                                     :
                                                     <div className={styles.grid_item}>
-                                                        <button onClick={() => router.push(`/category/${item?.slug}/${item?.name}/${item?.id}`)}>
+                                                        <button onClick={() => router.push(`/category_products/${item?.slug}`)}>
                                                             <strong>
                                                                 {item.name}
                                                             </strong>
                                                         </button>
                                                         <span>
-                                                            <CiEdit color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
+                                                            <FaPlusCircle color='black' size={25} onClick={() => router.push(`/edit_category/${item?.id}`)} />
                                                             &nbsp;&nbsp;
-                                                            <FaProductHunt onClick={() => router.push(`/category_products/${item?.slug}`)} size={28} />
+                                                            <BiSolidCategory onClick={() => router.push(`/category/${item?.slug}/${item?.name}/${item?.id}`)} size={28} />
                                                         </span>
                                                     </div>
                                                 }

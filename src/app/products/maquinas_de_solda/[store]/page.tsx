@@ -51,6 +51,7 @@ type ProductsStoreProps = {
 type CategorysProps = {
     id: string;
     name: string;
+    category_id: string;
     slug: string;
     image: string;
 }
@@ -71,7 +72,7 @@ export default function Products({ params }: { params: { store: string } }) {
     const [categoryName, setCategoryName] = useState<string>("");
     const [order, setOrder] = useState<number>(Number);
     const [orderCategory, setOrderCategory] = useState<number>(Number);
-    const [nameCategory, setNameCategory] = useState<string>("");
+    const [nameCategory, setNameCategory] = useState<{ name: string; categoryId: string | null }>({ name: '', categoryId: null });
     const [categorys, setCategorys] = useState<CategorysProps[]>();
 
     const initialFilters = {
@@ -193,9 +194,11 @@ export default function Products({ params }: { params: { store: string } }) {
         setIdProduct(id);
     }
 
-    function handleNameCategory(e: any) {
-        setNameCategory(e.target.value);
-    }
+    const handleNameCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const [name, categoryId] = event.target.value.split(',');
+        setNameCategory({ name, categoryId });
+        console.log('Name:', name, 'Category ID:', categoryId);
+    };
 
     const updateFilter = (filter: string, value: string | number) => {
         setFilters(prevFilters => ({
@@ -260,7 +263,8 @@ export default function Products({ params }: { params: { store: string } }) {
         try {
             await apiClient.post(`/create_category_product`, {
                 storeProduct_id: id,
-                name: nameCategory,
+                category_id: nameCategory.categoryId,
+                name: nameCategory.name,
                 order: order,
                 slug_title_product: slug_title_product,
                 store: store
@@ -439,7 +443,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                                         >
                                                             <option value="">Selecione as categoria aqui...</option>
                                                             {categorys?.map((cat) => (
-                                                                <option key={cat?.id} value={cat?.name}>{cat.name}</option>
+                                                                <option key={cat?.id} value={`${cat?.name},${cat?.id}`}>{cat.name}</option>
                                                             ))}
                                                         </select>
 

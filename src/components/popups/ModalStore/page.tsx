@@ -24,10 +24,6 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
 
     const router = useRouter();
 
-    const handleReload = () => {
-        router.refresh();
-    };
-
     const [loading, setLoading] = useState<boolean>(false);
     const [listProducts, setListProducts] = useState<any[]>();
 
@@ -71,16 +67,6 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
         loadStoreProducts();
     }, [valueStore]);
 
-    async function loadStoreProducts() {
-        const apiClient = setupAPIClient();
-        try {
-            const response = await apiClient.get(`/store_products?slug=${valueStore}`);
-            setListProducts(response?.data || []);
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-        }
-    }
-
     async function handleStoreMachineWelding() {
         setLoading(true);
         const valorCodificado = encodeURIComponent(String(valor1));
@@ -90,8 +76,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
             setLoading(false);
             toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
             onRequestClose();
-            handleReload();
-            loadStoreProducts();
+            window.location.reload();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             toast.error(`Erro ao carregar dados da concorrência ${valor2}`);
@@ -108,8 +93,7 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
             setLoading(false);
             toast.success(`Produtos da concorrência ${valor2} capturados com sucesso`);
             onRequestClose();
-            handleReload();
-            loadStoreProducts();
+            window.location.reload();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
             toast.error(`Erro ao carregar dados da concorrência ${valor2}`);
@@ -166,6 +150,10 @@ export function ModalStore({ isOpen, onRequestClose, valor1, valor2, valor3 }: M
                                     }
                                 </>
                             }
+
+                            <br />
+                            <hr />
+                            <br />
 
                             {machinesWelding?.length === 0 ?
                                 <button
