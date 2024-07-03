@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 
 import { Button } from "@/components/Button/page";
 import { Header } from "@/components/Header/page";
-import { Input } from "@/components/Input/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalDateProduct } from "@/components/popups/ModalDateProduct/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
@@ -70,7 +69,6 @@ export default function Products({ params }: { params: { store: string } }) {
     const [store, setStore] = useState<string>("");
     const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
     const [categoryName, setCategoryName] = useState<string>("");
-    const [order, setOrder] = useState<number>(Number);
     const [orderCategory, setOrderCategory] = useState<number>(Number);
     const [nameCategory, setNameCategory] = useState<{ name: string; categoryId: string | null }>({ name: '', categoryId: null });
     const [categorys, setCategorys] = useState<CategorysProps[]>();
@@ -91,7 +89,7 @@ export default function Products({ params }: { params: { store: string } }) {
         async function loadCategorys() {
             try {
                 const { data } = await apiClient.get('/all_categorys');
-                setCategorys(data?.all_categorys || []);
+                setCategorys(data?.categorys_zero || []);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
             }
@@ -264,7 +262,7 @@ export default function Products({ params }: { params: { store: string } }) {
                 storeProduct_id: id,
                 category_id: nameCategory.categoryId,
                 name: nameCategory.name,
-                order: order,
+                order: 0,
                 slug_title_product: slug_title_product,
                 store: store
             });
@@ -439,19 +437,13 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             onChange={handleNameCategory}
                                                             onClick={() => handleIdProduct(item?.id)}
                                                         >
-                                                            <option value="">Selecione as categoria aqui...</option>
-                                                            {categorys?.map((cat) => (
-                                                                <option key={cat?.id} value={`${cat?.name},${cat?.id}`}>{cat.name}</option>
-                                                            ))}
+                                                            <option value="">Selecione a categoria aqui...</option>
+                                                            {categorys?.[1] ? (
+                                                                <option value={`${categorys[1].name},${categorys[1].id}`}>{categorys[1].name}</option>
+                                                            ) : (
+                                                                <option value="" disabled>Nenhuma categoria disponível</option>
+                                                            )}
                                                         </select>
-
-                                                        <label className={styles.position}>Posição da categoria</label>
-                                                        <Input
-                                                            placeholder="Ordem"
-                                                            type='number'
-                                                            value={order}/* @ts-ignore */
-                                                            onChange={(e) => setOrder(e.target.value)}
-                                                        />
 
                                                         <button
                                                             className={styles.addCategoryButton}
