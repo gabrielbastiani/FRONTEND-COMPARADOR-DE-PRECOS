@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiSolidCategory } from 'react-icons/bi';
-import { FaPlusCircle } from 'react-icons/fa';
 
 import { Header } from "@/components/Header/page";
 
@@ -63,16 +62,13 @@ export default function Home() {
           {zeroCategs?.map((item, index) => {
             return (
               <div key={index} className={styles.grid_item}>
-                <button onClick={() => router.push(`/category_products/${item?.slug}/${item?.name}`)}>
+                <button onClick={() => router.push(`/category_products/${item?.id}/${item?.name}`)}>
                   <Image src={item?.image} width={70} height={70} alt={item?.name} />
                   <strong>
                     {item?.name}
                   </strong>
                 </button>
                 <span style={{ backgroundColor: 'white' }}>
-                  <FaPlusCircle color='black' size={25} onClick={() => router.push(`/add_subcategory/${item?.id}/${item?.name}`)} />
-                  <br />
-                  <br />
                   <BiSolidCategory onClick={() => router.push(`/category/${item?.slug}/${item?.name}/${item?.id}`)} size={28} />
                 </span>
               </div>

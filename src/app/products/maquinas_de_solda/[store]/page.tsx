@@ -267,9 +267,9 @@ export default function Products({ params }: { params: { store: string } }) {
                 slug_title_product: slug_title_product,
                 store: store
             });
-            loadStoreProducts();
             setLoading(false);
             toast.success("Categoria registrada com sucesso.");
+            window.location.reload();
         } catch (error) {/* @ts-ignore */
             if (error.response.data?.error === "Categoria já cadastrada nesse produto!") {
                 /* @ts-ignore */

@@ -82,7 +82,7 @@ export default function Category_products({ params }: { params: { category_slug:
             try {
                 const response = await apiClient.get(`/products_category`, {
                     params: {
-                        slug: params?.category_slug[0],
+                        id: params?.category_slug[0],
                         page: currentPage,
                         limit: filters.limit,
                         filter: filters.filter,
@@ -115,7 +115,7 @@ export default function Category_products({ params }: { params: { category_slug:
         try {
             const response = await apiClient.get(`/products_category`, {
                 params: {
-                    slug: params?.category_slug[0],
+                    id: params?.category_slug[0],
                     page: currentPage,
                     limit: filters.limit,
                     filter: filters.filter,
@@ -202,6 +202,7 @@ export default function Category_products({ params }: { params: { category_slug:
     }
 
     async function handleOpenModalDeleteProduct(id: string) {
+        console.log(id)
         setModalVisibleCategorysProduct(true);
         setIdProduct(id);
     }
@@ -318,13 +319,13 @@ export default function Category_products({ params }: { params: { category_slug:
                                                                 <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
                                                             </div>
                                                         </div>
-
+                                                        
                                                         <div>
                                                             <FaTrashAlt
                                                                 size={25}
                                                                 color="red"
                                                                 cursor="pointer"
-                                                                onClick={() => handleOpenModalDeleteProduct(item?.id)}
+                                                                onClick={() => handleOpenModalDeleteProduct(item?.productCategory?.id)}
                                                             />
                                                         </div>
 

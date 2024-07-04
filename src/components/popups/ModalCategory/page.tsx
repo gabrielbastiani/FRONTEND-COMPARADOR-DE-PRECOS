@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
@@ -13,7 +13,6 @@ import LoadingRequests from '@/components/LoadingRequests/page';
 import { setupAPIClient } from '../../../services/api';
 import styles from './styles.module.css';
 
-
 interface ModalDeleteProductRequest {
     isOpen: boolean;
     productCategory: string;
@@ -27,11 +26,17 @@ type CategorysProps = {
     id: string;
     name: string;
     slug: string;
-    image: string;
-}
+    nivel: number;
+    parentId: string | null;
+    order: number;
+    type_category: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+    children?: CategorysProps[];
+};
 
 export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad, slug_title_product, store }: ModalDeleteProductRequest) {
-
     const customStyles = {
         content: {
             top: '50%',
@@ -41,16 +46,16 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
             padding: '30px',
             transform: 'translate(-50%, -50%)',
             backgroundColor: 'black',
-            zIndex: 9999999
-        }
+            zIndex: 9999999,
+        },
     };
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [categorys, setCategorys] = useState<CategorysProps[]>();
+    const [categorys, setCategorys] = useState<CategorysProps[]>([]);
     const [registerCategorys, setRegisterCategorys] = useState<any[]>([]);
     const [nameCategory, setNameCategory] = useState<{ name: string; categoryId: string | null }>({ name: '', categoryId: null });
-    const [order, setOrder] = useState<number>(Number);
-    const [activeTab, setActiveTab] = useState("");
+    const [order, setOrder] = useState<number>(0);
+    const [activeTab, setActiveTab] = useState<string>("");
 
     const [toogle, setToogle] = useState(!activeTab);
     const [cor, setCor] = useState('grey');
@@ -61,7 +66,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
 
     const handleClick = (id: string) => {
         setActiveTab(id);
-        setToogle(state => !state);
+        setToogle((state) => !state);
     };
 
     useEffect(() => {
@@ -80,7 +85,8 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
     }, [productCategory]);
 
     const handleNameCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const [name, categoryId] = event.target.value.split(',');
+        const [path, categoryId] = event.target.value.split(',');/* @ts-ignore */
+        const name = path.split('>').pop().trim(); // Extrai a última categoria após o caractere ">"
         setNameCategory({ name, categoryId });
         console.log('Name:', name, 'Category ID:', categoryId);
     };
@@ -95,20 +101,19 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                 name: nameCategory.name,
                 order: order,
                 slug_title_product: slug_title_product,
-                store: store
+                store: store,
             });
             productLoad();
             setLoading(false);
             toast.success("Categoria registrada com sucesso");
         } catch (error) {/* @ts-ignore */
-            if (error.response.data?.error === "Categoria já cadastrada nesse produto!") {
-                /* @ts-ignore */
+            if (error.response.data?.error === "Categoria já cadastrada nesse produto!") {/* @ts-ignore */
                 toast.error(error.response.data?.error);
                 setLoading(false);
             } else {/* @ts-ignore */
                 console.log(error.response.data);
                 setLoading(false);
-                toast.error("Erro ao cadastrar esse produto nesta categoria!")
+                toast.error("Erro ao cadastrar esse produto nesta categoria!");
             }
         }
     }
@@ -124,7 +129,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
             onRequestClose();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error("Erro ao deletar essa categoria desse produto")
+            toast.error("Erro ao deletar essa categoria desse produto");
             setLoading(false);
         }
     }
@@ -134,7 +139,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         setLoading(true);
         try {
             await apiClient.put(`/update_positionCategory_product?productCategory_id=${id}`, {
-                order: order
+                order: order,
             });
             productLoad();
             toast.success("Posição da ordem atualizada com sucesso");
@@ -142,22 +147,40 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
             onRequestClose();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error("Erro ao atualizar a posição")
+            toast.error("Erro ao atualizar a posição");
             setLoading(false);
         }
     }
 
+    const buildCategoryTree = (categories: CategorysProps[], parentId: string | null = null): CategorysProps[] => {
+        return categories
+            .filter(category => category.parentId === parentId)
+            .map(category => ({
+                ...category,
+                children: buildCategoryTree(categories, category.id),
+            }));
+    };
+
+    const renderCategoryOptions = (categories: CategorysProps[], parentPath: string = ''): JSX.Element[] => {
+        return categories.flatMap(category => {
+            const currentPath = parentPath ? `${parentPath} > ${category.name}` : category.name;
+            return [
+                <option key={category.id} value={`${currentPath},${category.id}`}>
+                    {currentPath}
+                </option>,
+                ...renderCategoryOptions(category.children || [], currentPath),
+            ];
+        });
+    };
+
+    const categoryTree = buildCategoryTree(categorys);
+
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onRequestClose}
-            style={customStyles}
-        >
-
-            {loading ?
+        <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
+            {loading ? (
                 <LoadingRequests />
-                :
+            ) : (
                 <>
                     <button
                         type='button'
@@ -169,66 +192,58 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                     </button>
 
                     <div className={styles.containerContent}>
-
                         <h2>Categorias</h2>
 
-                        {registerCategorys?.length === 0 ?
+                        {registerCategorys?.length === 0 ? (
                             <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
-                            :
+                        ) : (
                             <>
                                 <strong className={styles.categoryStrong}>Categorias</strong>
-
-                                {registerCategorys.map((item) => {
-                                    return (
-                                        <ul key={item.name}>
-                                            <li
-                                                className={styles.categs}
-                                            >
-                                                {item.name}
-                                                <CiEdit
-                                                    color={cor}
-                                                    size={21}
-                                                    cursor="pointer"
-                                                    onClick={() => handleClick(item.id)}
+                                {registerCategorys.map((item) => (
+                                    <ul key={item.name}>
+                                        <li className={styles.categs}>
+                                            {item.name}
+                                            <CiEdit
+                                                color={cor}
+                                                size={21}
+                                                cursor="pointer"
+                                                onClick={() => handleClick(item.id)}
+                                            />
+                                        </li>
+                                        {activeTab === item.id && (
+                                            <>
+                                                <Input
+                                                    placeholder={item?.order.toString()}
+                                                    type='number'
+                                                    value={order ? order : item?.order}/* @ts-ignore */
+                                                    onChange={(e) => setOrder(Number(e.target.value))}
                                                 />
-                                            </li>
-                                            {activeTab === item.id ?
-                                                <>
-                                                    <Input
-                                                        placeholder={item?.order}
-                                                        type='number'
-                                                        value={order ? order : item?.order}/* @ts-ignore */
-                                                        onChange={(e) => setOrder(e.target.value)}
-                                                    />
-                                                    <Button
-                                                        style={{ width: '40%', fontWeight: "bold", fontSize: '14px', backgroundColor: 'green' }}
-                                                        onClick={() => updateOrder(item?.id)}
-                                                    >
-                                                        Atualizar posição
-                                                    </Button>
+                                                <Button
+                                                    style={{ width: '40%', fontWeight: "bold", fontSize: '14px', backgroundColor: 'green' }}
+                                                    onClick={() => updateOrder(item?.id)}
+                                                >
+                                                    Atualizar posição
+                                                </Button>
 
-                                                    <h4>Deletar essa categoria desse produto?</h4>
+                                                <h4>Deletar essa categoria desse produto?</h4>
 
-                                                    <Button
-                                                        style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
-                                                        onClick={() => deleteCategoryProduct(item?.id)}
-                                                    >
-                                                        Deletar
-                                                    </Button>
-                                                    <br />
-                                                    <br />
-                                                    <hr />
-                                                    <br />
-                                                    <br />
-                                                </>
-                                                :
-                                                null
-                                            }
-                                        </ul>
-                                    )
-                                })}
+                                                <Button
+                                                    style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
+                                                    onClick={() => deleteCategoryProduct(item?.id)}
+                                                >
+                                                    Deletar
+                                                </Button>
+                                                <br />
+                                                <br />
+                                                <hr />
+                                                <br />
+                                                <br />
+                                            </>
+                                        )}
+                                    </ul>
+                                ))}
                             </>
-                        }
+                        )}
 
                         <h2>Deseja cadastrar categoria(s)?</h2>
 
@@ -237,9 +252,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                             onChange={handleNameCategory}
                         >
                             <option value="">Selecione as categoria aqui...</option>
-                            {categorys?.map((cat) => (
-                                <option key={cat?.id} value={`${cat?.name},${cat?.id}`}>{cat.name}</option>
-                            ))}
+                            {renderCategoryOptions(categoryTree)}
                         </select>
 
                         <label className={styles.position}>Posição da categoria</label>
@@ -248,7 +261,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                             placeholder="Ordem"
                             type='number'
                             value={order}/* @ts-ignore */
-                            onChange={(e) => setOrder(e.target.value)}
+                            onChange={(e) => setOrder(Number(e.target.value))}
                         />
 
                         <button
@@ -259,7 +272,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                         </button>
                     </div>
                 </>
-            }
+            )}
         </Modal>
-    )
+    );
 }

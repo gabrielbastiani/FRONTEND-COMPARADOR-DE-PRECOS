@@ -18,7 +18,6 @@ type CategorysProps = {
     id: string;
     name: string;
     slug: string;
-    image: string;
     status: string;
     parentId: string;
     nivel: number;
@@ -50,7 +49,6 @@ export default function Category({ params }: { params: { category_id: string } }
         }
         loadSubCategory();
     }, [params.category_id]);
-
 
     return (
         <>
@@ -85,7 +83,7 @@ export default function Category({ params }: { params: { category_id: string } }
                                                     </button>
                                                     :
                                                     <div className={styles.grid_item}>
-                                                        <button onClick={() => router.push(`/category_products/${item?.slug}`)}>
+                                                        <button onClick={() => router.push(`/category_products/${item?.id}`)}>
                                                             <strong>
                                                                 {item.name}
                                                             </strong>
