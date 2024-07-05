@@ -1,7 +1,9 @@
 "use client"
 
 
+import { useRouter } from "next/navigation";
 import { FunctionComponent, useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 import { Header } from "@/components/Header/page";
@@ -15,6 +17,8 @@ import { CartesianGrid, ComposedChart, LabelList, Legend, Line, LineChart, Respo
 
 
 export default function Historico_preco({ params }: { params: { slug: string, slug_title_product: string } }) {
+
+    const router = useRouter();
 
     const [listProducts, setListProducts] = useState<any[]>([]);
     const [comparativeProducts, setComparativeProducts] = useState<any[]>([]);
@@ -270,7 +274,7 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                 setLoading(false);
             }
         }
-        
+
     }
 
 
@@ -285,6 +289,11 @@ export default function Historico_preco({ params }: { params: { slug: string, sl
                     <main className={styles.mainContainer}>
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
+                                <FaArrowLeft
+                                    onClick={() => router.back()}
+                                    size={32}
+                                    color='red'
+                                />
                                 <h1 className={styles.titulo}>Histórico do produto</h1>
                             </div>
 

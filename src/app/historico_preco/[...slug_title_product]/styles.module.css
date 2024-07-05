@@ -28,6 +28,12 @@
 
 .titleBox {
     margin: 30px;
+    display: flex;
+}
+
+.titleBox svg {
+    margin-right: 30px;
+    cursor: pointer;
 }
 
 .titulo {
