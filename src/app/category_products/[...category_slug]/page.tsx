@@ -37,12 +37,24 @@ type ProductsStoreProps = {
     productCategory: {
         length: number;
         id: string;
+        category_id: string;
         storeProduct_id: string;
         name: string;
         slug: string;
         order: number;
         created_at: string;
-    }
+        category: {
+            created_at: string;
+            id: string;
+            name: string;
+            nivel: number;
+            order: number;
+            parentId: string;
+            slug: string;
+            type_category: string;
+            status: string;
+        };
+    }[];
 }
 
 export default function Category_products({ params }: { params: { category_slug: string, title: string } }) {
@@ -62,6 +74,8 @@ export default function Category_products({ params }: { params: { category_slug:
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
+
+    console.log(listProducts)
 
     const titles = !nameCategory ? title : nameCategory;
 
@@ -238,12 +252,12 @@ export default function Category_products({ params }: { params: { category_slug:
                         <article className={styles.content}>
                             <div className={styles.titleBox}>
                                 <div className={styles.contentText}>
-                                <FaArrowLeft
-                                    onClick={() => router.back()}
-                                    size={32}
-                                    color='red'
-                                />
-                                <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + titles}</h1>
+                                    <FaArrowLeft
+                                        onClick={() => router.back()}
+                                        size={32}
+                                        color='red'
+                                    />
+                                    <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + titles}</h1>
                                 </div>
                                 <div className={styles.containerFilters}>
                                     <div className={styles.boxFilters}>
@@ -319,15 +333,20 @@ export default function Category_products({ params }: { params: { category_slug:
                                                                 <strong style={{ color: 'rgb(17, 192, 17)' }}>{moment(item?.created_at).format('DD/MM/YYYY - HH:mm')}</strong>
                                                             </div>
                                                         </div>
+
                                                         
-                                                        <div>
-                                                            <FaTrashAlt
-                                                                size={25}
-                                                                color="red"
-                                                                cursor="pointer"
-                                                                onClick={() => handleOpenModalDeleteProduct(item?.productCategory?.id)}
-                                                            />
-                                                        </div>
+                                                        {item.productCategory.filter(item => item.category_id === params?.category_slug[0]).map((item, index) => {
+                                                            return (
+                                                                <div key={index}>
+                                                                    <FaTrashAlt
+                                                                        size={25}
+                                                                        color="red"
+                                                                        cursor="pointer"
+                                                                        onClick={() => handleOpenModalDeleteProduct(item?.id)}
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        })}
 
                                                         <div className={styles.boxCategory}>
 
