@@ -43,17 +43,6 @@ type ProductsStoreProps = {
         slug: string;
         order: number;
         created_at: string;
-        category: {
-            created_at: string;
-            id: string;
-            name: string;
-            nivel: number;
-            order: number;
-            parentId: string;
-            slug: string;
-            type_category: string;
-            status: string;
-        };
     }[];
 }
 
