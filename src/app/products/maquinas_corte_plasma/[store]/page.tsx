@@ -47,14 +47,6 @@ type ProductsStoreProps = {
     }[];
 }
 
-type CategorysProps = {
-    id: string;
-    name: string;
-    category_id: string;
-    slug: string;
-    image: string;
-}
-
 export default function Products({ params }: { params: { store: string } }) {
 
     const router = useRouter();
@@ -70,8 +62,6 @@ export default function Products({ params }: { params: { store: string } }) {
     const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
     const [categoryName, setCategoryName] = useState<string>("");
     const [orderCategory, setOrderCategory] = useState<number>(Number);
-    const [nameCategory, setNameCategory] = useState<{ name: string; categoryId: string | null }>({ name: '', categoryId: null });
-    const [categorys, setCategorys] = useState<CategorysProps[]>();
 
     const initialFilters = {
         filter: '',
@@ -83,19 +73,6 @@ export default function Products({ params }: { params: { store: string } }) {
     };
 
     const [filters, setFilters] = useState(initialFilters);
-
-    useEffect(() => {
-        const apiClient = setupAPIClient();
-        async function loadCategorys() {
-            try {
-                const { data } = await apiClient.get('/all_categorys');
-                setCategorys(data?.categorys_zero || []);
-            } catch (error) {/* @ts-ignore */
-                console.log(error.response.data);
-            }
-        }
-        loadCategorys();
-    }, []);
 
     useEffect(() => {
         const apiClient = setupAPIClient();
@@ -187,16 +164,6 @@ export default function Products({ params }: { params: { store: string } }) {
         }
     }
 
-    async function handleIdProduct(id: string) {
-        setIdProduct(id);
-    }
-
-    const handleNameCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const [name, categoryId] = event.target.value.split(',');
-        setNameCategory({ name, categoryId });
-        console.log('Name:', name, 'Category ID:', categoryId);
-    };
-
     const updateFilter = (filter: string, value: string | number) => {
         setFilters(prevFilters => ({
             ...prevFilters,
@@ -254,31 +221,22 @@ export default function Products({ params }: { params: { store: string } }) {
         window.open(`${link}`, '_blank');
     };
 
-    async function handleRegisterCategory(id: string, slug_title_product: string, store: string) {
+    async function handleRegisterProduct(id: string, slug_title_product: string, store: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.post(`/create_category_product`, {
+            await apiClient.post(`/capture_product_cut_machine`, {
                 storeProduct_id: id,
-                category_id: nameCategory.categoryId,
-                name: nameCategory.name,
-                order: 0,
                 slug_title_product: slug_title_product,
                 store: store
             });
             setLoading(false);
-            toast.success("Categoria registrada com sucesso.");
+            toast.success("Produto cadastrado com sucesso.");
             window.location.reload();
         } catch (error) {/* @ts-ignore */
-            if (error.response.data?.error === "Categoria já cadastrada nesse produto!") {
-                /* @ts-ignore */
-                toast.error(error.response.data?.error);
-                setLoading(false);
-            } else {/* @ts-ignore */
-                console.log(error.response.data);
-                setLoading(false);
-                toast.error("Erro ao cadastrar esse produto nesta categoria!")
-            }
+            console.log(error.response.data);
+            setLoading(false);
+            toast.error("Erro ao cadastrar esse produto!");
         }
     }
 
@@ -403,7 +361,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                                         </button>
 
                                                         {item?.productCategory?.length === 0 ?
-                                                            <span className={styles.notFoundCategs}>Sem categorias cadastradas...</span>
+                                                            null
                                                             :
                                                             <>
                                                                 <strong className={styles.categoryStrong}>Categorias</strong>
@@ -432,24 +390,11 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             </>
                                                         }
 
-                                                        <select
-                                                            className={styles.selectImput}
-                                                            onChange={handleNameCategory}
-                                                            onClick={() => handleIdProduct(item?.id)}
-                                                        >
-                                                            <option value="">Selecione a categoria aqui...</option>
-                                                            {categorys?.[1] ? (
-                                                                <option value={`${categorys[1].name},${categorys[1].id}`}>{categorys[1].name}</option>
-                                                            ) : (
-                                                                <option value="" disabled>Nenhuma categoria disponível</option>
-                                                            )}
-                                                        </select>
-
                                                         <button
                                                             className={styles.addCategoryButton}
-                                                            onClick={() => handleRegisterCategory(item?.id, item?.slug_title_product, item?.store)}
+                                                            onClick={() => handleRegisterProduct(item?.id, item?.slug_title_product, item?.store)}
                                                         >
-                                                            Cadastrar categoria
+                                                            Capturar produto
                                                         </button>
 
                                                     </div>
