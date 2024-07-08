@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Modal from 'react-modal';
-import { toast } from "react-toastify";
 
 import { Button } from "@/components/Button/page";
 import { Header } from "@/components/Header/page";
@@ -60,8 +59,9 @@ export default function Products({ params }: { params: { store: string } }) {
     const [idProduct, setIdProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
-    const [categoryName, setCategoryName] = useState<string>("");
-    const [orderCategory, setOrderCategory] = useState<number>(Number);
+    const [slugTitle, setSlugTitle] = useState<string>("");
+    const [title, setTitle] = useState<string>("");
+    const [storeData, setStoreData] = useState<string>("");
 
     const initialFilters = {
         filter: '',
@@ -222,25 +222,6 @@ export default function Products({ params }: { params: { store: string } }) {
         window.open(`${link}`, '_blank');
     };
 
-    async function handleRegisterProduct(id: string, slug_title_product: string, store: string) {
-        const apiClient = setupAPIClient();
-        setLoading(true);
-        try {
-            await apiClient.post(`/capture_product_welding_machine`, {
-                storeProduct_id: id,
-                slug_title_product: slug_title_product,
-                store: store
-            });
-            setLoading(false);
-            toast.success("Produto cadastrado com sucesso.");
-            window.location.reload();
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            setLoading(false);
-            toast.error("Erro ao cadastrar esse produto!");
-        }
-    }
-
     function handleCloseModal() {
         setModalVisible(false);
     }
@@ -250,11 +231,12 @@ export default function Products({ params }: { params: { store: string } }) {
         setIdProduct(id);
     }
 
-    async function handleOpenModalDateProduct(id: string, name: string, order: number) {
+    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string, title_product: string) {
         setModalVisibleDateProduct(true);
         setIdProduct(id);
-        setCategoryName(name);
-        setOrderCategory(order);
+        setSlugTitle(slug_title_product);
+        setTitle(title_product);
+        setStoreData(store);
     }
 
     function handleCloseModalDateProduct() {
@@ -362,39 +344,9 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             Ver produto
                                                         </button>
 
-                                                        {item?.productCategory?.length === 0 ?
-                                                            null
-                                                            :
-                                                            <>
-                                                                <strong className={styles.categoryStrong}>Produto já cadastrado em Máquinas de solda</strong>
-
-                                                                {Array.isArray(item?.productCategory) ? (
-                                                                    item?.productCategory.map((item) => {
-                                                                        return (
-                                                                            <ul key={item.name}>
-                                                                                <li
-                                                                                    className={styles.categs}
-                                                                                >
-                                                                                    {item.name}
-                                                                                    <CiEdit
-                                                                                        color='red'
-                                                                                        size={21}
-                                                                                        cursor="pointer"
-                                                                                        onClick={() => handleOpenModalDateProduct(item?.id, item?.name, item?.order)}
-                                                                                    />
-                                                                                </li>
-                                                                            </ul>
-                                                                        )
-                                                                    })
-                                                                ) : (
-                                                                    <p>Recarregue a página por favor...</p>
-                                                                )}
-                                                            </>
-                                                        }
-
                                                         <button
                                                             className={styles.addCategoryButton}
-                                                            onClick={() => handleRegisterProduct(item?.id, item?.slug_title_product, item?.store)}
+                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store, item?.title_product)}
                                                         >
                                                             Capturar produto
                                                         </button>
@@ -434,9 +386,10 @@ export default function Products({ params }: { params: { store: string } }) {
                 <ModalDateProduct
                     isOpen={modalVisibleDateProduct}
                     onRequestClose={handleCloseModalDateProduct}
-                    productCategory={idProduct}
-                    nameCategory={categoryName}
-                    positionCategory={orderCategory}
+                    productId={idProduct}
+                    titleSlug={slugTitle}
+                    title={title}
+                    dataStore={storeData}
                     productLoad={loadStoreProducts}
                 />
             )}

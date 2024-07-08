@@ -15,14 +15,15 @@ import styles from './styles.module.css';
 
 interface ModalDeleteProductRequest {
     isOpen: boolean;
-    productCategory: string;
-    nameCategory: string;
-    positionCategory: number;
+    productId: string;
+    titleSlug: string;
+    dataStore: string;
+    title: string;
     onRequestClose: () => void;
     productLoad: () => void;
 }
 
-export function ModalDateProduct({ isOpen, onRequestClose, productCategory, productLoad, nameCategory, positionCategory }: ModalDeleteProductRequest) {
+export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoad, titleSlug, dataStore, title }: ModalDeleteProductRequest) {
 
     const customStyles = {
         content: {
@@ -38,38 +39,43 @@ export function ModalDateProduct({ isOpen, onRequestClose, productCategory, prod
     };
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [order, setOrder] = useState<number>(Number);
+    const [brand, setBrand] = useState<string>("");
 
-    async function updateOrder() {
+    async function handleRegisterProduct() {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.put(`/update_positionCategory_product?productCategory_id=${productCategory}`, {
-                order: order
+            await apiClient.post(`/capture_product_welding_machine`, {
+                storeProduct_id: productId,
+                slug_title_product: titleSlug,
+                store: dataStore
             });
-            productLoad();
-            toast.success("Posição da ordem atualizada com sucesso");
             setLoading(false);
-            onRequestClose();
+            toast.success("Produto cadastrado com sucesso.");
+            window.location.reload();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error("Erro ao atualizar a posição")
             setLoading(false);
+            toast.error("Erro ao cadastrar esse produto!");
         }
     }
 
-    async function deleteCategoryProduct() {
-        const apiClient = setupAPIClient();
+    async function handleBrandProduct() {
         setLoading(true);
+        const apiClient = setupAPIClient();
         try {
-            await apiClient.delete(`/delete_category_product?productCategory_id=${productCategory}`);
-            productLoad();
-            toast.success("Categoria para esse produto deletada com sucesso");
+            await apiClient.put(`/update_brand?storeProduct_id=${productId}`,
+                {
+                    brand: brand
+                }
+            );
             setLoading(false);
+            toast.success(`Marca do produto atualizada com sucesso`);
             onRequestClose();
+            productLoad();
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);
-            toast.error("Erro ao deletar essa categoria desse produto")
+            toast.error(`Erro ao atualizar a marca do produto`);
             setLoading(false);
         }
     }
@@ -97,31 +103,37 @@ export function ModalDateProduct({ isOpen, onRequestClose, productCategory, prod
 
                     <div className={styles.containerContent}>
 
-                        <h2>Categoria {nameCategory}</h2>
+                        <h2>O nome desse produto é o padrão para com relação a outras lojas?</h2>
+                        <h3>Se não... escolha abaixo o nome desse produto para que fique igual a todas as outras lojas.</h3>
+
+                        <h3 style={{ color: "#f34748" }}>{title}</h3>
+
+                        <select>
+                            <option>fdsfsdfsf</option>
+                        </select>
 
                         <div className={styles.containerButton}>
-                            <label>Posição dessa categoria: {positionCategory}</label>
-                            <Input
-                                placeholder="Ordem"
-                                type='number'
-                                value={order}/* @ts-ignore */
-                                onChange={(e) => setOrder(e.target.value)}
-                            />
 
                             <Button
                                 style={{ width: '40%', fontWeight: "bold", fontSize: '14px', backgroundColor: 'green' }}
-                                onClick={updateOrder}
+                                onClick={handleRegisterProduct}
                             >
-                                Atualizar posição
+                                Registrar esse produto
                             </Button>
 
-                            <h3>Deletar essa categoria desse produto?</h3>
+                            <h3>A Marca desse produto está correta não precisa edita-la?</h3>
+
+                            <Input
+                                placeholder='Digite aqui o nome correto...'
+                                value={brand}
+                                onChange={(e) => setBrand(e.target.value)}
+                            />
 
                             <Button
                                 style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
-                                onClick={deleteCategoryProduct}
+                                onClick={handleBrandProduct}
                             >
-                                Deletar
+                                Atualizar marca
                             </Button>
                         </div>
                     </div>
