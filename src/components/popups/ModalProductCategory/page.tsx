@@ -46,8 +46,8 @@ export function ModalProductCategory({ isOpen, onRequestClose, productCategory, 
             setLoading(false);
             onRequestClose();
         } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error("Erro ao deletar esse produto dessa categoria");
+            console.log(error.response.data);/* @ts-ignore */
+            toast.error(`${error.response.data.error}`);
             setLoading(false);
         }
     }

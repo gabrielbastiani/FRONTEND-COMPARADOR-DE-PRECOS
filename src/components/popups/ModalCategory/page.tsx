@@ -16,6 +16,7 @@ import styles from './styles.module.css';
 interface ModalDeleteProductRequest {
     isOpen: boolean;
     productCategory: string;
+    parentId: string;
     store: string;
     slug_title_product: string;
     onRequestClose: () => void;
@@ -36,7 +37,8 @@ type CategorysProps = {
     children?: CategorysProps[];
 };
 
-export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad, slug_title_product, store }: ModalDeleteProductRequest) {
+export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad, slug_title_product, store, parentId }: ModalDeleteProductRequest) {
+    
     const customStyles = {
         content: {
             top: '50%',
@@ -86,7 +88,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
 
     const handleNameCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const [path, categoryId] = event.target.value.split(',');/* @ts-ignore */
-        const name = path.split('>').pop().trim(); // Extrai a última categoria após o caractere ">"
+        const name = path.split('>').pop().trim();
         setNameCategory({ name, categoryId });
         console.log('Name:', name, 'Category ID:', categoryId);
     };
@@ -98,6 +100,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
             await apiClient.post(`/create_category_product`, {
                 storeProduct_id: productCategory,
                 category_id: nameCategory.categoryId,
+                parentId: parentId,
                 name: nameCategory.name,
                 order: order,
                 slug_title_product: slug_title_product,
