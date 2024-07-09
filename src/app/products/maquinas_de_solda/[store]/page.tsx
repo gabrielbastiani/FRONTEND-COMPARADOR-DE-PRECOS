@@ -12,6 +12,7 @@ import { Header } from "@/components/Header/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalDateProduct } from "@/components/popups/ModalDateProduct/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
+import { ModalEditTitle } from "@/components/popups/ModalEditTitle/page";
 
 import styles from "./styles.module.css";
 
@@ -56,11 +57,12 @@ export default function Products({ params }: { params: { store: string } }) {
     const [totalPages, setTotalPages] = useState(10);
     const [loading, setLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [modalVisibleTitle, setModalVisibleTitle] = useState<boolean>(false);
+    const [titleUpdate, setTitleUpdate] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
     const [slugTitle, setSlugTitle] = useState<string>("");
-    const [title, setTitle] = useState<string>("");
     const [storeData, setStoreData] = useState<string>("");
 
     const initialFilters = {
@@ -231,11 +233,19 @@ export default function Products({ params }: { params: { store: string } }) {
         setIdProduct(id);
     }
 
-    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string, title_product: string) {
+    function handleCloseModalTitle() {
+        setModalVisibleTitle(false);
+    }
+
+    async function handleOpenModalTitle(id: string) {
+        setTitleUpdate(id);
+        setModalVisibleTitle(true);
+    }
+
+    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string) {
         setModalVisibleDateProduct(true);
         setIdProduct(id);
         setSlugTitle(slug_title_product);
-        setTitle(title_product);
         setStoreData(store);
     }
 
@@ -308,6 +318,8 @@ export default function Products({ params }: { params: { store: string } }) {
                                         <div key={index}>
                                             <div className={styles.title}>
                                                 <h3>{item?.title_product}</h3>
+                                                &nbsp;&nbsp;
+                                                <CiEdit style={{ cursor: 'pointer' }} color='red' size={27} onClick={() => handleOpenModalTitle(item?.id)} />
                                             </div>
 
                                             <div className={styles.containerInfos}>
@@ -346,7 +358,7 @@ export default function Products({ params }: { params: { store: string } }) {
 
                                                         <button
                                                             className={styles.addCategoryButton}
-                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store, item?.title_product)}
+                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store)}
                                                         >
                                                             Capturar produto
                                                         </button>
@@ -374,6 +386,14 @@ export default function Products({ params }: { params: { store: string } }) {
                     </main>
                 </>
             }
+            {modalVisibleTitle && (
+                <ModalEditTitle
+                    isOpen={modalVisibleTitle}
+                    onRequestClose={handleCloseModalTitle}
+                    productId={titleUpdate}
+                    productLoad={loadStoreProducts}
+                />
+            )}
             {modalVisible && (
                 <ModalEditBrand
                     isOpen={modalVisible}
@@ -388,7 +408,6 @@ export default function Products({ params }: { params: { store: string } }) {
                     onRequestClose={handleCloseModalDateProduct}
                     productId={idProduct}
                     titleSlug={slugTitle}
-                    title={title}
                     dataStore={storeData}
                     productLoad={loadStoreProducts}
                 />

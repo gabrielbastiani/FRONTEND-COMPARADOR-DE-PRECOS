@@ -18,12 +18,11 @@ interface ModalDeleteProductRequest {
     productId: string;
     titleSlug: string;
     dataStore: string;
-    title: string;
     onRequestClose: () => void;
     productLoad: () => void;
 }
 
-export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoad, titleSlug, dataStore, title }: ModalDeleteProductRequest) {
+export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoad, titleSlug, dataStore }: ModalDeleteProductRequest) {
 
     const customStyles = {
         content: {
@@ -103,14 +102,7 @@ export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoa
 
                     <div className={styles.containerContent}>
 
-                        <h2>O nome desse produto é o padrão para com relação a outras lojas?</h2>
-                        <h3>Se não... escolha abaixo o nome desse produto para que fique igual a todas as outras lojas.</h3>
-
-                        <h3 style={{ color: "#f34748" }}>{title}</h3>
-
-                        <select>
-                            <option>fdsfsdfsf</option>
-                        </select>
+                        <h2>Registre esse produto</h2>
 
                         <div className={styles.containerButton}>
 
