@@ -58,7 +58,6 @@ export default function Category_products({ params }: { params: { category_slug:
     const [totalPages, setTotalPages] = useState(10);
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
-    const [productCategory_id, setProductCategory_id] = useState<string>("");
     const [slugTitleProduct, setSlugTitleProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -212,10 +211,9 @@ export default function Category_products({ params }: { params: { category_slug:
         setModalVisibleCategorysProduct(false);
     }
 
-    async function handleOpenModalCategorys(id: string, store: string, slug_title_product: string, productCategory_id: string) {
+    async function handleOpenModalCategorys(id: string, store: string, slug_title_product: string) {
         setModalVisibleCategorys(true);
         setIdProduct(id);
-        setProductCategory_id(productCategory_id);
         setStore(store);
         setSlugTitleProduct(slug_title_product)
     }
@@ -350,7 +348,7 @@ export default function Category_products({ params }: { params: { category_slug:
                                                                     <div key={index}>
                                                                         <button
                                                                             className={styles.buttonProdutoCategs}
-                                                                            onClick={() => handleOpenModalCategorys(item?.id, item?.store, item?.slug_title_product, categs?.id)}
+                                                                            onClick={() => handleOpenModalCategorys(item?.id, item?.store, item?.slug_title_product)}
                                                                         >
                                                                             Registros de categorias
                                                                         </button>
@@ -408,7 +406,6 @@ export default function Category_products({ params }: { params: { category_slug:
                             isOpen={modalVisibleCategorys}
                             onRequestClose={handleCloseModalCategorys}
                             productCategory={idProduct}
-                            parentId={productCategory_id}
                             store={store}
                             slug_title_product={slugTitleProduct}
                             productLoad={loadStoreProducts}

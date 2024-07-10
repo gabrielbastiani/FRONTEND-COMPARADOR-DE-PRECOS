@@ -16,7 +16,6 @@ import styles from './styles.module.css';
 interface ModalDeleteProductRequest {
     isOpen: boolean;
     productCategory: string;
-    parentId: string;
     store: string;
     slug_title_product: string;
     onRequestClose: () => void;
@@ -37,8 +36,8 @@ type CategorysProps = {
     children?: CategorysProps[];
 };
 
-export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad, slug_title_product, store, parentId }: ModalDeleteProductRequest) {
-    
+export function ModalCategory({ isOpen, onRequestClose, productCategory, productLoad, slug_title_product, store }: ModalDeleteProductRequest) {
+
     const customStyles = {
         content: {
             top: '50%',
@@ -58,6 +57,8 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
     const [nameCategory, setNameCategory] = useState<{ name: string; categoryId: string | null }>({ name: '', categoryId: null });
     const [order, setOrder] = useState<number>(0);
     const [activeTab, setActiveTab] = useState<string>("");
+
+    console.log(registerCategorys)
 
     const [toogle, setToogle] = useState(!activeTab);
     const [cor, setCor] = useState('grey');
@@ -90,17 +91,16 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         const [path, categoryId] = event.target.value.split(',');/* @ts-ignore */
         const name = path.split('>').pop().trim();
         setNameCategory({ name, categoryId });
-        console.log('Name:', name, 'Category ID:', categoryId);
     };
 
-    async function handleRegisterCategory() {
+    async function handleRegisterCategory(id: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
             await apiClient.post(`/create_category_product`, {
                 storeProduct_id: productCategory,
                 category_id: nameCategory.categoryId,
-                parentId: parentId,
+                parentId: id,
                 name: nameCategory.name,
                 order: order,
                 slug_title_product: slug_title_product,
@@ -122,6 +122,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
     }
 
     async function deleteCategoryProduct(id: string) {
+        console.log(id)
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
@@ -131,8 +132,8 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
             setLoading(false);
             onRequestClose();
         } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error("Erro ao deletar essa categoria desse produto");
+            console.log(error.response.data);/* @ts-ignore */
+            toast.error(`${error.response.data.error}`);
             setLoading(false);
         }
     }
@@ -241,38 +242,38 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
                                                 <hr />
                                                 <br />
                                                 <br />
+
+                                                <h2>Deseja cadastrar categoria(s)?</h2>
+
+                                                <select
+                                                    className={styles.selectImput}
+                                                    onChange={handleNameCategory}
+                                                >
+                                                    <option value="">Selecione as categoria aqui...</option>
+                                                    {renderCategoryOptions(categoryTree)}
+                                                </select>
+
+                                                <label className={styles.position}>Posição da categoria</label>
+
+                                                <Input
+                                                    placeholder="Ordem"
+                                                    type='number'
+                                                    value={order}/* @ts-ignore */
+                                                    onChange={(e) => setOrder(Number(e.target.value))}
+                                                />
+
+                                                <button
+                                                    className={styles.addCategoryButton}
+                                                    onClick={() => handleRegisterCategory(item?.id)}
+                                                >
+                                                    Cadastrar categoria
+                                                </button>
                                             </>
                                         )}
                                     </ul>
                                 ))}
                             </>
                         )}
-
-                        <h2>Deseja cadastrar categoria(s)?</h2>
-
-                        <select
-                            className={styles.selectImput}
-                            onChange={handleNameCategory}
-                        >
-                            <option value="">Selecione as categoria aqui...</option>
-                            {renderCategoryOptions(categoryTree)}
-                        </select>
-
-                        <label className={styles.position}>Posição da categoria</label>
-
-                        <Input
-                            placeholder="Ordem"
-                            type='number'
-                            value={order}/* @ts-ignore */
-                            onChange={(e) => setOrder(Number(e.target.value))}
-                        />
-
-                        <button
-                            className={styles.addCategoryButton}
-                            onClick={handleRegisterCategory}
-                        >
-                            Cadastrar categoria
-                        </button>
                     </div>
                 </>
             )}
