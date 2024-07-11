@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
+import { TbCapture } from 'react-icons/tb';
 import Modal from 'react-modal';
 
 import { Header } from '@/components/Header/page';
@@ -125,6 +126,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "sumig").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/sumig`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -137,6 +143,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "esab").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/esab`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -149,6 +160,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "amazon.com.br-seller").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/amazon.com.br-seller`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -161,6 +177,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "americanas.com").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/americanas.com`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -173,6 +194,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "carrefour").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/carrefour`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -185,6 +211,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "casas-bahia").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/casas-bahia`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -197,6 +228,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "dutra-maquinas").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/dutra-maquinas`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -209,6 +245,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "leroy-merlin").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/leroy-merlin`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -221,6 +262,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "loja-do-mecanico").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/loja-do-mecanico`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -233,6 +279,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "magazine-luiza").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/magazine-luiza`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -245,6 +296,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "mercado-livre").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/mercado-livre`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -257,6 +313,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "pontofrio.com").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/pontofrio.com`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -269,6 +330,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "shopee").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/shopee`)}
+                                />
                             </div>
 
                             <div className={styles.grid_item}>
@@ -281,6 +347,11 @@ export default function Stores() {
                                     </strong>
                                     <span>{listProducts.filter(item => item.slug === "shoptime").length}</span>
                                 </button>
+                                <TbCapture
+                                    color='red'
+                                    size={40}
+                                    onClick={() => router.push(`/register_products_store/shoptime`)}
+                                />
                             </div>
                         </div>
                         {
