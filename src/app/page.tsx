@@ -56,7 +56,7 @@ export default function Home() {
       <Header />
       <main className={styles.mainContainer}>
         <div>
-          <h2>Categorias</h2>
+          <h1>Categorias</h1>
         </div>
         <div className={styles.grid_container}>
           {zeroCategs?.map((item, index) => {

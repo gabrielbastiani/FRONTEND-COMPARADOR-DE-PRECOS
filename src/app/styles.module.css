@@ -96,6 +96,10 @@
   flex-direction: column;
 }
 
+.mainContainer h1 {
+  color: white;
+}
+
 .text h2 {
   color: white;
 }
