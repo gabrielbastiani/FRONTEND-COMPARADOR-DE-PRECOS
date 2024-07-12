@@ -15,11 +15,12 @@ import styles from './styles.module.css';
 interface ModalDeleteProductRequest {
     isOpen: boolean;
     productCategory: string;
+    storeProduct_id: string;
     onRequestClose: () => void;
     productLoad: () => void;
 }
 
-export function ModalProductCategory({ isOpen, onRequestClose, productCategory, productLoad }: ModalDeleteProductRequest) {
+export function ModalProductCategory({ isOpen, onRequestClose, productCategory, productLoad, storeProduct_id }: ModalDeleteProductRequest) {
     
     const customStyles = {
         content: {
@@ -40,7 +41,7 @@ export function ModalProductCategory({ isOpen, onRequestClose, productCategory, 
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.delete(`/delete_category_product?productCategory_id=${productCategory}`);
+            await apiClient.delete(`/delete_category_product?productCategory_id=${productCategory}&storeProduct_id=${storeProduct_id}`);
             productLoad();
             toast.success("Produto deletado dessa categoria com sucesso");
             setLoading(false);

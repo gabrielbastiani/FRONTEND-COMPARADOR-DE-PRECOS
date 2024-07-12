@@ -56,6 +56,7 @@ export default function Register_products_store({ params }: { params: { store_sl
     const [totalPages, setTotalPages] = useState(10);
     const [storeDate, setStoreDate] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
+    const [storeProduct_id, setStoreProduct_id] = useState<string>("");
     const [slugTitleProduct, setSlugTitleProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -198,9 +199,10 @@ export default function Register_products_store({ params }: { params: { store_sl
         setModalVisible(false);
     }
 
-    async function handleOpenModalDeleteProduct(id: string) {
+    async function handleOpenModalDeleteProduct(id: string, storeProduct_id: string) {
         setModalVisibleCategorysProduct(true);
         setIdProduct(id);
+        setStoreProduct_id(storeProduct_id);
     }
 
     function handleCloseModalDeleteProduct() {
@@ -324,7 +326,7 @@ export default function Register_products_store({ params }: { params: { store_sl
                                                                         size={25}
                                                                         color="red"
                                                                         cursor="pointer"
-                                                                        onClick={() => handleOpenModalDeleteProduct(item?.id)}
+                                                                        onClick={() => handleOpenModalDeleteProduct(item?.id, item?.storeProduct_id)}
                                                                     />
                                                                 </div>
                                                             )
@@ -395,6 +397,7 @@ export default function Register_products_store({ params }: { params: { store_sl
                             onRequestClose={handleCloseModalDeleteProduct}
                             productCategory={idProduct}
                             productLoad={loadStoreProducts}
+                            storeProduct_id={storeProduct_id}
                         />
                     )}
                     {modalVisibleCategorys && (

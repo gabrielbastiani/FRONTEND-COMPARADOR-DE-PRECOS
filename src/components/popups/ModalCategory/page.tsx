@@ -58,8 +58,6 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
     const [order, setOrder] = useState<number>(0);
     const [activeTab, setActiveTab] = useState<string>("");
 
-    console.log(registerCategorys)
-
     const [toogle, setToogle] = useState(!activeTab);
     const [cor, setCor] = useState('grey');
 
@@ -121,14 +119,13 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
         }
     }
 
-    async function deleteCategoryProduct(id: string) {
-        console.log(id)
+    async function deleteCategoryProduct(id: string, storeProduct_id: string) {
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.delete(`/delete_category_product?productCategory_id=${id}`);
+            await apiClient.delete(`/delete_category_product?productCategory_id=${id}&storeProduct_id=${storeProduct_id}`);
             productLoad();
-            toast.success("Categoria para esse produto deletada com sucesso");
+            toast.success("Categoria para esse produto deletada com sucesso.");
             setLoading(false);
             onRequestClose();
         } catch (error) {/* @ts-ignore */
@@ -233,7 +230,7 @@ export function ModalCategory({ isOpen, onRequestClose, productCategory, product
 
                                                 <Button
                                                     style={{ width: '40%', fontWeight: "bold", fontSize: '14px' }}
-                                                    onClick={() => deleteCategoryProduct(item?.id)}
+                                                    onClick={() => deleteCategoryProduct(item?.id, item?.storeProduct_id)}
                                                 >
                                                     Deletar
                                                 </Button>

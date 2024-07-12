@@ -12,6 +12,7 @@ import { Header } from "@/components/Header/page";
 import LoadingRequests from "@/components/LoadingRequests/page";
 import { ModalCategory } from "@/components/popups/ModalCategory/page";
 import { ModalEditBrand } from "@/components/popups/ModalEditBrand/page";
+import { ModalEditTitle } from "@/components/popups/ModalEditTitle/page";
 import { ModalProductCategory } from "@/components/popups/ModalProductCategory/page";
 
 import styles from "./styles.module.css";
@@ -58,11 +59,14 @@ export default function Category_products({ params }: { params: { category_slug:
     const [totalPages, setTotalPages] = useState(10);
     const [nameCategory, setNameCategory] = useState<string>("");
     const [idProduct, setIdProduct] = useState<string>("");
+    const [storeProduct_id, setStoreProduct_id] = useState<string>("");
     const [slugTitleProduct, setSlugTitleProduct] = useState<string>("");
     const [store, setStore] = useState<string>("");
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalVisibleCategorysProduct, setModalVisibleCategorysProduct] = useState<boolean>(false);
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
+    const [titleUpdate, setTitleUpdate] = useState<string>("");
+    const [modalVisibleTitle, setModalVisibleTitle] = useState<boolean>(false);
 
     const titles = !nameCategory ? title : nameCategory;
 
@@ -202,9 +206,10 @@ export default function Category_products({ params }: { params: { category_slug:
         setModalVisible(false);
     }
 
-    async function handleOpenModalDeleteProduct(id: string) {
+    async function handleOpenModalDeleteProduct(id: string, storeProduct_id: string) {
         setModalVisibleCategorysProduct(true);
         setIdProduct(id);
+        setStoreProduct_id(storeProduct_id);
     }
 
     function handleCloseModalDeleteProduct() {
@@ -220,6 +225,15 @@ export default function Category_products({ params }: { params: { category_slug:
 
     function handleCloseModalCategorys() {
         setModalVisibleCategorys(false);
+    }
+
+    function handleCloseModalTitle() {
+        setModalVisibleTitle(false);
+    }
+
+    async function handleOpenModalTitle(id: string) {
+        setTitleUpdate(id);
+        setModalVisibleTitle(true);
     }
 
     Modal.setAppElement('body');
@@ -292,6 +306,8 @@ export default function Category_products({ params }: { params: { category_slug:
                                             <div key={index}>
                                                 <div className={styles.title}>
                                                     <h3>{item?.title_product}</h3>
+                                                    &nbsp;&nbsp;
+                                                    <CiEdit style={{ cursor: 'pointer' }} color='red' size={27} onClick={() => handleOpenModalTitle(item?.id)} />
                                                 </div>
 
                                                 <div className={styles.containerInfos}>
@@ -328,7 +344,7 @@ export default function Category_products({ params }: { params: { category_slug:
                                                                         size={25}
                                                                         color="red"
                                                                         cursor="pointer"
-                                                                        onClick={() => handleOpenModalDeleteProduct(item?.id)}
+                                                                        onClick={() => handleOpenModalDeleteProduct(item?.id, item?.storeProduct_id)}
                                                                     />
                                                                 </div>
                                                             )
@@ -385,6 +401,14 @@ export default function Category_products({ params }: { params: { category_slug:
                             </div>
                         </article>
                     </main>
+                    {modalVisibleTitle && (
+                        <ModalEditTitle
+                            isOpen={modalVisibleTitle}
+                            onRequestClose={handleCloseModalTitle}
+                            productId={titleUpdate}
+                            productLoad={loadStoreProducts}
+                        />
+                    )}
                     {modalVisible && (
                         <ModalEditBrand
                             isOpen={modalVisible}
@@ -399,6 +423,7 @@ export default function Category_products({ params }: { params: { category_slug:
                             onRequestClose={handleCloseModalDeleteProduct}
                             productCategory={idProduct}
                             productLoad={loadStoreProducts}
+                            storeProduct_id={storeProduct_id}
                         />
                     )}
                     {modalVisibleCategorys && (
