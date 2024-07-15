@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight, FaTrashAlt } from "react-icons/fa";
 import Modal from 'react-modal';
@@ -19,6 +19,7 @@ import styles from "./styles.module.css";
 
 import { setupAPIClient } from "@/services/api";
 import moment from "moment";
+import { CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 
 type ProductsStoreProps = {
@@ -47,13 +48,12 @@ type ProductsStoreProps = {
     }[];
 }
 
-export default function Category_products({ params }: { params: { category_slug: string, title: string } }) {
+export default function Category_products({ params }: { params: { category_slug: string } }) {
 
     const router = useRouter();
 
-    const title = decodeURIComponent(String(params?.category_slug[1]));
-
     const [listProducts, setListProducts] = useState<ProductsStoreProps[]>();
+    const [comparativeProducts, setComparativeProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(10);
@@ -67,8 +67,13 @@ export default function Category_products({ params }: { params: { category_slug:
     const [modalVisibleCategorys, setModalVisibleCategorys] = useState<boolean>(false);
     const [titleUpdate, setTitleUpdate] = useState<string>("");
     const [modalVisibleTitle, setModalVisibleTitle] = useState<boolean>(false);
+    const [activeTab, setActiveTab] = useState("");
+    const [toogle, setToogle] = useState(!activeTab);
+    const [cor, setCor] = useState('red');
 
-    const titles = !nameCategory ? title : nameCategory;
+    useEffect(() => {
+        setCor(toogle ? 'green' : '');
+    }, [toogle]);
 
     const initialFilters = {
         filter: '',
@@ -131,6 +136,7 @@ export default function Category_products({ params }: { params: { category_slug:
                 },
             });
             setListProducts(response?.data?.product || []);
+            setComparativeProducts(response?.data?.pricesProductsStores || []);
             setTotalPages(response?.data?.totalPages);
             setNameCategory(response?.data?.productDate?.name || "");
             setLoading(false);
@@ -139,6 +145,18 @@ export default function Category_products({ params }: { params: { category_slug:
             setLoading(false);
         }
     }
+
+    const handleClick = async (id: string, slug_title_product: string) => {
+        setActiveTab(id);
+        setToogle(state => !state);
+        const apiClient = setupAPIClient();
+        try {
+            const response = await apiClient.get(`/history_prices_product?slug_title_product=${slug_title_product}`);
+            setComparativeProducts(response?.data || []);
+        } catch (error) {/* @ts-ignore */
+            console.log(error.response.data);
+        }
+    };
 
     const updateFilter = (filter: string, value: string | number) => {
         setFilters(prevFilters => ({
@@ -238,6 +256,38 @@ export default function Category_products({ params }: { params: { category_slug:
 
     Modal.setAppElement('body');
 
+    const formattedData = comparativeProducts.map(item => ({
+        ...item,
+        data: moment(item.created_at).format('DD/MM/YYYY - HH:mm')
+    }));
+
+    const groupedData = formattedData.reduce((acc, item) => {
+        if (!acc[item.store]) {
+            acc[item.store] = [];
+        }
+        acc[item.store].push(item);
+        return acc;
+    }, {});
+
+    const chartData = Object.keys(groupedData).map(store => ({
+        store,
+        data: groupedData[store]
+    }));
+
+    const CustomizedLabelComparative: FunctionComponent<any> = (props: any) => {
+        const { x, y, stroke, value } = props;
+
+        return (
+            <text x={x} y={y} dy={-4} fill={stroke} fontSize={14} textAnchor="middle">
+                {value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+            </text>
+        );
+    };
+
+    const handleButtonClickComaratives = (e: any, payload: any) => {
+        window.open(`${payload?.payload?.link}`, '_blank');
+    };
+
 
 
     return (
@@ -257,7 +307,7 @@ export default function Category_products({ params }: { params: { category_slug:
                                         size={32}
                                         color='red'
                                     />
-                                    <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + titles}</h1>
+                                    <h1 className={styles.titulo}>{"Produtos cadastrados na categoria " + nameCategory}</h1>
                                 </div>
                                 <div className={styles.containerFilters}>
                                     <div className={styles.boxFilters}>
@@ -374,7 +424,8 @@ export default function Category_products({ params }: { params: { category_slug:
 
                                                             <button
                                                                 className={styles.buttonPrices}
-                                                                onClick={() => router.push(`/historico_preco/${item?.slug}/${item?.slug_title_product}`)}
+                                                                style={{ backgroundColor: cor }}
+                                                                onClick={() => handleClick(item?.id, item?.slug_title_product)}
                                                             >
                                                                 Historico de Preços
                                                             </button>
@@ -382,6 +433,37 @@ export default function Category_products({ params }: { params: { category_slug:
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {activeTab === item?.id ?
+                                                    <>
+                                                        <br />
+                                                        <br />
+                                                        <br />
+                                                        <ResponsiveContainer width="100%" height={400}>
+                                                            <LineChart width={600} height={300} data={chartData}>
+                                                                <CartesianGrid strokeDasharray="6 6" />
+                                                                <XAxis dataKey="data" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Legend />
+                                                                {Object.keys(groupedData).map((store, index) => (
+                                                                    <Line
+                                                                        key={store}
+                                                                        type="monotone"
+                                                                        dataKey="price"
+                                                                        data={groupedData[store]}
+                                                                        name={store}
+                                                                        stroke={index === 0 ? "#8884d8" : index === 1 ? "#82ca9d" : "#ffc658"}
+                                                                        activeDot={{ onClick: handleButtonClickComaratives }}
+                                                                    >
+                                                                        <LabelList content={<CustomizedLabelComparative />} />
+                                                                    </Line>
+                                                                ))}
+                                                            </LineChart>
+                                                        </ResponsiveContainer>
+                                                    </>
+                                                    :
+                                                    null
+                                                }
                                                 <div className={styles.divisorBox}>
                                                     <hr />
                                                 </div>

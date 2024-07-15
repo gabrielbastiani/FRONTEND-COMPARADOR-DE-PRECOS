@@ -29,7 +29,6 @@ type CategorysProps = {
     nivel: number;
     parentId: string | null;
     order: number;
-    type_category: string;
     status: string;
     created_at: string;
     updated_at: string;
