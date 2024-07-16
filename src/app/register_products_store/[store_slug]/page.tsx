@@ -22,7 +22,6 @@ import moment from "moment";
 
 type ProductsStoreProps = {
     id: string;
-    type_product: string;
     slug_type: string;
     store: string;
     slug: string;
