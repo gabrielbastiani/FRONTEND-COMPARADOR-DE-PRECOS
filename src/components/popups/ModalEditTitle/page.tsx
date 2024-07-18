@@ -13,12 +13,12 @@ import styles from './styles.module.css';
 
 interface ModalStoreRequest {
     isOpen: boolean;
-    productId: string
+    slugTitleProduct: string
     onRequestClose: () => void;
     productLoad: () => void;
 }
 
-export function ModalEditTitle({ isOpen, onRequestClose, productLoad, productId }: ModalStoreRequest) {
+export function ModalEditTitle({ isOpen, onRequestClose, productLoad, slugTitleProduct }: ModalStoreRequest) {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [title_product, setTitle_product] = useState<string>("");
@@ -40,9 +40,10 @@ export function ModalEditTitle({ isOpen, onRequestClose, productLoad, productId 
         setLoading(true);
         const apiClient = setupAPIClient();
         try {
-            await apiClient.put(`/update_title_product?storeProduct_id=${productId}`,
+            await apiClient.post(`/create_alternative_title`,
                 {
-                    title_product: title_product
+                    slug_title_product: slugTitleProduct,
+                    title_alternative: title_product
                 }
             );
             setLoading(false);
