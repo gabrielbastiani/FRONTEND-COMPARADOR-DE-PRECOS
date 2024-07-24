@@ -18,11 +18,12 @@ interface ModalDeleteProductRequest {
     productId: string;
     titleSlug: string;
     dataStore: string;
+    type: string;
     onRequestClose: () => void;
     productLoad: () => void;
 }
 
-export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoad, titleSlug, dataStore }: ModalDeleteProductRequest) {
+export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoad, titleSlug, dataStore, type }: ModalDeleteProductRequest) {
 
     const customStyles = {
         content: {
@@ -44,11 +45,22 @@ export function ModalDateProduct({ isOpen, onRequestClose, productId, productLoa
         const apiClient = setupAPIClient();
         setLoading(true);
         try {
-            await apiClient.post(`/capture_product_welding_machine`, {
-                storeProduct_id: productId,
-                slug_title_product: titleSlug,
-                store: dataStore
-            });
+            if (type === "maquinas-de-corte-plasma-manual") {
+                await apiClient.post(`/capture_product_cut_machine`, {
+                    storeProduct_id: productId,
+                    slug_title_product: titleSlug,
+                    store: dataStore
+                });
+            }
+            
+            if (type === "maquinas-de-solda") {
+                await apiClient.post(`/capture_product_welding_machine`, {
+                    storeProduct_id: productId,
+                    slug_title_product: titleSlug,
+                    store: dataStore
+                });
+            }
+            
             setLoading(false);
             toast.success("Produto cadastrado com sucesso.");
             window.location.reload();

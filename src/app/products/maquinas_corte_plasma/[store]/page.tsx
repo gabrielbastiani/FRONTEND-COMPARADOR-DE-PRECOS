@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Modal from 'react-modal';
-import { toast } from "react-toastify";
 
 import { Button } from "@/components/Button/page";
 import { Header } from "@/components/Header/page";
@@ -65,6 +64,7 @@ export default function Products({ params }: { params: { store: string } }) {
     const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
     const [slugTitle, setSlugTitle] = useState<string>("");
     const [storeData, setStoreData] = useState<string>("");
+    const [slug_type, setSlug_type] = useState<string>("");
 
     const initialFilters = {
         filter: '',
@@ -119,6 +119,7 @@ export default function Products({ params }: { params: { store: string } }) {
                         maxPrice: filters.maxPrice
                     },
                 });
+
                 const uniqueProducts = response?.data?.product?.reduce((acc: any[], product: { title_product: any; }) => {
                     if (!acc.find(p => p.title_product === product.title_product)) {
                         acc.push(product);
@@ -127,7 +128,7 @@ export default function Products({ params }: { params: { store: string } }) {
                 }, []);
 
                 setListProducts(uniqueProducts || []);
-                setTotalPages(response.data.totalPages);
+                setTotalPages(response?.data?.totalPages);
             } catch (error) {/* @ts-ignore */
                 console.log(error.response.data);
             }
@@ -224,25 +225,6 @@ export default function Products({ params }: { params: { store: string } }) {
         window.open(`${link}`, '_blank');
     };
 
-    async function handleRegisterProduct(id: string, slug_title_product: string, store: string) {
-        const apiClient = setupAPIClient();
-        setLoading(true);
-        try {
-            await apiClient.post(`/capture_product_cut_machine`, {
-                storeProduct_id: id,
-                slug_title_product: slug_title_product,
-                store: store
-            });
-            setLoading(false);
-            toast.success("Produto cadastrado com sucesso.");
-            window.location.reload();
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            setLoading(false);
-            toast.error("Erro ao cadastrar esse produto!");
-        }
-    }
-
     function handleCloseModal() {
         setModalVisible(false);
     }
@@ -252,27 +234,29 @@ export default function Products({ params }: { params: { store: string } }) {
         setIdProduct(id);
     }
 
-    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string) {
+    function handleCloseModalTitle() {
+        setModalVisibleTitle(false);
+    }
+
+    async function handleOpenModalTitle(slug_title_product: string) {
+        setTitleUpdate(slug_title_product);
+        setModalVisibleTitle(true);
+    }
+
+    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string, slug_type: string) {
         setModalVisibleDateProduct(true);
         setIdProduct(id);
         setSlugTitle(slug_title_product);
         setStoreData(store);
+        setSlug_type(slug_type);
     }
 
     function handleCloseModalDateProduct() {
         setModalVisibleDateProduct(false);
     }
 
-    function handleCloseModalTitle() {
-        setModalVisibleTitle(false);
-    }
-
-    async function handleOpenModalTitle(id: string) {
-        setTitleUpdate(id);
-        setModalVisibleTitle(true);
-    }
-
     Modal.setAppElement('body');
+
 
 
     return (
@@ -337,7 +321,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                             <div className={styles.title}>
                                                 <h3>{item?.title_product}</h3>
                                                 &nbsp;&nbsp;
-                                                <CiEdit style={{ cursor: 'pointer' }} color='red' size={27} onClick={() => handleOpenModalTitle(item?.id)} />
+                                                <CiEdit style={{ cursor: 'pointer' }} color='red' size={27} onClick={() => handleOpenModalTitle(item?.slug_title_product)} />
                                             </div>
 
                                             <div className={styles.containerInfos}>
@@ -374,39 +358,9 @@ export default function Products({ params }: { params: { store: string } }) {
                                                             Ver produto
                                                         </button>
 
-                                                        {item?.productCategory?.length === 0 ?
-                                                            null
-                                                            :
-                                                            <>
-                                                                <strong className={styles.categoryStrong}>Categorias</strong>
-
-                                                                {Array.isArray(item?.productCategory) ? (
-                                                                    item?.productCategory.map((item) => {
-                                                                        return (
-                                                                            <ul key={item.name}>
-                                                                                <li
-                                                                                    className={styles.categs}
-                                                                                >
-                                                                                    {item.name}
-                                                                                    <CiEdit
-                                                                                        color='red'
-                                                                                        size={21}
-                                                                                        cursor="pointer"
-                                                                                        onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store)}
-                                                                                    />
-                                                                                </li>
-                                                                            </ul>
-                                                                        )
-                                                                    })
-                                                                ) : (
-                                                                    <p>Recarregue a página por favor...</p>
-                                                                )}
-                                                            </>
-                                                        }
-
                                                         <button
                                                             className={styles.addCategoryButton}
-                                                            onClick={() => handleRegisterProduct(item?.id, item?.slug_title_product, item?.store)}
+                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store, item?.slug_type)}
                                                         >
                                                             Capturar produto
                                                         </button>
@@ -438,7 +392,7 @@ export default function Products({ params }: { params: { store: string } }) {
                 <ModalEditTitle
                     isOpen={modalVisibleTitle}
                     onRequestClose={handleCloseModalTitle}
-                    productId={titleUpdate}
+                    slugTitleProduct={titleUpdate}
                     productLoad={loadStoreProducts}
                 />
             )}
@@ -457,6 +411,7 @@ export default function Products({ params }: { params: { store: string } }) {
                     productId={idProduct}
                     titleSlug={slugTitle}
                     dataStore={storeData}
+                    type={slug_type}
                     productLoad={loadStoreProducts}
                 />
             )}
