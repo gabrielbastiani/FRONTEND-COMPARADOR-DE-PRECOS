@@ -487,7 +487,7 @@ export default function Category_products({ params }: { params: { category_slug:
                         <ModalEditTitle
                             isOpen={modalVisibleTitle}
                             onRequestClose={handleCloseModalTitle}
-                            productId={titleUpdate}
+                            slugTitleProduct={titleUpdate}
                             productLoad={loadStoreProducts}
                         />
                     )}
