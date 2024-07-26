@@ -64,6 +64,7 @@ export default function Products({ params }: { params: { store: string } }) {
     const [modalVisibleDateProduct, setModalVisibleDateProduct] = useState<boolean>(false);
     const [slugTitle, setSlugTitle] = useState<string>("");
     const [storeData, setStoreData] = useState<string>("");
+    const [slug_type, setSlug_type] = useState<string>("");
 
     const initialFilters = {
         filter: '',
@@ -242,11 +243,12 @@ export default function Products({ params }: { params: { store: string } }) {
         setModalVisibleTitle(true);
     }
 
-    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string) {
+    async function handleOpenModalDateProduct(id: string, slug_title_product: string, store: string, slug_type: string) {
         setModalVisibleDateProduct(true);
         setIdProduct(id);
         setSlugTitle(slug_title_product);
         setStoreData(store);
+        setSlug_type(slug_type);
     }
 
     function handleCloseModalDateProduct() {
@@ -358,7 +360,7 @@ export default function Products({ params }: { params: { store: string } }) {
 
                                                         <button
                                                             className={styles.addCategoryButton}
-                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store)}
+                                                            onClick={() => handleOpenModalDateProduct(item?.id, item?.slug_title_product, item?.store, item?.slug_type)}
                                                         >
                                                             Capturar produto
                                                         </button>
@@ -410,6 +412,7 @@ export default function Products({ params }: { params: { store: string } }) {
                     titleSlug={slugTitle}
                     dataStore={storeData}
                     productLoad={loadStoreProducts}
+                    type={slug_type}
                 />
             )}
         </>
