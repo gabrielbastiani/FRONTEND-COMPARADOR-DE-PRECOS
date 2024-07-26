@@ -238,8 +238,8 @@ export default function Products({ params }: { params: { store: string } }) {
         setModalVisibleTitle(false);
     }
 
-    async function handleOpenModalTitle(id: string) {
-        setTitleUpdate(id);
+    async function handleOpenModalTitle(slug_title_product: string) {
+        setTitleUpdate(slug_title_product);
         setModalVisibleTitle(true);
     }
 
@@ -321,7 +321,7 @@ export default function Products({ params }: { params: { store: string } }) {
                                             <div className={styles.title}>
                                                 <h3>{item?.title_product}</h3>
                                                 &nbsp;&nbsp;
-                                                <CiEdit style={{ cursor: 'pointer' }} color='red' size={27} onClick={() => handleOpenModalTitle(item?.id)} />
+                                                <CiEdit style={{ cursor: 'pointer' }} color='red' size={27} onClick={() => handleOpenModalTitle(item?.slug_title_product)} />
                                             </div>
 
                                             <div className={styles.containerInfos}>
