@@ -131,6 +131,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/sumig`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "sumig" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -148,6 +149,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/esab`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "esab" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -165,6 +167,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/amazon.com.br-seller`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "amazon.com.br-seller" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -182,6 +185,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/americanas.com`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "americanas.com" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -199,6 +203,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/carrefour`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "carrefour" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -216,6 +221,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/casas-bahia`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "casas-bahia" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -233,6 +239,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/dutra-maquinas`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "dutra-maquinas" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -250,6 +257,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/leroy-merlin`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "leroy-merlin" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -267,6 +275,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/loja-do-mecanico`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "loja-do-mecanico" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -284,6 +293,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/magazine-luiza`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "magazine-luiza" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -301,6 +311,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/mercado-livre`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "mercado-livre" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -318,6 +329,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/pontofrio.com`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "pontofrio.com" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -335,6 +347,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/shopee`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "shopee" && item.register === "Sim").length}</span>
                             </div>
 
                             <div className={styles.grid_item}>
@@ -352,6 +365,7 @@ export default function Stores() {
                                     size={40}
                                     onClick={() => router.push(`/register_products_store/shoptime`)}
                                 />
+                                <span style={{ color: 'orange', fontWeight: 'bold' }}>{listProducts.filter(item => item.slug === "shoptime" && item.register === "Sim").length}</span>
                             </div>
                         </div>
                         {
